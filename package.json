@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@types/jsoneditor": "^9.9.0",
+    "jsoneditor": "^9.10.2"
+  }
+}

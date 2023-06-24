@@ -1,0 +1,38 @@
+
+#root .ace-jsoneditor {
+}
+
+:root {
+    --editor-line-height: 18px;
+}
+
+#root .jsoneditor.jsoneditor-mode-code {
+    border: 0;
+}
+
+#root .ace_variable {
+    color: #a31515;
+}
+
+#root .ace_active-line {
+    background: antiquewhite;
+}
+
+#root .ace_string {
+    color: #0451a5;
+}
+
+#root .ace_constant.ace_numeric {
+    color: #098658;
+}
+
+#root .ace-jsoneditor .ace_gutter {
+    background: transparent;
+    font-size: 12px;
+    line-height: var(--editor-line-height);
+}
+
+#root .ace_layer .ace_text-layer {
+    font-size: 12px !important;
+    line-height: var(--editor-line-height);
+}
