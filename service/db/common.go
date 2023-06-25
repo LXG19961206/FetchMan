@@ -3,9 +3,10 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"github.com/labstack/gommon/log"
 	"reflect"
 	"strings"
+
+	"github.com/labstack/gommon/log"
 )
 
 func CreateTableByStruct(db *sql.DB, dbName string, tableStruct interface{}) {
@@ -42,25 +43,59 @@ func CreateTableByStruct(db *sql.DB, dbName string, tableStruct interface{}) {
 
 }
 
-func InsertColByMap(db *sql.DB, name string, valueMap map[string]string) {
+func InsertColByTemplate(db *sql.DB, name string, col interface{}) {
 
-	var keys, values []string
+	var (
+		keyof   = reflect.TypeOf(col)
+		valueOf = reflect.ValueOf(col)
+		num     = keyof.NumField()
+		fields  = []string{}
+		values  = []string{}
+	)
 
-	for key, value := range valueMap {
-		keys = append(keys, key)
+	for i := 0; i < num; i++ {
+
+		var (
+			field = keyof.Field(i).Name
+			value = valueOf.Field(i).String()
+		)
+
+		fields = append(fields, field)
+
 		values = append(values, value)
+
 	}
 
 	var (
-		keyStr = fmt.Sprintf("(%s)", strings.Join(keys, ","))
-		valStr = fmt.Sprintf("(%s)", strings.Join(values, ","))
+		fieldStr = fmt.Sprintf("(%s)", strings.Join(fields, ","))
+		valueStr = fmt.Sprintf("(%s)", strings.Join(values, ","))
 	)
 
-	var sqlStr = "INSERT INTO" + " " + name + " " + keyStr + " VALUES " + valStr
+	var sqlStr = "INSERT INTO" + " " + name + " " + fieldStr + " VALUES " + valueStr
 
 	var _, _ = db.Exec(sqlStr)
 
 }
+
+// func InsertColByMap(db *sql.DB, name string, valueMap map[string]string) {
+
+// 	var keys, values []string
+
+// 	for key, value := range valueMap {
+// 		keys = append(keys, key)
+// 		values = append(values, value)
+// 	}
+
+// 	var (
+// 		keyStr = fmt.Sprintf("(%s)", strings.Join(keys, ","))
+// 		valStr = fmt.Sprintf("(%s)", strings.Join(values, ","))
+// 	)
+
+// 	var sqlStr = "INSERT INTO" + " " + name + " " + keyStr + " VALUES " + valStr
+
+// 	var _, _ = db.Exec(sqlStr)
+
+// }
 
 func OpenOrCreateDb(name string, path string) *sql.DB {
 
