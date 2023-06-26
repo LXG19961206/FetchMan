@@ -3,9 +3,10 @@ package request
 import (
 	"bytes"
 	"changeme/model"
-	"github.com/labstack/gommon/log"
 	"net/http"
 	"strings"
+
+	"github.com/labstack/gommon/log"
 )
 
 func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
@@ -39,9 +40,9 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 
 	defer func() {
 
-		err := recover()
+		// err := recover()
 
-		log.Info(err)
+		// log.Info(err)
 
 		log.Info(headers)
 
@@ -62,6 +63,8 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 			Status:     respErr.Error(),
 		}
 	}
+
+	SyncReqRecordToDb(req, reqInfo)
 
 	return handleResp(*resp, *req)
 

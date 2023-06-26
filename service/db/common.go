@@ -9,7 +9,9 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func CreateTableByStruct(db *sql.DB, dbName string, tableStruct interface{}) {
+var AppDb *sql.DB
+
+func CreateTableByStruct(tableName string, tableStruct interface{}) {
 
 	var (
 		typeOfTable = reflect.TypeOf(tableStruct)
@@ -29,11 +31,11 @@ func CreateTableByStruct(db *sql.DB, dbName string, tableStruct interface{}) {
 
 	}
 
-	var sqlStr = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s);", dbName, strings.Join(cols, ","))
+	var sqlStr = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s);", tableName, strings.Join(cols, ","))
 
 	log.Info(sqlStr)
 
-	_, err := db.Exec(sqlStr)
+	_, err := AppDb.Exec(sqlStr)
 
 	if err != nil {
 
@@ -43,7 +45,7 @@ func CreateTableByStruct(db *sql.DB, dbName string, tableStruct interface{}) {
 
 }
 
-func InsertColByTemplate(db *sql.DB, name string, col interface{}) {
+func InsertColByTemplate(name string, col interface{}) {
 
 	var (
 		keyof   = reflect.TypeOf(col)
@@ -73,7 +75,7 @@ func InsertColByTemplate(db *sql.DB, name string, col interface{}) {
 
 	var sqlStr = "INSERT INTO" + " " + name + " " + fieldStr + " VALUES " + valueStr
 
-	var _, _ = db.Exec(sqlStr)
+	var _, _ = AppDb.Exec(sqlStr)
 
 }
 
@@ -101,19 +103,21 @@ func OpenOrCreateDb(name string, path string) *sql.DB {
 
 	db, _ := sql.Open("sqlite3", fmt.Sprintf("%s/%s", path, name))
 
-	return db
+	AppDb = db
+
+	return AppDb
 
 }
 
-func CheckOrCreateTable(db *sql.DB, name string, tableStruct interface{}) {
+func CheckOrCreateTable(name string, tableStruct interface{}) {
 
 	var checkSql = "SELECT * FROM" + " " + name + ";"
 
-	_, err := db.Query(checkSql)
+	_, err := AppDb.Query(checkSql)
 
 	if err != nil {
 
-		CreateTableByStruct(db, name, tableStruct)
+		CreateTableByStruct(name, tableStruct)
 
 		log.Error(err.Error())
 	}

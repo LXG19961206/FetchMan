@@ -18,10 +18,10 @@ var TablesMap = map[string]interface{}{
 
 func InitDb(conf model.AppBaseConfig) {
 
-	database := db.OpenOrCreateDb(config.DbFileName, conf.DbDir)
+	db.OpenOrCreateDb(config.DbFileName, conf.DbDir)
 
 	for name, tableStruct := range TablesMap {
-		db.CheckOrCreateTable(database, name, tableStruct)
+		db.CheckOrCreateTable(name, tableStruct)
 	}
 
 	AppLogger.Info().Msg("db init done")
