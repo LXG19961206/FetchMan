@@ -1,6 +1,7 @@
 import {Input, Table} from '@douyinfe/semi-ui';
 import {Colors, createStyle, Cursor, OverFlow, px} from '../../style';
 import {IconDelete} from '@douyinfe/semi-icons';
+import { debounce } from 'lodash'
 import {useContext, useEffect, useMemo, useState} from 'react';
 import {ReqContext} from '../../context'
 import {Size} from '../../dicts';
@@ -96,6 +97,7 @@ export default (props: {
                 <Input
                     style={style.input}
                     onBlur={addRow.bind(void 0, item.key)}
+                    spellCheck={false}
                     placeholder="Please enter key"
                     onInput={(evt) => changeValue(evt as unknown as Event, item.key, 'Key')}
                     value={item.Key}>
@@ -106,6 +108,7 @@ export default (props: {
                     style={style.input}
                     onBlur={syncValueToContext}
                     placeholder="Please enter value"
+                    spellCheck={false}
                     onInput={(evt) => changeValue(evt as unknown as Event, item.key, 'Value')}
                     value={item.Value}>
                 </Input>
@@ -114,6 +117,7 @@ export default (props: {
                 <Input
                     style={style.input}
                     placeholder="Please enter Description"
+                    spellCheck={false}
                     onInput={(evt) => changeValue(evt as unknown as Event, item.key, 'Description')}
                     value={item.Description}>
                 </Input>
