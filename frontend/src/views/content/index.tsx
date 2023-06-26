@@ -1,111 +1,48 @@
-import {Colors, createStyle, OverFlow, percent, Position, px, vh} from "../../style"
-import {border, FlexCenter} from "../../style/common"
-import RequestTags from "../requestTags"
-import MethodsSelector from "../methodsSelector"
-import RequestParams from "../requestParams"
-import {ReqBody, ReqContext, RespContext, StatusContext} from '../../context'
-import ResponseView from "../responseView"
-import {Spin} from "@douyinfe/semi-ui"
-import {Size} from "../../dicts"
-import {useContext, useEffect, useState} from "react"
-import {RenderIf} from "../../components/renderIf";
-import * as events from "events";
+import React, {Fragment, useState} from 'react';
+import { Tabs, TabPane, List } from '@douyinfe/semi-ui';
+import { IconSendStroked, IconPlusCircle } from '@douyinfe/semi-icons';
+import Instance from "../instance";
+import {Colors, createStyle, OverFlow, Position, px, vh} from "../../style";
+import {border} from "../../style/common";
+
 
 export default () => {
-    const [size, setSize] = useState({
-        width: window.innerWidth, height: window.innerHeight
-    })
-    const [method, setMethod] = useState("")
-    const [headers, setHeaders] = useState<string [][]>([])
-    const [body, setBody] = useState<ReqBody>(null)
-    const [params, setParams] = useState<Record<string, string>>({})
-    const [url, setUrl] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [showRespShowState, setRespShowState] = useState(false)
 
-    const StatusStore = { size, setSize,loading, setLoading, showRespShowState, setRespShowState}
-    const ReqStore = {
-        method,
-        setMethod,
-        body,
-        params,
-        url,
-        headers,
-        setBody,
-        setParams,
-        setUrl,
-        setHeaders,
-        getContentType() {
-            const target = this.headers.find(item => item[0] === "Content-Type")
-            return target ? target[1] : ""
-        },
-        setContentType(val: string) {
-            this.setHeaders([
-                ...this.headers.filter(([key, _]) => key !== "Content-Type"),
-                ["Content-Type", val]
-            ])
-        }
+    const [tabList, setList] = useState([
+        { tab: <span><IconSendStroked/> new request </span>, itemKey: '1', closable: true },
+        { tab: '快速起步', itemKey: '2', closable: true },
+        { tab: <span><IconPlusCircle/> new request </span>, itemKey: '3'},
+    ])
+
+    const close = (key: string) => {
+        const newTabList = [...tabList];
+        setList(
+            tabList.filter(item => item.itemKey !== key)
+        )
     }
-
-    const [respBody, setRespBody] = useState<unknown>(null)
-    const [respHeaders, setRespHeaders] = useState<string [][]>([])
-    const [status, setStatus] = useState("")
-    const [code, setCode] = useState(0)
-    const RespStore = {
-        respBody,
-        respHeaders,
-        respStatus: status,
-        respStatusCode: code,
-        setRespBody: setRespBody,
-        setRespHeaders: setRespHeaders,
-        setRespStatus: setStatus,
-        setRespCode: setCode,
-        respReset() {
-            setRespBody(null)
-            setRespHeaders([])
-            setStatus("")
-            setCode(0)
-        }
-    }
-
-    return (
-        <StatusContext.Provider value={StatusStore}>
-            <ReqContext.Provider value={ReqStore}>
-                <RespContext.Provider value={RespStore}>
-                    <Content></Content>
-                </RespContext.Provider>
-            </ReqContext.Provider>
-        </StatusContext.Provider>
-    )
-}
-
-export const Content = () => {
-
-    const statusCtx = useContext(StatusContext)
-
-    useEffect(() => {
-        document.documentElement.addEventListener('resize', () => {
-            statusCtx.setSize({
-                width: window.innerWidth,
-                height: window.innerHeight
-            })
-        }, { once: true })
-    })
-
     return (
         <div style={style.wrapper}>
-            <RenderIf when={statusCtx.showRespShowState}>
-                <ResponseView></ResponseView>
-            </RenderIf>
-            <RequestTags></RequestTags>
-            <MethodsSelector></MethodsSelector>
-            <RequestParams></RequestParams>
+            <Tabs
+                size="large"
+                type="card"
+                defaultActiveKey="1"
+                onTabClose={close}>
+                {
+                    tabList.map(t =>
+                        <TabPane
+                            style={{ height: "100vh" }}
+                            closable={t.closable}
+                            tab={t.tab}
+                            itemKey={t.itemKey}
+                            key={t.itemKey}>
+                            <Instance></Instance>
+                        </TabPane>
+                    )
+                }
+            </Tabs>
         </div>
-
-    )
-
+    );
 }
-
 
 const style = {
     wrapper: createStyle({
@@ -122,3 +59,4 @@ const style = {
         borderLeft: border("1px", '#eee')
     })
 }
+

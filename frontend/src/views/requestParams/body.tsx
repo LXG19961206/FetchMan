@@ -208,7 +208,6 @@ const MulForm = () => {
         }
     }, [reqCtx.body]) as MulFormSource
 
-
     return <MulFormData getter={getter} syncHandler={mulFormHandler}></MulFormData>
 
 }
