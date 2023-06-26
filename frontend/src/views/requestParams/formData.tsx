@@ -22,14 +22,17 @@ const columns = [
     {
         title: 'Key',
         dataIndex: 'Key',
+        width: 300
     },
     {
-        title: 'ValueOrFile',
+        title: 'Value',
         dataIndex: 'Value',
+        width: 300
     },
     {
         title: 'Description',
         dataIndex: 'Description',
+        width: 400
     },
     {
         title: 'Edit',

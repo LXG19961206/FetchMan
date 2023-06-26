@@ -49,9 +49,7 @@ export default (props: {
 
             editor.aceEditor.setFontSize("12px");
 
-            const textarea = document.querySelector("textarea.ace_text-input")
-
-            if (props.viewMode && textarea) {
+            if (props.viewMode) {
                 editor.aceEditor.setReadOnly(true)
             }
 
