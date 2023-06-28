@@ -24,7 +24,6 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) {
 		Url:           req.URL.String(),
 		Method:        req.Method,
 		Headers:       string(headersStr),
-		BodyId:        "",
 		OriginUrl:     req.URL.String(),
 		WorkplaceFlag: "1",
 		EnvId:         0,

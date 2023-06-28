@@ -58,13 +58,16 @@ func InsertColByTemplate(name string, col interface{}) {
 	for i := 0; i < num; i++ {
 
 		var (
-			field = keyof.Field(i).Name
-			value = valueOf.Field(i).String()
+			field     = keyof.Field(i)
+			Name      = field.Name
+			fieldName = field.Tag.Get("name")
+			value     = valueOf.Field(i)
 		)
 
-		fields = append(fields, field)
-
-		values = append(values, value)
+		if !valueOf.FieldByName(Name).IsZero() {
+			fields = append(fields, fieldName)
+			values = append(values, `"`+value.String()+`"`)
+		}
 
 	}
 
@@ -75,33 +78,42 @@ func InsertColByTemplate(name string, col interface{}) {
 
 	var sqlStr = "INSERT INTO" + " " + name + " " + fieldStr + " VALUES " + valueStr
 
-	var _, _ = AppDb.Exec(sqlStr)
+	var _, err = AppDb.Exec(sqlStr)
+
+	if err != nil {
+		log.Error(err.Error())
+		log.Error(sqlStr)
+	}
 
 }
 
-// func InsertColByMap(db *sql.DB, name string, valueMap map[string]string) {
+func InsertColByMap(db *sql.DB, name string, valueMap map[string]string) {
 
-// 	var keys, values []string
+	var keys, values []string
 
-// 	for key, value := range valueMap {
-// 		keys = append(keys, key)
-// 		values = append(values, value)
-// 	}
+	for key, value := range valueMap {
+		keys = append(keys, key)
+		values = append(values, value)
+	}
 
-// 	var (
-// 		keyStr = fmt.Sprintf("(%s)", strings.Join(keys, ","))
-// 		valStr = fmt.Sprintf("(%s)", strings.Join(values, ","))
-// 	)
+	var (
+		keyStr = fmt.Sprintf("(%s)", strings.Join(keys, ","))
+		valStr = fmt.Sprintf("(%s)", strings.Join(values, ","))
+	)
 
-// 	var sqlStr = "INSERT INTO" + " " + name + " " + keyStr + " VALUES " + valStr
+	var sqlStr = "INSERT INTO" + " " + name + " " + keyStr + " VALUES " + valStr
 
-// 	var _, _ = db.Exec(sqlStr)
+	var _, _ = db.Exec(sqlStr)
 
-// }
+}
 
 func OpenOrCreateDb(name string, path string) *sql.DB {
 
-	db, _ := sql.Open("sqlite3", fmt.Sprintf("%s/%s", path, name))
+	db, err := sql.Open("sqlite3", fmt.Sprintf("%s/%s", path, name))
+
+	if err != nil {
+		log.Info(err.Error())
+	}
 
 	AppDb = db
 

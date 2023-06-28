@@ -2,9 +2,8 @@ package main
 
 import (
 	app "changeme/app"
-	"changeme/launch"
-	"changeme/model"
 	"embed"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -17,7 +16,7 @@ func main() {
 
 	application := &app.App{}
 
-	err := wails.Run(&options.App{
+	wails.Run(&options.App{
 		Title:  "go-app",
 		Width:  1024,
 		Height: 768,
@@ -30,23 +29,5 @@ func main() {
 			application,
 		},
 	})
-
-	var baseConfig = &model.AppBaseConfig{}
-
-	baseConfig.InitOrUpdateConfig()
-
-	launch.HandleFolder(*baseConfig)
-
-	var logFile = launch.InitLog(*baseConfig)
-
-	defer func() {
-		_ = logFile.Close()
-	}()
-
-	launch.InitDb(*baseConfig)
-
-	if err != nil {
-		println("Error:", err.Error())
-	}
 
 }
