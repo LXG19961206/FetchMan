@@ -4,7 +4,6 @@ import (
 	"changeme/config"
 	"changeme/model"
 	"changeme/service/db"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -23,7 +22,5 @@ func InitDb(conf model.AppBaseConfig) {
 	for name, tableStruct := range TablesMap {
 		db.CheckOrCreateTable(name, tableStruct)
 	}
-
-	AppLogger.Info().Msg("db init done")
 
 }
