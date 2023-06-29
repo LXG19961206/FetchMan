@@ -1,12 +1,16 @@
 package request
 
 import (
+	"changeme/app"
 	"changeme/config"
 	"changeme/model"
 	"changeme/service/db"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/labstack/gommon/log"
@@ -55,5 +59,31 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) {
 		log.Info(content)
 
 	}
+
+}
+
+func SaveBodyAsFile(body io.Reader) (fileid int, filePath string) {
+
+	var (
+		fileName     = time.Now().UnixMilli()
+		fullPath     = fmt.Sprintf("%s/%s", app.BaseConfig.BodyDir, fileName)
+		btyeVal, err = ioutil.ReadAll(body)
+	)
+
+	if err != nil {
+
+		return 0, ""
+
+	}
+
+	os.WriteFile(fullPath, btyeVal, os.ModePerm)
+
+	var file = &model.Body{
+		FilePath:   filePath,
+		CreateTime: time.Now().String(),
+		SaveAsText: false,
+	}
+
+	db.InsertColByTemplate(config.Table_body, file)
 
 }

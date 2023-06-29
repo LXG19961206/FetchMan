@@ -2,6 +2,7 @@ package main
 
 import (
 	app "changeme/app"
+	"changeme/model"
 	"embed"
 
 	"github.com/wailsapp/wails/v2"
@@ -11,6 +12,8 @@ import (
 
 //go:embed all:frontend/dist
 var assets embed.FS
+
+var BaseConfig *model.AppBaseConfig
 
 func main() {
 

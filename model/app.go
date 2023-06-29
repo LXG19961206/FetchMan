@@ -11,6 +11,7 @@ type AppBaseConfig struct {
 	RecordDir string
 	LogDir    string
 	EnvDir    string
+	BodyDir   string
 }
 
 func (rec *AppBaseConfig) InitOrUpdateConfig(rootPath ...string) {
@@ -27,5 +28,6 @@ func (rec *AppBaseConfig) InitOrUpdateConfig(rootPath ...string) {
 	rec.CacheDir = rec.WorkDir + config.CacheDirName
 	rec.RecordDir = rec.WorkDir + config.RecordDirName
 	rec.EnvDir = rec.WorkDir + config.EnvDirName
+	rec.BodyDir = rec.WorkDir + config.RecordBodyDirName
 
 }
