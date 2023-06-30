@@ -10,7 +10,7 @@ type RequestRecord struct {
 	Headers       string `db:"TEXT NULL" name:"headers" json:"headers"`
 	ContentType   string `db:"VARCHAR(128) NULL" name:"content_type" json:"contentType"`
 	Name          string `db:"VARCHAR(255) NULL" name:"name" json:"name"`
-	BodyId        any    `db:"INTEGER NULL" name:"body_id" json:"bodyId"`
+	BodyId        int    `db:"INTEGER NULL" name:"body_id" json:"bodyId"`
 	RespId        int    `db:"INTEGER NULL" name:"resp_id" json:"respId"`
 	CreateTime    string `db:"DATE NULL" name:"create_time" json:"createTime"`
 }

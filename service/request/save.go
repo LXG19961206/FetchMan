@@ -6,15 +6,21 @@ import (
 	"changeme/service/db"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/labstack/gommon/log"
 )
 
-func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) {
+func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, string) {
 
-	var headersStr, stringifyHeadersErr = json.Marshal(reqInfo.Headers)
+	var (
+		headersStr, stringifyHeadersErr = json.Marshal(reqInfo.Headers)
+		bodyId, _                       = SaveBodyAsFile(req.Body)
+	)
 
 	if stringifyHeadersErr != nil {
 		headersStr = []byte("")
@@ -22,9 +28,9 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) {
 
 	var reqRec = &model.RequestRecord{
 		Url:           req.URL.String(),
+		BodyId:        bodyId,
 		Method:        req.Method,
 		Headers:       string(headersStr),
-		BodyId:        "",
 		OriginUrl:     req.URL.String(),
 		WorkplaceFlag: "1",
 		EnvId:         0,
@@ -33,28 +39,72 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) {
 		CreateTime:    fmt.Sprintf("%d", time.Now().UnixMilli()),
 	}
 
-	db.InsertColByTemplate(config.Table_request_record, *reqRec)
+	id, err := db.InsertColByTemplate(config.Table_request_record, *reqRec)
 
-	var sql = fmt.Sprintf("select * from %s", config.Table_request_record)
+	return id, err
+}
 
-	var col, err = db.AppDb.Query(sql)
+func SaveBodyAsFile(body io.Reader) (fileid int, filePath string) {
 
-	defer func() {
-		_ = col.Close()
-	}()
+	var (
+		fileName     = fmt.Sprintf("%d", time.Now().UnixMilli())
+		fullPath     = fmt.Sprintf("%s/%s", config.HomeDir+config.RecordBodyDirName, fileName)
+		btyeVal, err = ioutil.ReadAll(body)
+	)
 
 	if err != nil {
-		return
+		return 0, ""
 	}
 
-	for col.Next() {
+	var file, fileErr = os.OpenFile(fullPath, os.O_CREATE|os.O_RDWR, 0644)
 
-		var content string
-
-		col.Scan(&content)
-
-		log.Info(content)
+	if fileErr != nil {
 
 	}
 
+	file.Write(btyeVal)
+
+	var finalBody = &model.Body{
+		FilePath:   filePath,
+		CreateTime: time.Now().String(),
+		SaveAsText: false,
+	}
+
+	var (
+		id, _ = db.InsertColByTemplate(config.Table_body, *finalBody)
+	)
+
+	return id, filePath
+
+}
+
+func SyncRespRecordToDb(resp *model.AppResp, originResp *http.Response, reqId int, req http.Request) (int, string) {
+
+	var (
+		headersStr, stringifyHeadersErr = json.Marshal(resp.Headers)
+		bodyId, _                       = SaveBodyAsFile(originResp.Body)
+	)
+
+	if stringifyHeadersErr != nil {
+		headersStr = []byte("")
+	}
+
+	var respRec = &model.RespRecord{
+		Url:         req.URL.String(),
+		Method:      req.Method,
+		Status:      resp.Status,
+		StatusCode:  resp.StatusCode,
+		ContentType: originResp.Header.Get(ContentType),
+		ReqId:       reqId,
+		BodyId:      bodyId,
+		Headers:     string(headersStr),
+		CreateTime:  fmt.Sprintf("%d", time.Now().UnixMilli()),
+		CostTime:    0,
+	}
+
+	log.Info(respRec)
+
+	id, err := db.InsertColByTemplate(config.Table_resp_record, *respRec)
+
+	return id, err
 }

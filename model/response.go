@@ -4,8 +4,8 @@ type RespRecord struct {
 	Url         string `db:"TEXT NULL" name:"url" json:"url"`
 	Method      string `db:"VARCHAR(32) NULL" name:"method" json:"method"`
 	Id          int    `db:"INTEGER PRIMARY KEY AUTOINCREMENT" name:"id" json:"id"`
-	Status      int    `db:"VARCHAR(128) NULL" name:"status" json:"status"`
-	StatusCode  string `db:"INTEGER NULL" name:"status_code" json:"status_code"`
+	Status      string `db:"VARCHAR(128) NULL" name:"status" json:"status"`
+	StatusCode  int    `db:"INTEGER NULL" name:"status_code" json:"status_code"`
 	Headers     string `db:"TEXT NULL" name:"headers" json:"header"`
 	ContentType string `db:"VARCHAR(128) NULL" name:"content_type" json:"ContentType"`
 	BodyId      any    `db:"INTEGER NULL" name:"body_id" json:"bodyId"`

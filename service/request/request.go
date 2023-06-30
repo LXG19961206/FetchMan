@@ -38,16 +38,6 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 		}
 	}
 
-	defer func() {
-
-		// err := recover()
-
-		// log.Info(err)
-
-		log.Info(headers)
-
-	}()
-
 	if len(contentType) > 0 {
 		req.Header.Add(ContentType, contentType)
 	}
@@ -64,9 +54,13 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 		}
 	}
 
-	SyncReqRecordToDb(req, reqInfo)
+	reqId, _ := SyncReqRecordToDb(req, reqInfo)
 
-	return handleResp(*resp, *req)
+	finalResp := handleResp(*resp, *req)
+
+	SyncRespRecordToDb(finalResp, resp, reqId, *req)
+
+	return finalResp
 
 }
 

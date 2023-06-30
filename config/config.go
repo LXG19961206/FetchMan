@@ -6,13 +6,14 @@ import (
 )
 
 const (
-	RootDirName   = "/FetchMan"
-	DbDirName     = "/db"
-	CacheDirName  = "/cache"
-	RecordDirName = "/record"
-	EnvDirName    = "/env"
-	LogDirName    = "/log"
-	DbFileName    = "FetchMan.db"
+	RootDirName       = "/FetchMan"
+	DbDirName         = "/db"
+	CacheDirName      = "/cache"
+	RecordDirName     = "/record"
+	RecordBodyDirName = "/record/body"
+	EnvDirName        = "/env"
+	LogDirName        = "/log"
+	DbFileName        = "FetchMan.db"
 )
 
 var (
