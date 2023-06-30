@@ -45,7 +45,7 @@ func CreateTableByStruct(tableName string, tableStruct interface{}) {
 
 }
 
-func InsertColByTemplate(name string, col interface{}) {
+func InsertColByTemplate(name string, col interface{}) (int, string) {
 
 	var (
 		keyof   = reflect.TypeOf(col)
@@ -78,12 +78,18 @@ func InsertColByTemplate(name string, col interface{}) {
 
 	var sqlStr = "INSERT INTO" + " " + name + " " + fieldStr + " VALUES " + valueStr
 
-	var _, err = AppDb.Exec(sqlStr)
+	var (
+		res, err = AppDb.Exec(sqlStr)
+		id, _    = res.LastInsertId()
+	)
 
 	if err != nil {
 		log.Error(err.Error())
 		log.Error(sqlStr)
+		return 0, err.Error()
 	}
+
+	return int(id), ""
 
 }
 
