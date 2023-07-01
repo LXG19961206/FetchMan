@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"changeme/model"
 	"changeme/service/file"
+	"github.com/labstack/gommon/log"
 	"io"
 	"mime/multipart"
+	"strings"
 )
 
 const (
@@ -61,12 +63,10 @@ func BodyHandler(body model.ReqBody) (io.Reader, string) {
 		var reader io.Reader
 		reader = bytes.NewReader(bin)
 		return reader, ""
-	case FormType, HtmlType, TextType, XmlType, JsonType:
-		fallthrough
+
 	default:
-		var reader io.Reader
-		reader = bytes.NewReader([]byte(body.Value))
-		return reader, ""
+		log.Info(body.Value)
+		return strings.NewReader(body.Value), ""
 	}
 
 }

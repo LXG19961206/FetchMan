@@ -157,6 +157,8 @@ const Form = () => {
             Value: urlencoded
         })
 
+        reqCtx.setContentType("application/x-www-form-urlencoded")
+
     }
 
     const getter = useMemo((): Source => {

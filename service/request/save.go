@@ -2,28 +2,34 @@ package request
 
 import (
 	"changeme/config"
+	"changeme/launch"
 	"changeme/model"
 	"changeme/service/db"
 	"encoding/json"
 	"fmt"
+	"github.com/labstack/gommon/log"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/labstack/gommon/log"
 )
 
 func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, string) {
 
 	var (
 		headersStr, stringifyHeadersErr = json.Marshal(reqInfo.Headers)
-		bodyId, _                       = SaveBodyAsFile(req.Body)
+		reqBody, bodyErr                = io.ReadAll(req.Body)
+		bodyId, _                       = SaveBodyAsFile(reqBody)
 	)
 
 	if stringifyHeadersErr != nil {
 		headersStr = []byte("")
+	}
+
+	log.Info(reqBody)
+
+	if bodyErr != nil {
+		launch.AppLogger.Info().Msg(bodyErr.Error())
 	}
 
 	var reqRec = &model.RequestRecord{
@@ -44,28 +50,37 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 	return id, err
 }
 
-func SaveBodyAsFile(body io.Reader) (fileid int, filePath string) {
+func SaveBodyAsFile(bodyVal []byte) (int, string) {
 
 	var (
-		fileName     = fmt.Sprintf("%d", time.Now().UnixMilli())
-		fullPath     = fmt.Sprintf("%s/%s", config.HomeDir+config.RecordBodyDirName, fileName)
-		btyeVal, err = ioutil.ReadAll(body)
+		fileName = fmt.Sprintf("%d", time.Now().UnixMilli())
+		fullPath = fmt.Sprintf("%s/%s", config.HomeDir+config.RootDirName+config.RecordBodyDirName, fileName)
 	)
 
-	if err != nil {
+	log.Info(bodyVal)
+
+	if len(bodyVal) == 0 {
 		return 0, ""
 	}
 
 	var file, fileErr = os.OpenFile(fullPath, os.O_CREATE|os.O_RDWR, 0644)
 
-	if fileErr != nil {
+	defer func() {
+		_ = file.Close()
+	}()
 
+	if fileErr != nil {
+		launch.AppLogger.Error().Msg(fileErr.Error())
 	}
 
-	file.Write(btyeVal)
+	_, writeErr := file.WriteString(string(bodyVal))
+
+	if writeErr != nil {
+		launch.AppLogger.Error().Msg(writeErr.Error())
+	}
 
 	var finalBody = &model.Body{
-		FilePath:   filePath,
+		FilePath:   fullPath,
 		CreateTime: time.Now().String(),
 		SaveAsText: false,
 	}
@@ -74,7 +89,7 @@ func SaveBodyAsFile(body io.Reader) (fileid int, filePath string) {
 		id, _ = db.InsertColByTemplate(config.Table_body, *finalBody)
 	)
 
-	return id, filePath
+	return id, fullPath
 
 }
 
@@ -82,8 +97,15 @@ func SyncRespRecordToDb(resp *model.AppResp, originResp *http.Response, reqId in
 
 	var (
 		headersStr, stringifyHeadersErr = json.Marshal(resp.Headers)
-		bodyId, _                       = SaveBodyAsFile(originResp.Body)
+		respBody, bodyErr               = io.ReadAll(originResp.Body)
+		bodyId, _                       = SaveBodyAsFile(respBody)
 	)
+
+	log.Info(respBody)
+
+	if bodyErr != nil {
+		launch.AppLogger.Error().Msg(bodyErr.Error())
+	}
 
 	if stringifyHeadersErr != nil {
 		headersStr = []byte("")
@@ -101,8 +123,6 @@ func SyncRespRecordToDb(resp *model.AppResp, originResp *http.Response, reqId in
 		CreateTime:  fmt.Sprintf("%d", time.Now().UnixMilli()),
 		CostTime:    0,
 	}
-
-	log.Info(respRec)
 
 	id, err := db.InsertColByTemplate(config.Table_resp_record, *respRec)
 

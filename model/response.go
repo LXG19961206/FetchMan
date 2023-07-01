@@ -8,7 +8,7 @@ type RespRecord struct {
 	StatusCode  int    `db:"INTEGER NULL" name:"status_code" json:"status_code"`
 	Headers     string `db:"TEXT NULL" name:"headers" json:"header"`
 	ContentType string `db:"VARCHAR(128) NULL" name:"content_type" json:"ContentType"`
-	BodyId      any    `db:"INTEGER NULL" name:"body_id" json:"bodyId"`
+	BodyId      int    `db:"INTEGER NULL" name:"body_id" json:"bodyId"`
 	ReqId       int    `db:"INTEGER NULL" name:"req_id" json:"reqId"`
 	CostTime    int    `db:"INTEGER NULL" name:"cost_time" json:"costTime"`
 	CreateTime  string `db:"DATE NULL" name:"create_time" json:"createTime"`

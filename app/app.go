@@ -21,11 +21,7 @@ func (a *App) Startup(ctx context.Context) {
 
 	launch.HandleFolder(*baseConfig)
 
-	var logFile = launch.InitLog(*baseConfig)
-
-	defer func() {
-		_ = logFile.Close()
-	}()
+	launch.InitLog(*baseConfig)
 
 	launch.InitDb(*baseConfig)
 

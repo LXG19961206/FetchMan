@@ -17,11 +17,9 @@ func InitLog(conf model.AppBaseConfig) *os.File {
 
 	if err == nil {
 
-		AppLogger = zerolog.New(file).With().Timestamp().Logger()
+		AppLogger = zerolog.New(file).With().Caller().Timestamp().Logger()
 
 	}
-
-	AppLogger.Info().Msg("logger init done")
 
 	return file
 

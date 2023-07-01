@@ -47,6 +47,8 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 		resp, respErr = cli.Do(req)
 	)
 
+	log.Info(req.Header.Get(ContentType), body)
+
 	if respErr != nil {
 		return &model.AppResp{
 			StatusCode: 0,
