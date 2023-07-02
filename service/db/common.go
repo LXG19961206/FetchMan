@@ -4,9 +4,11 @@ import (
 	_ "changeme/dicts"
 	"database/sql"
 	"fmt"
-	"github.com/labstack/gommon/log"
 	"reflect"
+	"strconv"
 	"strings"
+
+	"github.com/labstack/gommon/log"
 )
 
 var AppDb *sql.DB
@@ -45,19 +47,20 @@ func CreateTableByStruct(tableName string, tableStruct interface{}) {
 
 }
 
-func GetFinalVal(value interface{}, fieldType reflect.Type) string {
-	switch fieldType.Kind() {
+func GetFinalVal(value reflect.Value) string {
+	switch value.Kind() {
+	case reflect.Bool:
+		return strconv.FormatBool(value.Bool())
+	case reflect.Int, reflect.Int32, reflect.Int64, reflect.Int16:
+		return fmt.Sprintf("%d", value.Int())
+	case reflect.Uint, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return fmt.Sprintf("%d", value.Uint())
+	case reflect.Float32, reflect.Float64:
+		return fmt.Sprintf("%g", value.Float())
 	case reflect.String:
-		str := fmt.Sprintf("%s", value)
-		if strings.Contains(str, `"`) {
-			return fmt.Sprintf("`%s`", str)
-		} else {
-			return fmt.Sprintf(`"%s"`, str)
-		}
-	case reflect.Int, reflect.Int8, reflect.Int32, reflect.Int16, reflect.Int64:
-		return fmt.Sprintf("%d", value)
+		return fmt.Sprintf("%s", value.String())
 	default:
-		return fmt.Sprintf("%s", value)
+		return ""
 	}
 }
 
@@ -77,7 +80,7 @@ func InsertColByTemplate(name string, col interface{}) (int, string) {
 			field     = keyof.Field(i)
 			Name      = field.Name
 			fieldName = field.Tag.Get("name")
-			value     = valueOf.Field(i).String()
+			value     = GetFinalVal(valueOf.Field(i))
 		)
 
 		if !valueOf.FieldByName(Name).IsZero() {
