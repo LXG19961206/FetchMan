@@ -6,14 +6,16 @@ import (
 )
 
 const (
-	RootDirName       = "/FetchMan"
-	DbDirName         = "/db"
-	CacheDirName      = "/cache"
-	RecordDirName     = "/record"
-	RecordBodyDirName = "/record/body"
-	EnvDirName        = "/env"
-	LogDirName        = "/log"
-	DbFileName        = "FetchMan.db"
+	RootDirName           = "/FetchMan"
+	DbDirName             = "/db"
+	CacheDirName          = "/cache"
+	RecordDirName         = "/record"
+	RecordBodyDirName     = "/record/body"
+	EnvDirName            = "/env"
+	LogDirName            = "/log"
+	DbFileName            = "FetchMan.db"
+	BodyFileMinByteSize   = 1024 * 2
+	DefaultFileServerPort = 30399
 )
 
 var (

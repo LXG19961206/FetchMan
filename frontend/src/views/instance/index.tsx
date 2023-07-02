@@ -9,12 +9,14 @@ import {Spin} from "@douyinfe/semi-ui"
 import {Size} from "../../dicts"
 import {useContext, useEffect, useState} from "react"
 import {RenderIf} from "../../components/renderIf";
-import * as events from "events";
+import {GetPort} from "../../../wailsjs/go/app/App";
+
 
 export default () => {
     const [size, setSize] = useState({
         width: window.innerWidth, height: window.innerHeight
     })
+    const [port,setPort] = useState(0)
     const [method, setMethod] = useState("")
     const [headers, setHeaders] = useState<string [][]>([])
     const [body, setBody] = useState<ReqBody>(null)
@@ -23,7 +25,7 @@ export default () => {
     const [loading, setLoading] = useState(false)
     const [showRespShowState, setRespShowState] = useState(false)
 
-    const StatusStore = { size, setSize,loading, setLoading, showRespShowState, setRespShowState}
+    const StatusStore = { port, setPort , size, setSize,loading, setLoading, showRespShowState, setRespShowState}
     const ReqStore = {
         method,
         setMethod,
@@ -51,8 +53,10 @@ export default () => {
     const [respHeaders, setRespHeaders] = useState<string [][]>([])
     const [status, setStatus] = useState("")
     const [code, setCode] = useState(0)
+    const [respBodyPath, setBodyPath] = useState("")
     const RespStore = {
         respBody,
+        respBodyPath,
         respHeaders,
         respStatus: status,
         respStatusCode: code,
@@ -60,6 +64,7 @@ export default () => {
         setRespHeaders: setRespHeaders,
         setRespStatus: setStatus,
         setRespCode: setCode,
+        setBodyPath,
         respReset() {
             setRespBody(null)
             setRespHeaders([])
@@ -67,6 +72,10 @@ export default () => {
             setCode(0)
         }
     }
+
+    useEffect(() => {
+        GetPort().then(setPort)
+    },[])
 
     return (
         <StatusContext.Provider value={StatusStore}>

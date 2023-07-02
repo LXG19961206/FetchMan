@@ -1,24 +1,33 @@
 import ReactJson from "react-json-view";
-import {RespContext} from "../../context";
-import {useContext, useMemo} from "react";
+import {RespContext, StatusContext} from "../../context";
+import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import JsonEditor from "../../components/jsonEditor";
 import {createStyle, OverFlow, percent, px} from "../../style";
 import {Match} from "../../components/match";
+
+
 
 
 export const Preview = () => {
 
     const respCtx = useContext(RespContext)
 
+    const statusCtx = useContext(StatusContext)
+
+    const [imgUrl, setUrl] = useState("")
+
     const contentType = respCtx.respHeaders.find(([k,v]) => k === "Content-Type") || []
 
     const [_, contentTypeVal] = contentType
 
-    const imgUrl = useMemo(() => {
-        if (!/.*image.*/.test(contentTypeVal)) return ''
-        return URL.createObjectURL(new Blob([respCtx.respBody as string], {
-            type: "image/jpeg"
-        }))
+    useEffect(() => {
+
+        if (!/.*image.*/.test(contentTypeVal)) return
+
+        setUrl(`http://localhost:${statusCtx.port}/${respCtx.respBodyPath}`)
+
+        console.log(imgUrl)
+
     }, [respCtx.respBody])
 
     return (

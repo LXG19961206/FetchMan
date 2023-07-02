@@ -3,6 +3,8 @@
 import {frontend} from '../models';
 import {model} from '../models';
 
+export function GetPort():Promise<number>;
+
 export function NativeFileDialog(arg1:frontend.OpenDialogOptions,arg2:boolean):Promise<model.FileInfo>;
 
 export function NativeMessageDialog(arg1:frontend.MessageDialogOptions):Promise<string>;

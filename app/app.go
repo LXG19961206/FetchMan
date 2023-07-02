@@ -1,6 +1,7 @@
 package app
 
 import (
+	"changeme/config"
 	"changeme/launch"
 	"changeme/model"
 	"context"
@@ -25,4 +26,10 @@ func (a *App) Startup(ctx context.Context) {
 
 	launch.InitDb(*baseConfig)
 
+	launch.StartFileServer(config.HomeDir + config.RootDirName)
+
+}
+
+func (a *App) GetPort() int {
+	return config.DefaultFileServerPort
 }

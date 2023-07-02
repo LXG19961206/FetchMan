@@ -1,13 +1,14 @@
 package request
 
 import (
+	"bytes"
 	"changeme/config"
 	"changeme/launch"
 	"changeme/model"
 	"changeme/service/db"
+	fileService "changeme/service/file"
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/gommon/log"
 	"io"
 	"net/http"
 	"os"
@@ -18,18 +19,13 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 
 	var (
 		headersStr, stringifyHeadersErr = json.Marshal(reqInfo.Headers)
-		reqBody, bodyErr                = io.ReadAll(req.Body)
-		bodyId, _                       = SaveBodyAsFile(reqBody)
+		buf                             = new(bytes.Buffer)
+		_, _                            = buf.ReadFrom(req.Body)
+		bodyId, _                       = SaveBodyAsFile(buf)
 	)
 
 	if stringifyHeadersErr != nil {
 		headersStr = []byte("")
-	}
-
-	log.Info(reqBody)
-
-	if bodyErr != nil {
-		launch.AppLogger.Info().Msg(bodyErr.Error())
 	}
 
 	var reqRec = &model.RequestRecord{
@@ -50,62 +46,78 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 	return id, err
 }
 
-func SaveBodyAsFile(bodyVal []byte) (int, string) {
+func SaveBodyAsFile(bodyBuf *bytes.Buffer) (int, string) {
 
 	var (
-		fileName = fmt.Sprintf("%d", time.Now().UnixMilli())
-		fullPath = fmt.Sprintf("%s/%s", config.HomeDir+config.RootDirName+config.RecordBodyDirName, fileName)
+		text        string
+		fileName    = fmt.Sprintf("%d", time.Now().UnixMilli())
+		saveAsText  = bodyBuf.Len() < config.BodyFileMinByteSize
+		baseDirPath = config.HomeDir + config.RootDirName
+		path        = fmt.Sprintf("%s/%s", config.RecordBodyDirName, fileName)
+		fullPath    = baseDirPath + path
 	)
 
-	log.Info(bodyVal)
+	if saveAsText {
 
-	if len(bodyVal) == 0 {
-		return 0, ""
-	}
+		text = bodyBuf.String()
 
-	var file, fileErr = os.OpenFile(fullPath, os.O_CREATE|os.O_RDWR, 0644)
+	} else {
 
-	defer func() {
-		_ = file.Close()
-	}()
+		bodyBytes := bodyBuf.Bytes()
 
-	if fileErr != nil {
-		launch.AppLogger.Error().Msg(fileErr.Error())
-	}
+		contentType := http.DetectContentType(bodyBytes)
 
-	_, writeErr := file.WriteString(string(bodyVal))
+		extName := fileService.GetExtName(contentType)
 
-	if writeErr != nil {
-		launch.AppLogger.Error().Msg(writeErr.Error())
+		fullPath = fmt.Sprintf("%s%s", fullPath, extName)
+
+		path = fmt.Sprintf("%s%s", path, extName)
+
+		var file, fileErr = os.OpenFile(fullPath, os.O_CREATE|os.O_RDWR, 0644)
+
+		defer func() {
+			_ = file.Close()
+		}()
+
+		if fileErr != nil {
+			launch.AppLogger.Error().Msg(fileErr.Error())
+		}
+
+		_, writeErr := file.Write(bodyBytes)
+
+		if writeErr != nil {
+			launch.AppLogger.Error().Msg(writeErr.Error())
+		}
+
 	}
 
 	var finalBody = &model.Body{
+		Text:       text,
 		FilePath:   fullPath,
 		CreateTime: time.Now().String(),
-		SaveAsText: false,
+		SaveAsText: saveAsText,
 	}
 
 	var (
 		id, _ = db.InsertColByTemplate(config.Table_body, *finalBody)
 	)
 
-	return id, fullPath
+	return id, path
 
 }
 
-func SyncRespRecordToDb(resp *model.AppResp, originResp *http.Response, reqId int, req http.Request) (int, string) {
+func SyncRespRecordToDb(
+	resp *model.AppResp,
+	bodyBuf *bytes.Buffer,
+	reqId int,
+	req http.Request,
+	cttType string,
+) (int, string) {
 
 	var (
 		headersStr, stringifyHeadersErr = json.Marshal(resp.Headers)
-		respBody, bodyErr               = io.ReadAll(originResp.Body)
-		bodyId, _                       = SaveBodyAsFile(respBody)
+		bodyId, bodyPath                = SaveBodyAsFile(bodyBuf)
 	)
-
-	log.Info(respBody)
-
-	if bodyErr != nil {
-		launch.AppLogger.Error().Msg(bodyErr.Error())
-	}
 
 	if stringifyHeadersErr != nil {
 		headersStr = []byte("")
@@ -116,7 +128,7 @@ func SyncRespRecordToDb(resp *model.AppResp, originResp *http.Response, reqId in
 		Method:      req.Method,
 		Status:      resp.Status,
 		StatusCode:  resp.StatusCode,
-		ContentType: originResp.Header.Get(ContentType),
+		ContentType: cttType,
 		ReqId:       reqId,
 		BodyId:      bodyId,
 		Headers:     string(headersStr),
@@ -124,7 +136,21 @@ func SyncRespRecordToDb(resp *model.AppResp, originResp *http.Response, reqId in
 		CostTime:    0,
 	}
 
-	id, err := db.InsertColByTemplate(config.Table_resp_record, *respRec)
+	id, _ := db.InsertColByTemplate(config.Table_resp_record, *respRec)
 
-	return id, err
+	return id, bodyPath
+}
+
+func GetBodyBuffer(body io.Reader) *bytes.Buffer {
+
+	var buf = new(bytes.Buffer)
+
+	_, err := buf.ReadFrom(body)
+
+	if err != nil {
+		launch.AppLogger.Error().Msg(err.Error())
+	}
+
+	return buf
+
 }

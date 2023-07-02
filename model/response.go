@@ -19,5 +19,6 @@ type AppResp struct {
 	Status     string
 	Headers    [][2]string
 	Body       interface{}
+	BodyPath   string
 	ReqHeaders [][2]string
 }

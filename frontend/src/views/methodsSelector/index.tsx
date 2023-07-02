@@ -5,7 +5,7 @@ import {BorderType, Colors, createStyle, Display, percent, px} from '../../style
 import {marginX, paddingX, Reset} from '../../style/common';
 import {Params, ReqContext, RespContext, StatusContext} from '../../context'
 import {stringify} from 'qs'
-import {SimpleRequest} from "../../../wailsjs/go/app/App";
+import {SimpleRequest, GetPort} from "../../../wailsjs/go/app/App";
 
 
 export default () => {
@@ -36,6 +36,8 @@ export default () => {
             Body: reqContext.body
         })
 
+        console.log(resp)
+
         respCtx.respReset()
 
         reqContext.setHeaders(resp.ReqHeaders || [])
@@ -45,6 +47,8 @@ export default () => {
         respCtx.setRespCode(resp.Code)
 
         respCtx.setRespBody(resp.Body)
+
+        respCtx.setBodyPath(resp.BodyPath)
 
         respCtx.setRespHeaders(resp.Headers)
 

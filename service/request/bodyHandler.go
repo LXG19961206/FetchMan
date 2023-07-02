@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"changeme/model"
 	"changeme/service/file"
-	"github.com/labstack/gommon/log"
 	"io"
 	"mime/multipart"
 	"strings"
@@ -65,7 +64,6 @@ func BodyHandler(body model.ReqBody) (io.Reader, string) {
 		return reader, ""
 
 	default:
-		log.Info(body.Value)
 		return strings.NewReader(body.Value), ""
 	}
 

@@ -5,4 +5,5 @@ type Body struct {
 	FilePath   string `db:"TEXT NULL" name:"file_path" json:"filePath"`
 	CreateTime string `db:"DATE NULL" name:"create_time" json:"createTime"`
 	SaveAsText bool   `db:"INTEGER NULL" name:"sava_as_text" json:"saveAsText"`
+	Text       string `db:"TEXT NULL" name:"text" json:"text"`
 }

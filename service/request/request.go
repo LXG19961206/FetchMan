@@ -47,8 +47,6 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 		resp, respErr = cli.Do(req)
 	)
 
-	log.Info(req.Header.Get(ContentType), body)
-
 	if respErr != nil {
 		return &model.AppResp{
 			StatusCode: 0,
@@ -58,15 +56,13 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 
 	reqId, _ := SyncReqRecordToDb(req, reqInfo)
 
-	finalResp := handleResp(*resp, *req)
-
-	SyncRespRecordToDb(finalResp, resp, reqId, *req)
+	finalResp := handleResp(*resp, *req, reqId)
 
 	return finalResp
 
 }
 
-func handleResp(resp http.Response, req http.Request) *model.AppResp {
+func handleResp(resp http.Response, req http.Request, reqId int) *model.AppResp {
 
 	var (
 		status     = resp.Status
@@ -76,7 +72,7 @@ func handleResp(resp http.Response, req http.Request) *model.AppResp {
 	)
 
 	defer func() {
-		_ = resp.Body.Close()
+		//_ = resp.Body.Close()
 	}()
 
 	_, _ = buf.ReadFrom(resp.Body)
@@ -87,13 +83,19 @@ func handleResp(resp http.Response, req http.Request) *model.AppResp {
 		finalReqHeaders = append(finalReqHeaders, [2]string{name, strings.Join(value, ",")})
 	}
 
-	return &model.AppResp{
+	var afterHandle = &model.AppResp{
 		Status:     status,
 		StatusCode: statusCode,
 		Headers:    headers,
 		Body:       buf.String(),
 		ReqHeaders: finalReqHeaders,
 	}
+
+	_, bodyPath := SyncRespRecordToDb(afterHandle, buf, reqId, req, resp.Header.Get(ContentType))
+
+	afterHandle.BodyPath = bodyPath
+
+	return afterHandle
 
 }
 
