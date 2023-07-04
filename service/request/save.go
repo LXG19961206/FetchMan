@@ -21,7 +21,7 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 		headersStr, stringifyHeadersErr = json.Marshal(reqInfo.Headers)
 		buf                             = new(bytes.Buffer)
 		_, _                            = buf.ReadFrom(req.Body)
-		bodyId, _                       = SaveBodyAsFile(buf)
+		bodyId, _                       = SaveBodyAsFile(buf, req.Header.Get(ContentType))
 	)
 
 	if stringifyHeadersErr != nil {
@@ -46,12 +46,12 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 	return id, err
 }
 
-func SaveBodyAsFile(bodyBuf *bytes.Buffer) (int, string) {
+func SaveBodyAsFile(bodyBuf *bytes.Buffer, cttType string) (int, string) {
 
 	var (
 		text        string
 		fileName    = fmt.Sprintf("%d", time.Now().UnixMilli())
-		saveAsText  = bodyBuf.Len() < config.BodyFileMinByteSize
+		saveAsText  = bodyBuf.Len() < config.BodyFileMinByteSize && !fileService.IsFileBinary(bodyBuf)
 		baseDirPath = config.HomeDir + config.RootDirName
 		path        = fmt.Sprintf("%s/%s", config.RecordBodyDirName, fileName)
 		fullPath    = baseDirPath + path
@@ -65,7 +65,13 @@ func SaveBodyAsFile(bodyBuf *bytes.Buffer) (int, string) {
 
 		bodyBytes := bodyBuf.Bytes()
 
-		contentType := http.DetectContentType(bodyBytes)
+		var contentType = func() string {
+			if len(cttType) > 0 {
+				return cttType
+			} else {
+				return http.DetectContentType(bodyBytes)
+			}
+		}()
 
 		extName := fileService.GetExtName(contentType)
 
@@ -116,7 +122,7 @@ func SyncRespRecordToDb(
 
 	var (
 		headersStr, stringifyHeadersErr = json.Marshal(resp.Headers)
-		bodyId, bodyPath                = SaveBodyAsFile(bodyBuf)
+		bodyId, bodyPath                = SaveBodyAsFile(bodyBuf, cttType)
 	)
 
 	if stringifyHeadersErr != nil {

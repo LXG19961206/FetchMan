@@ -3,10 +3,15 @@ package launch
 import (
 	"changeme/config"
 	"changeme/model"
-	"changeme/service/db"
+	"database/sql"
+	"fmt"
+	"reflect"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var AppDb *sql.DB
 
 var TablesMap = map[string]interface{}{
 	config.Table_request_record: model.RequestRecord{},
@@ -18,10 +23,67 @@ var TablesMap = map[string]interface{}{
 
 func InitDb(conf model.AppBaseConfig) {
 
-	db.OpenOrCreateDb(config.DbFileName, conf.DbDir)
+	OpenOrCreateDb(config.DbFileName, conf.DbDir)
 
 	for name, tableStruct := range TablesMap {
-		db.CheckOrCreateTable(name, tableStruct)
+		CheckOrCreateTable(name, tableStruct)
+	}
+
+}
+
+func OpenOrCreateDb(name string, path string) *sql.DB {
+
+	db, err := sql.Open("sqlite3", fmt.Sprintf("%s/%s", path, name))
+
+	if err != nil {
+	}
+
+	AppDb = db
+
+	return AppDb
+
+}
+
+func CheckOrCreateTable(name string, tableStruct interface{}) {
+
+	var checkSql = "SELECT * FROM" + " " + name + ";"
+
+	_, err := AppDb.Query(checkSql)
+
+	if err != nil {
+
+		CreateTableByStruct(name, tableStruct)
+
+	}
+
+}
+
+func CreateTableByStruct(tableName string, tableStruct interface{}) {
+
+	var (
+		typeOfTable = reflect.TypeOf(tableStruct)
+		num         = typeOfTable.NumField()
+		cols        []string
+	)
+
+	for idx := 0; idx < num; idx++ {
+
+		var (
+			field      = typeOfTable.Field(idx)
+			fieldAttrs = field.Tag.Get("db")
+			fieldName  = field.Tag.Get("name")
+		)
+
+		cols = append(cols, fieldName+" "+fieldAttrs)
+
+	}
+
+	var sqlStr = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s);", tableName, strings.Join(cols, ","))
+
+	_, err := AppDb.Exec(sqlStr)
+
+	if err != nil {
+
 	}
 
 }

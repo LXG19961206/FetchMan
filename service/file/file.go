@@ -1,10 +1,12 @@
 package file
 
 import (
+	"bytes"
 	"changeme/model"
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -44,6 +46,11 @@ func GetExtName(contentType string) string {
 	if val, ok := ContentTypeToExtension[contentType]; ok {
 		return fmt.Sprintf("%s", val)
 	} else {
+		for typeName, extName := range ContentTypeToExtension {
+			if isLike := strings.Contains(contentType, typeName); isLike {
+				return extName
+			}
+		}
 		return ""
 	}
 
@@ -78,4 +85,27 @@ func GetFileInfo(path string) *model.FileInfo {
 	}
 
 	return LastFileCache
+}
+
+func IsFileBinary(bytesBuffer *bytes.Buffer) bool {
+
+	var buf = bytesBuffer.Bytes()
+
+	var partBytesLength = func() int {
+		if length := len(buf); length >= 256 {
+			return 256
+		} else {
+			return length
+		}
+	}()
+
+	for i := 0; i < partBytesLength; i++ {
+		if (buf[i] >= 0x20) || buf[i] == 9 || buf[i] == 10 || buf[i] == 13 {
+			return false
+		} else if buf[i] <= 6 || (buf[i] >= 14 && buf[i] <= 31) {
+			return true
+		}
+	}
+
+	return true
 }

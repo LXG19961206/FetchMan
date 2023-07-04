@@ -1,15 +1,16 @@
-import {SideSheet, TabPane, Tabs, Divider, Spin} from '@douyinfe/semi-ui';
+import {SideSheet, TabPane, Tabs, Divider, Spin, Tag } from '@douyinfe/semi-ui';
 import {useContext, useState} from 'react';
 import {ReqContext, RespContext, StatusContext} from '../../context'
 import ReactJson from 'react-json-view';
 import {Preview} from "./preview";
-import {createStyle, vh,Display, OverFlow, percent, Position, px, Resize} from "../../style";
+import {createStyle, vh, Display, OverFlow, percent, Position, px, Resize, BoxSizing} from "../../style";
 import {border, FlexCenter, getWindowHeight, marginX, paddingX, Reset} from "../../style/common";
 import ResizeableWrapper from "../../components/resizeableWrapper";
 import {Match} from "../../components/match";
 import {Size} from "../../dicts";
 import {RenderIf} from "../../components/renderIf";
-
+import Headers from './headers'
+import Header from "@douyinfe/semi-ui/lib/es/image/previewHeader";
 // const RespTabsDict = {
 //     body: ["body"],
 //     headers: ["headers"]
@@ -17,7 +18,7 @@ import {RenderIf} from "../../components/renderIf";
 
 export default () => {
     const reqContext = useContext(ReqContext)
-    const [currentIdx, setIdx] = useState("0")
+    const [currentIdx, setIdx] = useState("1")
     const respCtx = useContext(RespContext)
     const statusCtx = useContext(StatusContext)
 
@@ -35,19 +36,19 @@ export default () => {
             <Tabs type="button"
                   onChange={setIdx}
                   activeKey={currentIdx}>
-                <TabPane tab="Payload" itemKey="0"></TabPane>
-                <TabPane tab="Preview" itemKey="1"></TabPane>
-                <TabPane tab="Response" itemKey="2"></TabPane>
+                <TabPane tab="Header" itemKey="1"></TabPane>
+                <TabPane tab="Preview" itemKey="2"></TabPane>
+                <TabPane tab="Response" itemKey="3"></TabPane>
             </Tabs>
             <Match>
-                <Match.Option when={currentIdx === "0"}>
-                    <ReactJson name={null} src={reqContext.params}></ReactJson>
-                </Match.Option>
                 <Match.Option when={currentIdx === "1"}>
-                        <Preview></Preview>
+                    <Headers></Headers>
                 </Match.Option>
                 <Match.Option when={currentIdx === "2"}>
-                    <div> { respCtx.respBody }  </div>
+                        <Preview></Preview>
+                </Match.Option>
+                <Match.Option when={currentIdx === "3"}>
+                    <div style={style.plainText}> { respCtx.respBody }  </div>
                 </Match.Option>
             </Match>
         </ResizeableWrapper>
@@ -55,6 +56,12 @@ export default () => {
 }
 
 const style = {
+    plainText: createStyle({
+       boxSizing: BoxSizing.borderBox,
+       padding: px(16),
+       width: percent(90),
+       fontSize: px(13)
+    }),
     wrapper: createStyle({
         ...Reset,
         position: Position.absolute,
