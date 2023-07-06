@@ -36,8 +36,6 @@ export default () => {
             Body: reqContext.body
         })
 
-        console.log(resp)
-
         respCtx.respReset()
 
         reqContext.setHeaders(resp.ReqHeaders || [])
@@ -49,6 +47,8 @@ export default () => {
         respCtx.setRespBody(resp.Body)
 
         respCtx.setBodyPath(resp.BodyPath)
+
+        respCtx.setProto(resp.Proto)
 
         respCtx.setRespHeaders(resp.Headers)
 

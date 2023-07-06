@@ -89,6 +89,7 @@ func handleResp(resp http.Response, req http.Request, reqId int) *model.AppResp 
 		Headers:    headers,
 		Body:       buf.String(),
 		ReqHeaders: finalReqHeaders,
+		Proto:      resp.Proto,
 	}
 
 	_, bodyPath := SyncRespRecordToDb(afterHandle, buf, reqId, req, resp.Header.Get(ContentType))

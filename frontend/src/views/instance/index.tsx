@@ -24,7 +24,7 @@ export default () => {
     const [url, setUrl] = useState('')
     const [loading, setLoading] = useState(false)
     const [showRespShowState, setRespShowState] = useState(false)
-
+    const [respProto, setProto] = useState("")
     const StatusStore = { port, setPort , size, setSize,loading, setLoading, showRespShowState, setRespShowState}
     const ReqStore = {
         method,
@@ -57,9 +57,11 @@ export default () => {
     const RespStore = {
         respBody,
         respBodyPath,
+        respProto,
         respHeaders,
         respStatus: status,
         respStatusCode: code,
+        setProto,
         setRespBody: setRespBody,
         setRespHeaders: setRespHeaders,
         setRespStatus: setStatus,

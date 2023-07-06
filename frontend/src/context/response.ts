@@ -7,6 +7,8 @@ export const RespContext = createContext<{
     respHeaders: string [][],
     respStatus: string,
     respBodyPath: string,
+    respProto: string,
+    setProto: (proto: string) => void,
     respStatusCode: number,
     setRespBody: (body: unknown) => void,
     setRespHeaders: (headers: string [][]) => void,
@@ -15,6 +17,8 @@ export const RespContext = createContext<{
     setRespCode: (code: number) => void
     respReset: () => void
 }>({
+    respProto: "",
+    setProto (proto: string) {},
     respBody: null,
     respBodyPath: "",
     respHeaders: [],

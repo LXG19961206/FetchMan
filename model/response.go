@@ -21,4 +21,5 @@ type AppResp struct {
 	Body       interface{}
 	BodyPath   string
 	ReqHeaders [][2]string
+	Proto      string
 }

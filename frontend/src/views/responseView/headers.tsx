@@ -9,16 +9,13 @@ export default  () => {
 
     const reqContext = useContext(ReqContext)
 
-    console.log(respContext)
-
-
     return (
         <div style={style.desc}>
             <Typography.Title heading={6} style={style.title} > First Line </Typography.Title>
             <Divider align='left' dashed margin={8}>
             </Divider>
             <Descriptions align={"left"} >
-                <Descriptions.Item itemKey={"version"}> HTTP/1.1 </Descriptions.Item>
+                <Descriptions.Item itemKey={"version"}> { respContext.respProto } </Descriptions.Item>
                 <Descriptions.Item itemKey={"status"}>
                     <Match fallback={<> respContext.respStatus </>}>
                         <Match.Option when={ /2\d\d .*/.test(respContext.respStatus) }>
@@ -31,7 +28,6 @@ export default  () => {
                             <Tag color={"red"}>{ respContext.respStatus }</Tag>
                         </Match.Option>
                     </Match>
-
                 </Descriptions.Item>
             </Descriptions>
             <Typography.Title heading={6} style={style.title} > Headers </Typography.Title>
