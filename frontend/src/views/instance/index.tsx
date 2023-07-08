@@ -1,21 +1,18 @@
-import {Colors, createStyle, OverFlow, percent, Position, px, vh} from "../../style"
-import {border, FlexCenter} from "../../style/common"
-import RequestTags from "../requestTags"
+import {createStyle, percent} from "../../style"
 import MethodsSelector from "../methodsSelector"
 import RequestParams from "../requestParams"
-import {ReqBody, ReqContext, RespContext, StatusContext} from '../../context'
+import {ReqBody, ReqContext, ReqInsantcePayload, RespContext, StatusContext} from '../../context'
 import ResponseView from "../responseView"
-import {Spin} from "@douyinfe/semi-ui"
-import {Size} from "../../dicts"
 import {useContext, useEffect, useState} from "react"
 import {RenderIf} from "../../components/renderIf";
-import {GetPort} from "../../../wailsjs/go/app/App";
+import {GetPort, UpdateTabInfo, GetRecordById } from "../../../wailsjs/go/app/App";
+import { stringify } from "qs"
 
-
-export default () => {
+export default (props: { id: number, reqId?: number }) => {
     const [size, setSize] = useState({
         width: window.innerWidth, height: window.innerHeight
     })
+    const [reqId, setReqId] = useState(0)
     const [port,setPort] = useState(0)
     const [method, setMethod] = useState("")
     const [headers, setHeaders] = useState<string [][]>([])
@@ -25,9 +22,20 @@ export default () => {
     const [loading, setLoading] = useState(false)
     const [showRespShowState, setRespShowState] = useState(false)
     const [respProto, setProto] = useState("")
-    const StatusStore = { port, setPort , size, setSize,loading, setLoading, showRespShowState, setRespShowState}
+    const StatusStore = { 
+        port, 
+        setPort , 
+        size, 
+        setSize,loading, 
+        setLoading, 
+        showRespShowState, 
+        setRespShowState, 
+        getTabId () { return props.id }  
+    }
     const ReqStore = {
         method,
+        id: reqId,
+        setId: setReqId,
         setMethod,
         body,
         params,
@@ -46,6 +54,33 @@ export default () => {
                 ...this.headers.filter(([key, _]) => key !== "Content-Type"),
                 ["Content-Type", val]
             ])
+        },
+        updateTabInfo () {
+
+            UpdateTabInfo({
+                req_id: reqId,
+                id: props.id,
+                createTime: "",
+                method: method,
+                url: url,
+                workplace_id: 0
+            })
+
+        },
+        createReqPayload (): ReqInsantcePayload {
+
+            const finalUrl = Object.keys(params).length
+                ? url + "?" + stringify(params)
+                : url
+
+            return {
+                Id: reqId,
+                Url: finalUrl.trim(),
+                Method: method,
+                Headers: headers,
+                Body: body
+            }
+        
         }
     }
 
@@ -76,7 +111,17 @@ export default () => {
     }
 
     useEffect(() => {
+
         GetPort().then(setPort)
+
+        if (!!props.reqId) {
+
+            GetRecordById(props.reqId).then(res => {
+                console.log(res)
+            })
+
+        }
+
     },[])
 
     return (
@@ -104,7 +149,8 @@ export const Content = () => {
     })
 
     return (
-        <div style={style.wrapper}>
+        <div
+            style={style.wrapper}>
             <RenderIf when={statusCtx.showRespShowState}>
                 <ResponseView></ResponseView>
             </RenderIf>

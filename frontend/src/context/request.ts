@@ -17,9 +17,19 @@ export type ReqBody = {
   FormData?: ReqBody []
 } | null
 
+export type ReqInsantcePayload = {
+  Id: number,
+  Url: string;
+  Method: string;
+  Headers: string[][];
+  Body: ReqBody;
+}
+
 
 
 export const ReqContext = createContext<{
+  id: number,
+  setId: (id: number) => void,
   body: ReqBody,
   method: string,
   setMethod: (method: string) => void,
@@ -31,8 +41,13 @@ export const ReqContext = createContext<{
   setParams: (params: Record<string, string>) => void
   setHeaders: (headers: string [][]) => void
   setContentType: (v: string) => void,
-  getContentType: () => string
+  getContentType: () => string,
+  createReqPayload: () => ReqInsantcePayload | null,
+  updateTabInfo: () => void,
 }>({
+  id: 0,
+  setId (id: number) {},
+  createReqPayload () { return null  },
   setContentType (v: string) {},
   body: null,
   method: '',
@@ -44,7 +59,8 @@ export const ReqContext = createContext<{
   setUrl(url: string) {},
   setParams(params: Record<string, string>) {},
   setHeaders(headers: string [][]) {},
-  getContentType () { return "" }
+  getContentType () { return "" },
+  updateTabInfo () {}
 })
 
 

@@ -2,6 +2,7 @@ package request
 
 import (
 	"bytes"
+	"changeme/launch"
 	"changeme/model"
 	"net/http"
 	"strings"
@@ -9,7 +10,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
+func CreateReqInstance(reqInfo *model.AppRequest) (*http.Request, error) {
 
 	var (
 		url               = reqInfo.Url
@@ -20,19 +21,13 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 	)
 
 	if err != nil {
-		log.Info(err)
-		return &model.AppResp{
-			StatusCode: 0,
-			Status:     err.Error(),
-		}
+		return nil, err
 	}
 
 	for _, value := range headers {
-
 		if reqInfo.Body.Type == FormData && value[0] == ContentType {
 			continue
 		}
-
 		if itemName, itemVal := value[0], value[1]; len(itemName) > 0 && len(itemVal) > 0 {
 			req.Header.Add(itemName, itemVal)
 		}
@@ -40,6 +35,36 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 
 	if len(contentType) > 0 {
 		req.Header.Add(ContentType, contentType)
+	}
+
+	return req, nil
+
+}
+
+func AddReqRecord(reqInfo *model.AppRequest) int {
+
+	var req, err = CreateReqInstance(reqInfo)
+
+	if err != nil {
+		launch.AppLogger.Error().Msg(err.Error())
+	} else {
+		reqId, _ := SyncReqRecordToDb(req, reqInfo)
+		return reqId
+	}
+
+	return 0
+}
+
+func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
+
+	var req, err = CreateReqInstance(reqInfo)
+
+	if err != nil {
+		log.Info(err)
+		return &model.AppResp{
+			StatusCode: 0,
+			Status:     err.Error(),
+		}
 	}
 
 	var (
@@ -54,11 +79,25 @@ func QuickRequest(reqInfo *model.AppRequest) *model.AppResp {
 		}
 	}
 
-	reqId, _ := SyncReqRecordToDb(req, reqInfo)
+	if reqInfo.Id == 0 {
 
-	finalResp := handleResp(*resp, *req, reqId)
+		reqId, _ := SyncReqRecordToDb(req, reqInfo)
 
-	return finalResp
+		finalResp := handleResp(*resp, *req, reqId)
+
+		return finalResp
+
+	} else {
+
+		if err := UpdateReqRecord(req, reqInfo); err != nil {
+			launch.AppLogger.Error().Msg(err.Error())
+		}
+
+		finalResp := handleResp(*resp, *req, reqInfo.Id)
+
+		return finalResp
+
+	}
 
 }
 

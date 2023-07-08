@@ -8,11 +8,13 @@ export const StatusContext = createContext<{
     setRespShowState: (boo: boolean) => void,
     setLoading: (boo: boolean) => void,
     size: { width: number, height: number },
+    getTabId: () => number,
     setSize: (payload: { width: number, height: number }) => void
 }>({
     port: 0,
     setPort (port: number) {},
     showRespShowState: false,
+    getTabId () { return 0 },
     loading: false,
     setRespShowState (boo: boolean) {},
     setLoading (boo: boolean)  {},

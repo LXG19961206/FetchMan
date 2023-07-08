@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/labstack/gommon/log"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -19,6 +20,7 @@ var TablesMap = map[string]interface{}{
 	config.Table_env:            model.Env{},
 	config.Table_vars:           model.Vars{},
 	config.Table_body:           model.Body{},
+	config.Table_tab_page:       model.TabPage{},
 }
 
 func InitDb(conf model.AppBaseConfig) {
@@ -83,6 +85,8 @@ func CreateTableByStruct(tableName string, tableStruct interface{}) {
 	_, err := AppDb.Exec(sqlStr)
 
 	if err != nil {
+
+		log.Info(err.Error())
 
 	}
 

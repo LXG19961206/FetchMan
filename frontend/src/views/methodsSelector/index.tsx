@@ -1,15 +1,16 @@
 import {Button, Input, Select} from '@douyinfe/semi-ui';
-import {useContext, useEffect, useState} from 'react';
+import {useContext } from 'react';
 import {Methods, Size} from '../../dicts';
-import {BorderType, Colors, createStyle, Display, percent, px} from '../../style';
+import {BorderType, createStyle, Display, percent, px} from '../../style';
 import {marginX, paddingX, Reset} from '../../style/common';
-import {Params, ReqContext, RespContext, StatusContext} from '../../context'
-import {stringify} from 'qs'
-import {SimpleRequest, GetPort} from "../../../wailsjs/go/app/App";
+import { ReqContext, RespContext, StatusContext, TabsContext} from '../../context'
+import {SimpleRequest, AddRequest, UpdateTabInfo} from "../../../wailsjs/go/app/App";
+import { endsWith } from 'lodash';
 
 
 export default () => {
 
+    const tabCtx = useContext(TabsContext)
 
     const reqContext = useContext(ReqContext)
 
@@ -21,22 +22,17 @@ export default () => {
 
         statusCtx.setLoading(true)
 
-        const url = reqContext.url
-
-        const finalUrl = Object.keys(reqContext.params).length
-            ? url + "?" + stringify(reqContext.params)
-            : url
-
         statusCtx.setRespShowState(true)
 
-        let resp = await SimpleRequest({
-            Url: finalUrl.trim(),
-            Method: reqContext.method,
-            Headers: reqContext.headers,
-            Body: reqContext.body
-        })
+        openNewTabIfCurrentIsLast()
+
+        reqContext.updateTabInfo()
+
+        let resp = await SimpleRequest(reqContext.createReqPayload())
 
         respCtx.respReset()
+
+        reqContext.setId(0)
 
         reqContext.setHeaders(resp.ReqHeaders || [])
 
@@ -54,6 +50,28 @@ export default () => {
 
         statusCtx.setLoading(false)
 
+    }
+
+    const openNewTabIfCurrentIsLast = () => {
+
+        const tid = statusCtx.getTabId()
+
+        if (tabCtx.isLastItem(tid)) {
+            
+            AddRequest(reqContext.createReqPayload()).then(res => {
+
+                reqContext.setId(res)
+
+                reqContext.updateTabInfo()
+
+            })
+
+            tabCtx.open()
+            
+        }
+        tabCtx.setItem(tid, {
+            id: tid, url: reqContext.url, method: reqContext.method || Methods.get
+        })
     }
 
     return (
@@ -77,6 +95,7 @@ export default () => {
             <Input
                 value={reqContext.url}
                 onChange={reqContext.setUrl}
+                onBlur={openNewTabIfCurrentIsLast}
                 placeholder='Please enter your url' size={Size.large}>
             </Input>
             <Button

@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, string) {
+func GenerateReqRecord(req *http.Request, reqInfo *model.AppRequest) *model.RequestRecord {
 
 	var (
 		headersStr, stringifyHeadersErr = json.Marshal(reqInfo.Headers)
@@ -28,7 +28,7 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 		headersStr = []byte("")
 	}
 
-	var reqRec = &model.RequestRecord{
+	return &model.RequestRecord{
 		Url:           req.URL.String(),
 		BodyId:        bodyId,
 		Method:        req.Method,
@@ -40,10 +40,24 @@ func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, strin
 		Name:          req.URL.String(),
 		CreateTime:    fmt.Sprintf("%d", time.Now().UnixMilli()),
 	}
+}
+
+func UpdateReqRecord(req *http.Request, reqInfo *model.AppRequest) error {
+
+	var reqRec = GenerateReqRecord(req, reqInfo)
+
+	return db.UpadteColById(config.Table_request_record, *reqRec, reqInfo.Id)
+
+}
+
+func SyncReqRecordToDb(req *http.Request, reqInfo *model.AppRequest) (int, string) {
+
+	var reqRec = GenerateReqRecord(req, reqInfo)
 
 	id, err := db.InsertColByTemplate(config.Table_request_record, *reqRec)
 
 	return id, err
+
 }
 
 func SaveBodyAsFile(bodyBuf *bytes.Buffer, cttType string) (int, string) {

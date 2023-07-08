@@ -31,4 +31,5 @@ const (
 	Table_env            = "env"
 	Table_vars           = "vars"
 	Table_body           = "body"
+	Table_tab_page       = "tab_page"
 )

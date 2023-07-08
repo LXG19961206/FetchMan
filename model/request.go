@@ -29,4 +29,5 @@ type AppRequest struct {
 	Method  string
 	Headers [][2]string
 	Body    ReqBody
+	Id      int
 }
