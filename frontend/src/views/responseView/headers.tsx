@@ -2,7 +2,7 @@ import { Descriptions, Typography, Divider, Tag } from '@douyinfe/semi-ui';
 import {useContext, useMemo} from "react";
 import {ReqContext, RespContext} from "../../context";
 import {createStyle, px} from "../../style";
-import {Match} from "../../components/match";
+import {Match} from "../../components/headerless/match";
 export default  () => {
 
     const respContext = useContext(RespContext)

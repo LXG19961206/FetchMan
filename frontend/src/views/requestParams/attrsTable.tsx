@@ -1,9 +1,7 @@
 import {Input, Table} from '@douyinfe/semi-ui';
 import {Colors, createStyle, Cursor, OverFlow, px} from '../../style';
 import {IconDelete} from '@douyinfe/semi-icons';
-import { debounce } from 'lodash'
 import {useContext, useEffect, useMemo, useState} from 'react';
-import {ReqContext} from '../../context'
 import {Size} from '../../dicts';
 
 

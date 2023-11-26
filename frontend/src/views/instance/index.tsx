@@ -4,7 +4,7 @@ import RequestParams from "../requestParams"
 import {ReqBody, ReqContext, ReqInsantcePayload, RespContext, StatusContext} from '../../context'
 import ResponseView from "../responseView"
 import {useContext, useEffect, useState} from "react"
-import {RenderIf} from "../../components/renderIf";
+import {RenderIf} from "../../components/headerless/renderIf";
 import {GetPort, UpdateTabInfo, GetRecordById } from "../../../wailsjs/go/app/App";
 import { stringify } from "qs"
 

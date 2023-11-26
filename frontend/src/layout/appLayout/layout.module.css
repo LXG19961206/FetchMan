@@ -1,0 +1,29 @@
+.layout {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.app_header {
+  height: 44px;
+  width: 100%;
+  border-bottom: 1px solid var(--default-wrapper-boder);
+  flex: 1 1 44px;
+}
+
+.app_content {
+  display: flex;
+  justify-content: flex-start;
+  height: calc(100% - 44px);
+}
+
+.content_side_menu {
+  width: 100px;
+  flex: 0 0 100px;
+}
+
+.content_side_menu {
+  width: 50px;
+}

@@ -54,3 +54,11 @@ body, body[theme-mode=dark] .semi-always-light {
 button {
   font-size: calc(10px + 2vmin);
 }
+
+
+:root {
+  --default-text-dark: #333;
+  --default-font-sm: 12px;
+  --default-text-secondly: #aaa;
+  --default-wrapper-boder: #eee;
+}

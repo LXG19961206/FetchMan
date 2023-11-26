@@ -5,10 +5,10 @@ import ReactJson from 'react-json-view';
 import {Preview} from "./preview";
 import {createStyle, vh, Display, OverFlow, percent, Position, px, Resize, BoxSizing} from "../../style";
 import {border, FlexCenter, getWindowHeight, marginX, paddingX, Reset} from "../../style/common";
-import ResizeableWrapper from "../../components/resizeableWrapper";
-import {Match} from "../../components/match";
+import ResizeableWrapper from "../../components/resizeableWrapper/resizeableWrapper";
+import {Match} from "../../components/headerless/match";
 import {Size} from "../../dicts";
-import {RenderIf} from "../../components/renderIf";
+import {RenderIf} from "../../components/headerless/renderIf";
 import Headers from './headers'
 import Header from "@douyinfe/semi-ui/lib/es/image/previewHeader";
 // const RespTabsDict = {

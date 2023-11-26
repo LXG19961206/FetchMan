@@ -6,7 +6,7 @@ import {BodyTypeDict} from "../../dicts/body";
 import { IconPaperclip, IconDelete } from '@douyinfe/semi-icons';
 import {NativeFileDialog} from "../../../wailsjs/go/app/App";
 import {paddingX, Reset} from "../../style/common";
-import {RenderIf} from "../../components/renderIf";
+import {RenderIf} from "../../components/headerless/renderIf";
 import {ReqContext} from "../../context";
 
 export type MulFormSource = {

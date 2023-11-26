@@ -6,13 +6,11 @@ import MulFormData, {MulFormSource} from "./formData";
 import {ReqContext} from "../../context";
 import { stringify, parse } from 'qs'
 import {NativeFileDialog} from "../../../wailsjs/go/app/App";
-import {RenderIf} from "../../components/renderIf";
-import Editor from '../../components/jsonEditor';
+import {RenderIf} from "../../components/headerless/renderIf";
+import Editor from '../../components/jsonEditor/jsonEditor';
 import {BoxSizing, Colors, createStyle, Cursor, OverFlow, px} from "../../style";
 import {border, marginY} from "../../style/common";
-import {Match} from "../../components/match";
-import StrategyPattern from "../../components/strategyPattern";
-import FormData from "./formData";
+import StrategyPattern from "../../components/headerless/strategyPattern";
 
 export const Body = () => {
 

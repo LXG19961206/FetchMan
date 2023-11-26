@@ -1,6 +1,6 @@
 import interact from 'interactjs'
-import React ,{JSX, useEffect, useRef} from "react";
-import {px} from "../style";
+import React ,{useEffect, useRef} from "react";
+import {px} from "../../style";
 
 export default (props: {
     left?: boolean | HTMLElement,
@@ -19,6 +19,7 @@ export default (props: {
     const wrapper = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
+        
         if (!wrapper.current) return
 
 

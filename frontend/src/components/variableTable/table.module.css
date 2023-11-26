@@ -1,0 +1,36 @@
+
+.table_field_input {
+  background: transparent;
+  color: var(--default-text-dark);
+  font-size: var(--default-font-sm);
+  border: 0;
+  outline: none;
+}
+
+.table_field_icon {
+  cursor: pointer;
+}
+
+.table {
+  overflow: scroll;
+  max-height: 350px;
+}
+
+.wrapper {
+  height: 400px;
+  width: 100%;
+}
+
+.add_action_bar {
+  background: #fff;
+  display: flex;
+  height: 50px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--default-text-gray);
+  font-size: var(--default-font-sm);
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}

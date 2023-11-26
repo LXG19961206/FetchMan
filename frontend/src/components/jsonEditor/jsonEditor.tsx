@@ -1,7 +1,7 @@
 import Editor from 'jsoneditor'
 import 'jsoneditor/dist/jsoneditor.css'
 import './editorTheme.css'
-import {createStyle, percent, px} from "../style";
+import style from './editor.module.css'
 import {useEffect, useMemo, useRef} from "react";
 
 
@@ -44,7 +44,6 @@ export default (props: {
             }
         })
 
-
         setTimeout(() => {
 
             editor.aceEditor.setFontSize("12px");
@@ -67,15 +66,10 @@ export default (props: {
     return (
         <div
             ref={wrapper}
-            style={{...style.wrapper, height: props.height, width: props.width }}>
+            className={style.wrapper}
+            style={{ height: props.height, width: props.width }}>
         </div>
     )
 
-}
-
-const style = {
-    wrapper: createStyle({
-        width: percent(100)
-    }),
 }
 
