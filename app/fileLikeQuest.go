@@ -1,18 +1,18 @@
 package app
 
 import (
-	"changeme/models"
-	db "changeme/models/fileLike"
+	dbUtil "changeme/models"
+	fileLikeTable "changeme/models/fileLike"
 	"errors"
 )
 
-func (a *App) LsRequestOfCollection(collectionId int64) []db.FileLike {
-	var files []db.FileLike
+func (a *App) LsRequestOfCollection(collectionId int64) []fileLikeTable.FileLike {
+	var files []fileLikeTable.FileLike
 	if collectionId == 0 {
 		return nil
 	}
-	if engine, err := models.GetSqLiteEngine(); err == nil {
-		engine.Find(&files, &db.FileLike{FolderId: collectionId, Type: db.REQUEST})
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		engine.Find(&files, &fileLikeTable.FileLike{FolderId: collectionId, Type: fileLikeTable.REQUEST})
 		return files
 	} else {
 		return nil
@@ -23,7 +23,7 @@ func (a *App) RenameFileLikeRequest(name string, id int64) error {
 	if id == 0 {
 		return errors.New("id is not apply")
 	} else {
-		err := models.BaseRename(name, id, &db.FileLike{})
+		err := dbUtil.BaseRename(name, id, &fileLikeTable.FileLike{})
 		return err
 	}
 }
@@ -32,21 +32,21 @@ func (a *App) DelFileLikeRecord(id int64) error {
 	if id == 0 {
 		return errors.New("id is not apply")
 	} else {
-		err := models.BasePhyDel(id, &db.FileLike{})
+		err := dbUtil.BasePhyDel(id, &fileLikeTable.FileLike{})
 		return err
 	}
 }
 
-func (a *App) AddRequestToCollection(collectionId int64, name string) *db.FileLike {
+func (a *App) AddRequestToCollection(collectionId int64, name string) *fileLikeTable.FileLike {
 	if collectionId == 0 {
 		return nil
 	}
-	if engine, err := models.GetSqLiteEngine(); err == nil {
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
 
-		var file = &db.FileLike{
+		var file = &fileLikeTable.FileLike{
 			FolderId: collectionId,
 			Name:     name,
-			Type:     db.REQUEST,
+			Type:     fileLikeTable.REQUEST,
 		}
 		engine.Insert(file)
 
