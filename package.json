@@ -4,5 +4,8 @@
     "@types/lodash": "^4.14.195",
     "jsoneditor": "^9.10.2",
     "lodash": "^4.17.21"
+  },
+  "dependencies": {
+    "less": "^4.2.0"
   }
 }

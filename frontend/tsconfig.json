@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "/node_modules",
+    "paths": {  
+      "@/*": ["src/*"]  
+    },
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": [
@@ -22,7 +26,9 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "references": [
     {

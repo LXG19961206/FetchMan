@@ -12,9 +12,9 @@ type App struct {
 	ctx context.Context
 }
 
-func (a *App) Startup(ctx context.Context) {
+func (app *App) Startup(ctx context.Context) {
 
-	a.ctx = ctx
+	app.ctx = ctx
 
 	var baseConfig = &model.AppBaseConfig{}
 

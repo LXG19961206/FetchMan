@@ -3,6 +3,7 @@ package launch
 import (
 	"changeme/config"
 	"changeme/model"
+	_ "changeme/models"
 	"database/sql"
 	"fmt"
 	"reflect"

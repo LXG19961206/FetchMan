@@ -1,3 +1,65 @@
+export namespace filelike {
+	
+	export class FileLike {
+	    id: number;
+	    createTime: string;
+	    updateTime: string;
+	    folderId: number;
+	    name: string;
+	    type: string;
+	    fileId: number;
+	    requestId: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new FileLike(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.createTime = source["createTime"];
+	        this.updateTime = source["updateTime"];
+	        this.folderId = source["folderId"];
+	        this.name = source["name"];
+	        this.type = source["type"];
+	        this.fileId = source["fileId"];
+	        this.requestId = source["requestId"];
+	    }
+	}
+
+}
+
+export namespace folder {
+	
+	export class Folder {
+	    id: number;
+	    createTime: string;
+	    updateTime: string;
+	    createrId: string;
+	    name: string;
+	    depth: number;
+	    parentId: number;
+	    type: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Folder(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.createTime = source["createTime"];
+	        this.updateTime = source["updateTime"];
+	        this.createrId = source["createrId"];
+	        this.name = source["name"];
+	        this.depth = source["depth"];
+	        this.parentId = source["parentId"];
+	        this.type = source["type"];
+	    }
+	}
+
+}
+
 export namespace model {
 	
 	
