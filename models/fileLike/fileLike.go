@@ -8,6 +8,7 @@ import (
 const (
 	PHYSICALFILE = "PhysicalFile"
 	REQUEST      = "Request"
+	ENVRECORD    = "EnvRecord"
 )
 
 type FileLike struct {
@@ -17,6 +18,7 @@ type FileLike struct {
 	Type              string `json:"type"`
 	FileId            int64  `json:"fileId"`
 	RequestId         int64  `json:"requestId"`
+	Tag               string `json:"tag"`
 }
 
 func init() {

@@ -17,16 +17,28 @@
   display: flex;
   line-height: 40px;
   border-bottom: 1px solid #ccc;
+  gap: 8px;
 
   .toolbar_item {
     font-size: 12px;
     display: flex;
     align-items: center;
     color: var(--semi-color-primary);
+    opacity: .9;
+    transition: .4s all;
+
+    img {
+      width: 18px;
+      cursor: pointer;
+    }
 
     span {
       margin-left: 4px;
       cursor: pointer;
+    }
+
+    &:active {
+      opacity: .7;
     }
   }
 }

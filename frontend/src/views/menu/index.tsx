@@ -1,10 +1,12 @@
-import { Input, Dropdown, Modal } from '@douyinfe/semi-ui'
-import { RenameFileLikeRequest,DelFileLikeRecord,AddRequestToCollection, LsRequestOfCollection, LsCollectionFolder, AddCollectionFolder, RenameFolder, RemoveCollection } from '../../../wailsjs/go/app/App'
-import { filelike, folder } from '../../../wailsjs/go/models'
+import { Input, Dropdown, Modal, Tooltip } from '@douyinfe/semi-ui'
+import { RenameFileLikeRequest, DelFileLikeRecord, AddRequestToCollection, LsRequestOfCollection, LsCollectionFolder, AddCollectionFolder, RenameFolder, RemoveCollection } from '~/go/app/App'
+import { filelike, folder } from '~/go/models'
 import { useEffect, useRef, useState } from 'react'
 import style from './index.module.less'
 import { IconPlusCircle, IconFolder, IconFolderOpen, IconMore } from '@douyinfe/semi-icons'
 import empty from './empty.png'
+import addFile from './addFile.png'
+import refresh from './refresh.png'
 import { RenderIf } from '../../components/headerless/renderIf'
 import { throttle } from 'lodash'
 
@@ -72,12 +74,23 @@ export default () => {
   return (
     <div className={style.wrapper}>
       <div className={style.toolbar}>
-        <div
-          onClick={() => appendChild(0, void 0, void 0, updateChild)}
-          className={style.toolbar_item}>
-          <IconPlusCircle size="small"></IconPlusCircle>
-          <span> Add New Collection </span>
-        </div>
+        <Tooltip
+          content="Add a collection" 
+          trigger='hover'>
+          <div
+            onClick={() => appendChild(0, void 0, void 0, updateChild)}
+            className={style.toolbar_item}>
+            <img src={addFile} alt="" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          content="Get the lasted collection list" 
+          trigger='hover'>
+          <div
+            className={style.toolbar_item}>
+            <img src={refresh} alt="" />
+          </div>
+        </Tooltip>
       </div>
       <FolderTree
         parentId={0}
@@ -173,13 +186,13 @@ export const FileLikeRequest = (
           <div
             key={item.id}
             style={{ marginLeft: 7 * props.depth + 'px' }}
-            onContextMenu={ evt => showMenu(evt, `${style.more_icon + item.id + 'folder'}`) }
+            onContextMenu={evt => showMenu(evt, `${style.more_icon + item.id + 'folder'}`)}
             className={style.file_item}>
             <div className={style.file_item_method}> GET </div>
             <div className={style.file_item_title}>
               <RenderIf
                 fallback={
-                  <Input 
+                  <Input
                     autofocus
                     onBlur={evt => renameReq(evt.target.value, item, setFiles, setEditId)}
                     placeholder={"please enter request name..."}

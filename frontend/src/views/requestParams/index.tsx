@@ -1,8 +1,8 @@
 import { Tabs, TabPane } from '@douyinfe/semi-ui';
-import { createStyle, percent, px } from '../../style';
-import { paddingX, Reset } from '../../style/common';
+import { createStyle, percent, px } from '@/style';
+import { paddingX, Reset } from '@/style/common';
 import AttrsTable, { Source } from "./attrsTable";
-import { ReqContext } from '../../context'
+import { ReqContext } from '@/context'
 import {useContext, useMemo} from "react";
 import {Body} from "./body";
 

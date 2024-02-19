@@ -1,21 +1,32 @@
 import style from './layout.module.css'
-import ResizeableWrapper from '../../components/resizeableWrapper/resizeableWrapper'
-import VariableTable from '../../components/variableTable'
-import Side from '../../views/side'
+import Side from './side'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { router } from '@/router/index'
 
 export default () => {
   return (
     <div className={style.layout}>
       <div className={style.app_header}></div>
-      <div className={style.app_content}>
-        <div className={style.content_side_menu}>
-          <Side></Side>
+      <Router>
+        <div className={style.app_content}>
+          <div className={style.content_side_menu}>
+            <Side></Side>
+          </div>
+          <div className={style.content_content_area}>
+            <Routes>
+              {
+                router.map(item => (
+                  <Route
+                    key={item.path}
+                    path={item.path}
+                    element={<item.element></item.element>}>
+                  </Route>
+                ))
+              }
+            </Routes>
+          </div>
         </div>
-        <div className={style.content_content_area}>
-          <VariableTable source={[]}></VariableTable>
-        </div>   
-        <div className={style.content_folders}></div>
-      </div>
+      </Router>
     </div>
   )
 }

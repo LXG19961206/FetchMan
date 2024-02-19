@@ -14,3 +14,7 @@ type RequestRecord struct {
 	RespId            int64          `json:"respId"`
 	Body              string         `json:"body"`
 }
+
+func init() {
+	models.CheckOrAppendTable(new(RequestRecord))
+}

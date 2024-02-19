@@ -1,12 +1,18 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
+import { join } from 'path'
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {  
-    alias: {  
-      '@': '/src'  
-    }  
+    alias: {
+      '@': join(__dirname, "src"),
+      '~': join(__dirname, "wailsjs"),
+      '@img': join(__dirname, "src/assets"),
+      '@util': join(__dirname, "src/utils"),
+      '@dict': join(__dirname, "src/dicts")
+    }
   },
   plugins: [react({
     babel: {

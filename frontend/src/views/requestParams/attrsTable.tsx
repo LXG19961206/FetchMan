@@ -1,8 +1,8 @@
 import {Input, Table} from '@douyinfe/semi-ui';
-import {Colors, createStyle, Cursor, OverFlow, px} from '../../style';
+import {Colors, createStyle, Cursor, OverFlow, px} from '@/style';
 import {IconDelete} from '@douyinfe/semi-icons';
 import {useContext, useEffect, useMemo, useState} from 'react';
-import {Size} from '../../dicts';
+import {Size} from '@/dicts';
 
 
 export type Source = {

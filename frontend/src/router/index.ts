@@ -1,32 +1,50 @@
-import { IconAppCenter, IconTerminal, IconSend, IconGlobe } from '@douyinfe/semi-icons';
+import { IconAppCenter, IconSend, IconGlobe } from '@douyinfe/semi-icons';
+import Collection from '../views/collection'
+
+
+export const RouterDict = {
+  Collection: 'Collection',
+  Environment: 'Environment',
+  QuickRequest: 'QuickRequest',
+  Tools: 'Tools'
+} as const
+
+
+export const Util = {
+  GenerateFullPath: (...paths: string []) => {
+    return paths.map(path => "/" + path).join('')
+  },
+  GenerateFullName: (...names: string []) => {
+    return names.map(name => name.charAt(0).toUpperCase() + name.slice(1)).join('')
+  }
+}
+
+
+
 
 export const router = [
   {
-    path: '/env',
-    name: 'env',
-    title: '环境',
-    icon: IconGlobe,
-    inSideMenu: true
-  },
-  {
-    path: '/collection',
-    name: 'collection',
-    title: '集合',
-    icon: IconSend,
-    inSideMenu: true
-  },
-  {
-    path: '/history',
-    name: 'history',
-    title: '请求历史',
+    path: Util.GenerateFullPath(RouterDict.Collection),
+    name: Util.GenerateFullName(RouterDict.Collection),
+    title: RouterDict.Collection,
     icon: IconAppCenter,
-    inSideMenu: true
+    inSideMenu: true,
+    element: Collection
   },
   {
-    path: '/terminal',
-    name: 'terminal',
-    title: '终端',
-    icon: IconTerminal,
-    inSideMenu: true
+    path: Util.GenerateFullPath(RouterDict.Environment),
+    name: Util.GenerateFullName(RouterDict.Environment),
+    title: RouterDict.Environment,
+    icon: IconGlobe,
+    inSideMenu: true,
+    element: Collection
+  },
+  {
+    path: Util.GenerateFullPath(RouterDict.QuickRequest),
+    name: Util.GenerateFullName(RouterDict.QuickRequest),
+    title: RouterDict.QuickRequest,
+    icon: IconSend,
+    inSideMenu: true,
+    element: Collection
   },
 ]

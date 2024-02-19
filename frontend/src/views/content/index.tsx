@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Tabs, TabPane, Tag } from '@douyinfe/semi-ui';
-import { StartNewTab, CloseTab, LsAllTabs } from "../../../wailsjs/go/app/App";
+import { StartNewTab, CloseTab, LsAllTabs } from "~/go/app/App";
 import Instance from "../instance";
-import { Colors, createStyle, OverFlow, Position, px, vh } from "../../style";
+import { Colors, createStyle, OverFlow, percent, Position, px, vh } from "../../style";
 import { border } from "../../style/common";
 import { TabsContext, TabPages, TabPage } from '../../context/tabs'
 import { Methods } from '../../dicts';
@@ -117,15 +117,11 @@ export default () => {
 const style = {
     addIcon: createStyle({}),
     wrapper: createStyle({
-        top: px(0),
-        bottom: px(0),
-        height: vh(100),
+        height: percent(100),
         right: 0,
         overflow: OverFlow.hidden,
         width: `calc(100% - 305px)`,
         minWidth: px(500),
-        position: Position.fixed,
-        left: px(305),
         background: Colors.White,
         borderLeft: border("1px", '#eee')
     })

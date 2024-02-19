@@ -1,13 +1,13 @@
 import {Input, Table, Tag } from '@douyinfe/semi-ui';
-import {Colors, createStyle, Cursor, OverFlow, percent, px} from '../../style';
+import {Colors, createStyle, Cursor, OverFlow, percent, px} from '@/style';
 import {useContext, useEffect, useMemo, useState} from 'react';
-import {Size} from '../../dicts';
-import {BodyTypeDict} from "../../dicts/body";
+import {Size} from '@/dicts';
+import {BodyTypeDict} from "@/dicts/body";
 import { IconPaperclip, IconDelete } from '@douyinfe/semi-icons';
-import {NativeFileDialog} from "../../../wailsjs/go/app/App";
-import {paddingX, Reset} from "../../style/common";
-import {RenderIf} from "../../components/headerless/renderIf";
-import {ReqContext} from "../../context";
+import {NativeFileDialog} from "~/go/app/App";
+import {paddingX, Reset} from "@/style/common";
+import {RenderIf} from "@/components/headerless/renderIf";
+import {ReqContext} from "@/context";
 
 export type MulFormSource = {
     Type: string,

@@ -5,7 +5,7 @@ import {ReqBody, ReqContext, ReqInsantcePayload, RespContext, StatusContext} fro
 import ResponseView from "../responseView"
 import {useContext, useEffect, useState} from "react"
 import {RenderIf} from "../../components/headerless/renderIf";
-import {GetPort, UpdateTabInfo, GetRecordById } from "../../../wailsjs/go/app/App";
+import {GetPort, UpdateTabInfo, GetRecordById } from "~/go/app/App";
 import { stringify } from "qs"
 
 export default (props: { id: number, reqId?: number }) => {

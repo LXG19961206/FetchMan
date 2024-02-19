@@ -4,7 +4,7 @@ import {Methods, Size} from '../../dicts';
 import {BorderType, createStyle, Display, percent, px} from '../../style';
 import {marginX, paddingX, Reset} from '../../style/common';
 import { ReqContext, RespContext, StatusContext, TabsContext} from '../../context'
-import {SimpleRequest, AddRequest, UpdateTabInfo} from "../../../wailsjs/go/app/App";
+import {SimpleRequest, AddRequest, UpdateTabInfo} from "~/go/app/App";
 import { endsWith } from 'lodash';
 
 

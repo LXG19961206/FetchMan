@@ -9,6 +9,7 @@ export namespace filelike {
 	    type: string;
 	    fileId: number;
 	    requestId: number;
+	    tag: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new FileLike(source);
@@ -24,6 +25,7 @@ export namespace filelike {
 	        this.type = source["type"];
 	        this.fileId = source["fileId"];
 	        this.requestId = source["requestId"];
+	        this.tag = source["tag"];
 	    }
 	}
 

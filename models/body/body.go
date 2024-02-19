@@ -13,3 +13,7 @@ type Body struct {
 	FilePath          string `json:"filePath"`
 	FileId            int    `json:"fileId"`
 }
+
+func init() {
+	models.CheckOrAppendTable(new(Body))
+}

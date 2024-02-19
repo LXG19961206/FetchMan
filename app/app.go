@@ -31,5 +31,6 @@ func (app *App) Startup(ctx context.Context) {
 }
 
 func (a *App) GetPort() int {
-	return config.DefaultFileServerPort
+	return 30399
+	// return config.DefaultFileServerPort
 }

@@ -1,16 +1,16 @@
-import {BodyTypeDict} from "../../dicts/body";
+import {BodyTypeDict} from "@/dicts/body";
 import React, {Fragment,useContext, useEffect, useMemo, useRef, useState} from "react";
 import { Radio, RadioGroup, Button, Tag, Image, Space, TextArea } from '@douyinfe/semi-ui';
 import AttrsTable, {Source} from "./attrsTable";
 import MulFormData, {MulFormSource} from "./formData";
-import {ReqContext} from "../../context";
+import {ReqContext} from "@/context";
 import { stringify, parse } from 'qs'
-import {NativeFileDialog} from "../../../wailsjs/go/app/App";
-import {RenderIf} from "../../components/headerless/renderIf";
-import Editor from '../../components/jsonEditor/jsonEditor';
-import {BoxSizing, Colors, createStyle, Cursor, OverFlow, px} from "../../style";
-import {border, marginY} from "../../style/common";
-import StrategyPattern from "../../components/headerless/strategyPattern";
+import {NativeFileDialog} from "~/go/app/App";
+import {RenderIf} from "@/components/headerless/renderIf";
+import Editor from '@/components/jsonEditor/jsonEditor';
+import {BoxSizing, Colors, createStyle, Cursor, OverFlow, px} from "@/style";
+import {border, marginY} from "@/style/common";
+import StrategyPattern from "@/components/headerless/strategyPattern";
 
 export const Body = () => {
 

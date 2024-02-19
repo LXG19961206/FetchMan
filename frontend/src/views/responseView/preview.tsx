@@ -1,9 +1,9 @@
 import ReactJson from "react-json-view";
-import {RespContext, StatusContext} from "../../context";
+import {RespContext, StatusContext} from "@/context";
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import JsonEditor from "../../components/jsonEditor/jsonEditor";
-import {createStyle, OverFlow, percent, px} from "../../style";
-import {Match} from "../../components/headerless/match";
+import JsonEditor from "@/components/jsonEditor/jsonEditor";
+import {createStyle, OverFlow, percent, px} from "@/style";
+import {Match} from "@/components/headerless/match";
 
 
 
