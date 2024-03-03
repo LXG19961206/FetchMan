@@ -1,22 +1,23 @@
 .layout {
   width: 100%;
-  height: 100%;
-  overflow: scroll;
   display: flex;
   flex-direction: column;
+  height: inherit;
+  overflow: hidden;
 }
 
 .app_header {
-  height: 44px;
   width: 100%;
+  flex: 0 0 60px;
   border-bottom: 1px solid var(--default-wrapper-boder);
-  flex: 1 1 44px;
+  height: 60px;
 }
 
 .app_content {
   display: flex;
+  flex: 0 1;
+  height: calc(100% - 60px);
   justify-content: flex-start;
-  height: calc(100% - 44px);
 }
 
 .content_side_menu {
@@ -26,4 +27,8 @@
 
 .content_side_menu {
   width: 50px;
+}
+
+.content_content_area {
+  flex: 1 1 auto;
 }

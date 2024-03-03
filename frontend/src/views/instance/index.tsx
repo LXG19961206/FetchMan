@@ -114,6 +114,7 @@ export default (props: { id: number, reqId?: number }) => {
 
         GetPort().then(setPort)
 
+
         if (!!props.reqId) {
 
             GetRecordById(props.reqId).then(res => {

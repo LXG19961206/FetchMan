@@ -9,6 +9,7 @@ import addFile from './addFile.png'
 import refresh from './refresh.png'
 import { RenderIf } from '../../components/headerless/renderIf'
 import { throttle } from 'lodash'
+import { BaseProps } from '@/models/base'
 
 type Folder = folder.Folder & {
   isFold: boolean,
@@ -67,12 +68,14 @@ const renameReq = async (name: string, node: FileLike, setNodes: FileStateSetter
 }
 
 
-export default () => {
+export default (props: BaseProps) => {
 
   const [lastAppendId, updateChild] = useState(-1)
 
   return (
-    <div className={style.wrapper}>
+    <div
+      style={props.style} 
+      className={style.wrapper}>
       <div className={style.toolbar}>
         <Tooltip
           content="Add a collection" 

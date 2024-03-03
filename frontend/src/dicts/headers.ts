@@ -1,0 +1,17 @@
+export const SmartHeaders = {
+  ContentType: "Content-Type",
+  Authorization: 'Authorization',
+  Cookies: 'Cookies',
+  Token: 'Token',
+  Accept: 'Accept',
+  Origin: 'Origin',
+  Referer: 'Referer',
+  Host: 'Host',
+  UserAgent: 'User-Agent',
+  AcceptLanguage: 'Accept-Language',
+  AcceptEncoding: 'Accept-Encoding',
+  Connection: 'Connection',
+  Upgrade: 'Upgrade',
+  SecWebSocketKey: 'Sec-WebSocket-Key',
+  SecWebSocketVersion: 'Sec-WebSocket-Version',
+}

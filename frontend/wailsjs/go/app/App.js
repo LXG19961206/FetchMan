@@ -22,12 +22,20 @@ export function DelFileLikeRecord(arg1) {
   return window['go']['app']['App']['DelFileLikeRecord'](arg1);
 }
 
+export function GetBaseUrl() {
+  return window['go']['app']['App']['GetBaseUrl']();
+}
+
 export function GetPort() {
   return window['go']['app']['App']['GetPort']();
 }
 
 export function GetRecordById(arg1) {
   return window['go']['app']['App']['GetRecordById'](arg1);
+}
+
+export function GetSpecialFields() {
+  return window['go']['app']['App']['GetSpecialFields']();
 }
 
 export function LsAllTabs() {

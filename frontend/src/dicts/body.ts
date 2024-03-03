@@ -3,8 +3,8 @@ export const BodyTypeDict = {
     none: "none",
     formData: "formData",
     text: "text",
-    html: "html",
-    form: "x-www-form-urlencoded",
+    html: "HTML",
+    formUrl: "x-www-form-urlencoded",
     xml: "xml",
-    binary: "binary"
+    binary: "file"
 }

@@ -1,5 +1,6 @@
 import { IconAppCenter, IconSend, IconGlobe } from '@douyinfe/semi-icons';
 import Collection from '../views/collection'
+import React from 'react';
 
 
 export const RouterDict = {
@@ -23,6 +24,15 @@ export const Util = {
 
 
 export const router = [
+  {
+    path: '/',
+    redirect: Util.GenerateFullPath(RouterDict.Collection),
+    name: '',
+    title: '',
+    icon: '',
+    inSideMenu: false,
+    element: Collection
+  },
   {
     path: Util.GenerateFullPath(RouterDict.Collection),
     name: Util.GenerateFullName(RouterDict.Collection),

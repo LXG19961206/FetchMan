@@ -3,6 +3,7 @@
 import {folder} from '../models';
 import {model} from '../models';
 import {filelike} from '../models';
+import {app} from '../models';
 import {frontend} from '../models';
 
 export function AddCollectionFolder(arg1:string,arg2:number):Promise<folder.Folder>;
@@ -15,9 +16,13 @@ export function CloseTab(arg1:number):Promise<void>;
 
 export function DelFileLikeRecord(arg1:number):Promise<void>;
 
+export function GetBaseUrl():Promise<string>;
+
 export function GetPort():Promise<number>;
 
 export function GetRecordById(arg1:number):Promise<{[key: string]: any}>;
+
+export function GetSpecialFields():Promise<app.SpecialReqLineFieldForClient>;
 
 export function LsAllTabs():Promise<Array<{[key: string]: any}>>;
 

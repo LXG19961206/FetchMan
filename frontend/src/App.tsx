@@ -1,7 +1,13 @@
 import '@/App.css'
 import Layout from '@/layout/appLayout'
+import { request } from '@/util/http'
+import { useEffect } from 'react'
+import { RequestMethod } from './dicts/methods'
+import { observer } from 'mobx-react'
 
 function App() {
+
+
   return <>
     {/* <Side></Side> */}
     {/* <Menu></Menu>

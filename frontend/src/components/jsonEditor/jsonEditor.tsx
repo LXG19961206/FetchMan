@@ -46,7 +46,7 @@ export default (props: {
 
         setTimeout(() => {
 
-            editor.aceEditor.setFontSize("12px");
+            editor.aceEditor.setFontSize("13px");
 
             if (props.viewMode) {
                 editor.aceEditor.setReadOnly(true)

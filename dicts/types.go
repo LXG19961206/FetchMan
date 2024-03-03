@@ -5,3 +5,4 @@ const (
 	IntType    = "int"
 	BoolType   = "bool"
 )
+

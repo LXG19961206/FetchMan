@@ -1,7 +1,7 @@
 package main
 
 import (
-	app "changeme/app"
+	"changeme/app"
 	"changeme/model"
 	"embed"
 

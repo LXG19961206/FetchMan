@@ -28,11 +28,11 @@
 
 #root .ace-jsoneditor .ace_gutter {
     background: transparent;
-    font-size: 12px;
+    font-size: 13px;
     line-height: var(--editor-line-height);
 }
 
 #root .ace_layer .ace_text-layer {
-    font-size: 12px !important;
+    font-size: 13px !important;
     line-height: var(--editor-line-height);
 }

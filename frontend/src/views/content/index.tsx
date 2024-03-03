@@ -96,7 +96,6 @@ export default () => {
                     {
                         tabList.map(t =>
                             <TabPane
-                                style={{ height: "100vh" }}
                                 closable={tabs.length > 1}
                                 tab={t.tab}
                                 itemKey={t.itemKey.toString()}
@@ -117,7 +116,6 @@ export default () => {
 const style = {
     addIcon: createStyle({}),
     wrapper: createStyle({
-        height: percent(100),
         right: 0,
         overflow: OverFlow.hidden,
         width: `calc(100% - 305px)`,
