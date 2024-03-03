@@ -18,11 +18,15 @@ export function DelFileLikeRecord(arg1:number):Promise<void>;
 
 export function GetBaseUrl():Promise<string>;
 
+export function GetFilePathPlaceholder():Promise<string>;
+
+export function GetFileUrl():Promise<string>;
+
 export function GetPort():Promise<number>;
 
 export function GetRecordById(arg1:number):Promise<{[key: string]: any}>;
 
-export function GetSpecialFields():Promise<app.SpecialReqLineFieldForClient>;
+export function GetSpecialFields():Promise<app.SpecialReqHeaderFields>;
 
 export function LsAllTabs():Promise<Array<{[key: string]: any}>>;
 
@@ -30,7 +34,7 @@ export function LsCollectionFolder(arg1:number):Promise<Array<folder.Folder>>;
 
 export function LsRequestOfCollection(arg1:number):Promise<Array<filelike.FileLike>>;
 
-export function NativeFileDialog(arg1:frontend.OpenDialogOptions,arg2:boolean):Promise<model.FileInfo>;
+export function NativeFileDialog(arg1:frontend.OpenDialogOptions,arg2:boolean):Promise<app.FileInfo>;
 
 export function NativeMessageDialog(arg1:frontend.MessageDialogOptions):Promise<string>;
 

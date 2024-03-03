@@ -65,7 +65,6 @@ export namespace folder {
 export namespace model {
 	
 	
-	
 	export class TabPage {
 	    id: number;
 	    workplace_id: number;

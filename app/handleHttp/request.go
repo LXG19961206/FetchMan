@@ -12,9 +12,6 @@ func ForwardRequest(originRespWriter http.ResponseWriter, req *http.Request) *ht
 		return nil
 	}
 
-	fmt.Printf("req.URL: %v\n", req.URL)
-	fmt.Printf("req.Method: %v\n", req.Method)
-
 	var client = &http.Client{}
 
 	if resp, err := client.Do(req); err == nil {

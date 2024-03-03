@@ -26,6 +26,14 @@ export function GetBaseUrl() {
   return window['go']['app']['App']['GetBaseUrl']();
 }
 
+export function GetFilePathPlaceholder() {
+  return window['go']['app']['App']['GetFilePathPlaceholder']();
+}
+
+export function GetFileUrl() {
+  return window['go']['app']['App']['GetFileUrl']();
+}
+
 export function GetPort() {
   return window['go']['app']['App']['GetPort']();
 }

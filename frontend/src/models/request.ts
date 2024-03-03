@@ -5,5 +5,7 @@ export type RequestInfo = {
   id: string,
   method: RequestMethod,
   headers?: Record<string, string>,
-  body?: unknown
+  body?: unknown,
+  isBinary?: boolean,
+  isFormData?: boolean
 }

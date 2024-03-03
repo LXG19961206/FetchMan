@@ -9,6 +9,8 @@ export const Json = () => {
 
   const sync = (newVal: string) => {
     reqStore.setHeader('Content-Type', ContentType.Json)
+    reqStore.setBinaryState(false)
+      reqStore.setFormDataState(false)
     reqStore.setBody(newVal)
   }
 

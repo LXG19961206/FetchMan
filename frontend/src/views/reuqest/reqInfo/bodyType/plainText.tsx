@@ -11,6 +11,8 @@ export default () => {
 
   const sync = () => {
     reqStore.setBody(text)
+    reqStore.setBinaryState(false)
+    reqStore.setFormDataState(false)
     reqStore.setHeader("Content-Type", ContentType.Text)
   }
 

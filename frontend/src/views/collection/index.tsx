@@ -7,7 +7,7 @@ export default () => {
   return (
     <div className={style.wrapper}>
       <Menu></Menu>
-      <Request></Request>
+      <Request></Request> 
       {/* <Content></Content> */}
     </div>
   )

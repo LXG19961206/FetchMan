@@ -1,16 +1,16 @@
 import { RequestMethod } from '@/dicts/methods';
-import { GetBaseUrl, GetSpecialFields } from '~/go/app/App'
 import { getTimeStamp } from './time';
 import { ContentType } from '@/dicts/contentType';
 import { contains } from './native';
 import { RequestInfo } from '@/models/request'
-import { isNil } from 'lodash';
+import { GetBaseUrl, GetSpecialFields } from "~/go/app/App"
+
 
 
 let baseUrl = ""
 
 let fakeFields = {
-  Method: "", Url: "", Time: ""
+  Method: "", Url: "", Time: "", IsBinary: "", IsFormData: ""
 }
 
 const initConfig = async () => {
@@ -18,19 +18,27 @@ const initConfig = async () => {
     return 
   }
   fakeFields = await GetSpecialFields()
+  console.log(fakeFields)
   baseUrl = await GetBaseUrl()
 }
 
 export const request = async (
   req: RequestInfo
 ) => {
-  console.log(req)
   await initConfig()
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open(RequestMethod.Post, baseUrl);
     xhr.setRequestHeader(fakeFields.Url, req.url)
     xhr.setRequestHeader(fakeFields.Method, req.method)
+
+    if (req.isBinary) {
+      xhr.setRequestHeader(fakeFields.IsBinary, "1")
+    }
+
+    if (req.isFormData) {
+      xhr.setRequestHeader(fakeFields.IsFormData, "1")
+    }
 
     if (req.headers) {
       Object.entries(req.headers).forEach(([key, val]) => {

@@ -1,6 +1,7 @@
 package handlehttp
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -17,21 +18,39 @@ const (
 	FAKE_TIMES  = PREFIX + "Times"
 )
 
+const (
+	IS_BINARY   = PREFIX + "Bainy"
+	IS_FORMDATA = PREFIX + "FormDate"
+)
+
 func GetRealReqFromHeaders(r *http.Request) (*http.Request, error) {
+
+	const YES = "1"
 	var (
-		headers = r.Header
-		url     = headers.Get(FAKE_URL)
-		method  = headers.Get(FAKE_METHOD)
+		headers    = r.Header
+		url        = headers.Get(FAKE_URL)
+		method     = headers.Get(FAKE_METHOD)
+		IsBinary   = headers.Get(IS_BINARY) == YES
+		IsFormData = headers.Get(IS_FORMDATA) == YES
 	)
+
+	var body = GenerateRealBody(headers, r.Body, IsFormData, IsBinary)
+
+	fmt.Printf("headers.Get(\"Content-Type\"): %v\n", headers.Get("Content-Type"))
+
 	headers.Del(FAKE_URL)
 	headers.Del(FAKE_METHOD)
 	headers.Del(FAKE_TIMES)
-	if newReq, err := http.NewRequest(method, url, r.Body); err == nil {
+	headers.Del(IS_BINARY)
+	headers.Del(IS_FORMDATA)
+
+	if newReq, err := http.NewRequest(method, url, body); err == nil {
 		newReq.Header = headers
 		return newReq, err
 	} else {
 		return nil, err
 	}
+
 }
 
 func CopyHeaders(originRespWriter http.ResponseWriter, headers http.Header) {

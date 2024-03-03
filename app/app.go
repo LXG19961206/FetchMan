@@ -1,7 +1,6 @@
 package app
 
 import (
-	_ "changeme/app/handleHttp"
 	"changeme/config"
 	"changeme/launch"
 	"changeme/model"

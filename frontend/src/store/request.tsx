@@ -37,6 +37,14 @@ class RequestStore {
     this.url = url
   }
 
+  setBinaryState (boo: boolean) {
+    this.currentRequest.isBinary = boo
+  }
+
+  setFormDataState (boo: boolean) {
+    this.currentRequest.isFormData = boo
+  }
+
   setHeader (key: string, value: string) {
     if (!this.currentRequest.headers) {
       this.currentRequest.headers = {}

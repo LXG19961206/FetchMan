@@ -87,6 +87,8 @@ export default observer(() => {
         [item.name]: item.value
       }), {}))
       reqStore.setHeader("Content-Type", ContentType.FormUrl)
+      reqStore.setBinaryState(false)
+      reqStore.setFormDataState(false)
       reqStore.setBody(formUrl)
     }
   }

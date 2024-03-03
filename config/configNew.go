@@ -9,11 +9,15 @@ type AppBaseConfig struct {
 	CacheFilePath     string
 	DbFileName        string
 	LogFilePath       string
+	RequestFileUrl    string
 }
 
 type CconfigExportForClient struct {
-	RequestServerPort int
-	RequestBaseUrl    string
+	RequestServerPort   int
+	RequestBaseUrl      string
+	RequestFileUrl      string
+	FileServerPort      int
+	FilePlaceholderPath string
 }
 
 var AppConfig = &AppBaseConfig{}
@@ -29,6 +33,7 @@ func (receiver *AppBaseConfig) useConfigDefault() {
 	receiver.FileServerPort = 30399
 	receiver.RequestServerPort = 10240
 	receiver.RequestBaseUrl = "/request"
+	receiver.RequestFileUrl = "/file"
 	receiver.CacheFilePath = "/cache"
 	receiver.DbFileName = ".fetchmanV0.1.db"
 	receiver.LogFilePath = "/log"
@@ -38,4 +43,7 @@ func (receiver *AppBaseConfig) useConfigDefault() {
 func (receiver *CconfigExportForClient) useClientConfigDefault() {
 	receiver.RequestBaseUrl = AppConfig.RequestBaseUrl
 	receiver.RequestServerPort = AppConfig.RequestServerPort
+	receiver.RequestFileUrl = AppConfig.RequestFileUrl
+	receiver.FileServerPort = AppConfig.FileServerPort
+	receiver.FilePlaceholderPath = "@@file/"
 }
