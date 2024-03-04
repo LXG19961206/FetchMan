@@ -29,7 +29,8 @@ func HandleFunc(w http.ResponseWriter, r *http.Request) {
 		*/
 		go SaveRequest(req)
 		/*
-		  帮客户端去发送这个新的请求，并将结果转发给客户端
+			  帮客户端去发送这个新的请求，并将结果转发给客户端
+				我需要转发并且可能需要把结果记录入库，因此不能直接使用 Proxy（代理）
 		*/
 		var resp = ForwardRequest(w, req)
 		/*
