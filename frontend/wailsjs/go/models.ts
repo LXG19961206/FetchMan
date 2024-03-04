@@ -1,3 +1,48 @@
+export namespace app {
+	
+	export class FileInfo {
+	    file: number[];
+	    name: string;
+	    size: number;
+	    path: string;
+	    content_type: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new FileInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.file = source["file"];
+	        this.name = source["name"];
+	        this.size = source["size"];
+	        this.path = source["path"];
+	        this.content_type = source["content_type"];
+	    }
+	}
+	export class SpecialReqHeaderFields {
+	    method: string;
+	    url: string;
+	    times: string;
+	    isBinary: string;
+	    isFormData: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SpecialReqHeaderFields(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.method = source["method"];
+	        this.url = source["url"];
+	        this.times = source["times"];
+	        this.isBinary = source["isBinary"];
+	        this.isFormData = source["isFormData"];
+	    }
+	}
+
+}
+
 export namespace filelike {
 	
 	export class FileLike {

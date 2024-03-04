@@ -13,11 +13,11 @@ type AppBaseConfig struct {
 }
 
 type CconfigExportForClient struct {
-	RequestServerPort   int
-	RequestBaseUrl      string
-	RequestFileUrl      string
-	FileServerPort      int
-	FilePlaceholderPath string
+	RequestServerPort   int    `json:"requestServerPort"`
+	RequestBaseUrl      string `json:"requestBaseUrl"`
+	RequestFileUrl      string `json:"requestFileUrl"`
+	FileServerPort      int    `json:"fileServerPort"`
+	FilePlaceholderPath string `json:"filePlaceholderPath"`
 }
 
 var AppConfig = &AppBaseConfig{}

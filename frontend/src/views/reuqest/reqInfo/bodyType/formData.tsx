@@ -85,8 +85,8 @@ export default observer(() => {
       setSource(prev => (
         prev.map(formItem => formItem === item ? {
           ...formItem,
-          filePath: filePlaceholder + res.Path,
-          value: res.Path,
+          filePath: filePlaceholder + res.path,
+          value: res.path,
           isFile: true,
         } : formItem)
       ))

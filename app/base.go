@@ -34,9 +34,9 @@ func (a *App) GetFilePathPlaceholder() string {
 }
 
 type SpecialReqHeaderFields struct {
-	Method     string
-	Url        string
-	Times      string
-	IsBinary   string
-	IsFormData string
+	Method     string `json:"method"`
+	Url        string `json:"url"`
+	Times      string `json:"times"`
+	IsBinary   string `json:"isBinary"`
+	IsFormData string `json:"isFormData"`
 }

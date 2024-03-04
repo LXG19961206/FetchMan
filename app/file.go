@@ -16,11 +16,11 @@ func (a *App) NativeFileDialog(payload runtime.OpenDialogOptions, onlyPath bool)
 }
 
 type FileInfo struct {
-	File        []byte
-	Name        string
-	Size        int64
-	Path        string
-	ContentType string
+	File        []byte `json:"file"`
+	Name        string `json:"name"`
+	Size        int64  `json:"size"`
+	Path        string `json:"path"`
+	ContentType string `json:"content_type"`
 }
 
 func GetFileInfo(path string) *FileInfo {

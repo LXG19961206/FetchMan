@@ -4,17 +4,17 @@ import { ContentType } from '@/dicts/contentType';
 import { contains } from './native';
 import { RequestInfo } from '@/models/request'
 import { GetBaseUrl, GetSpecialFields } from "~/go/app/App"
-
+import { app } from '~/go/models'
 
 
 let baseUrl = ""
 
 let fakeFields = {
-  Method: "", Url: "", Time: "", IsBinary: "", IsFormData: ""
-}
+  method: "", url: "", times: "", isBinary: "", isFormData: ""
+} as app.SpecialReqHeaderFields
 
 const initConfig = async () => {
-  if (baseUrl && fakeFields.Method) {
+  if (baseUrl && fakeFields.method) {
     return 
   }
   fakeFields = await GetSpecialFields()
@@ -29,15 +29,15 @@ export const request = async (
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open(RequestMethod.Post, baseUrl);
-    xhr.setRequestHeader(fakeFields.Url, req.url)
-    xhr.setRequestHeader(fakeFields.Method, req.method)
+    xhr.setRequestHeader(fakeFields.url, req.url)
+    xhr.setRequestHeader(fakeFields.method, req.method)
 
     if (req.isBinary) {
-      xhr.setRequestHeader(fakeFields.IsBinary, "1")
+      xhr.setRequestHeader(fakeFields.isBinary, "1")
     }
 
     if (req.isFormData) {
-      xhr.setRequestHeader(fakeFields.IsFormData, "1")
+      xhr.setRequestHeader(fakeFields.isFormData, "1")
     }
 
     if (req.headers) {

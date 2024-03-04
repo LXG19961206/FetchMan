@@ -100,13 +100,13 @@ const Binary = () => {
     const upload = () => {
        cancel()
        NativeFileDialog({}, false).then(res => {
-           setPath(res.Path)
-           reqCtx.setContentType(res.ContentType)
-           setBase64(res.File)
+           setPath(res.path)
+           reqCtx.setContentType(res.content_type)
+           setBase64(res.file)
            reqCtx.setBody({
                Type: BodyTypeDict.binary,
-               FilePath: res.Path,
-               FileId: res.Id
+               FilePath: res.path,
+               FileId: res.id
            })
        })
     }

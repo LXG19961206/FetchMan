@@ -34,9 +34,9 @@ export default () => {
     NativeFileDialog({}, false).then(res => {
       reqStore.setBinaryState(true)
       reqStore.setFormDataState(false)
-      reqStore.setHeader("Content-Type" ,res.ContentType)
-      reqStore.setBody(`${filePathPlaceholder}${res.Path}`)
-      setPath(res.Path)
+      reqStore.setHeader("Content-Type" ,res.content_type)
+      reqStore.setBody(`${filePathPlaceholder}${res.path}`)
+      setPath(res.path)
     })
   }
   return (

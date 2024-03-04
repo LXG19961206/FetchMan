@@ -108,7 +108,7 @@ export default (props: {
         await NativeFileDialog({}, true).then(res => {
             setSource([
                 ...source.filter(row => row.key !== item.key),
-                { ...item, Type: BodyTypeDict.binary, Value: res.Path }
+                { ...item, Type: BodyTypeDict.binary, Value: res.path }
             ])
         })
     }

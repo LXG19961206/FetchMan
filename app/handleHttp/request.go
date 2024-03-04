@@ -22,13 +22,21 @@ func ForwardRequest(originRespWriter http.ResponseWriter, req *http.Request) *ht
 		}()
 
 		var bytes, _ = io.ReadAll(resp.Body)
+
 		CopyHeaders(originRespWriter, resp.Header)
+
 		originRespWriter.Write(bytes)
+
 		return resp
+
 	} else {
+
 		fmt.Printf("err: %v\n", err)
+
 		originRespWriter.Write([]byte("hello world"))
+
 		return nil
+
 	}
 
 }
