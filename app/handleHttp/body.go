@@ -58,28 +58,20 @@ func GenerateRealBody(
 				var path = strings.Split(formItem.FilePath, config.AppConfigForClient.FilePlaceholderPath)[1]
 
 				if file, err := os.Open(path); err == nil {
-
 					var info, _ = file.Stat()
-
 					var formItemHeader = make(textproto.MIMEHeader)
-
-					var bytes, _ = io.ReadAll(file)
-
+					var fileBuf = bytes.Buffer{}
+					io.Copy(&fileBuf, file)
+					var bytes = fileBuf.Bytes()
 					var fileContentType = http.DetectContentType(bytes)
-
 					formItemHeader.Set("Content-Type", fileContentType)
-
 					formItemHeader.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, formItem.Name, info.Name()))
-
 					var part, _ = writer.CreatePart(formItemHeader)
 					// fileWriter, _ := writer.CreateFormFile(formItem.Name, path)
 					part.Write(bytes)
 					file.Close()
-
 				} else {
-
 					fmt.Printf("err: %v\n", err)
-
 				}
 			} else {
 				_ = writer.WriteField(formItem.Name, formItem.Value)
