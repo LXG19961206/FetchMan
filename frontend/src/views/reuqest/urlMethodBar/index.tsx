@@ -26,13 +26,14 @@ export default observer(() => {
         }
       </Select>
       <Input
-        value={reqStore.currentRequest.url}
+        value={reqStore.currentViewRequest.url}
         onChange={val => reqStore.setUrl(val)}
         spellCheck={false}
         placeholder='Please enter your url' 
         size={"large"}>
       </Input>
       <Button
+        disabled={!reqStore.currentViewRequest.url}
         className={style.button}
         onClick={() => reqStore.execRequest()}
         size={"large"}

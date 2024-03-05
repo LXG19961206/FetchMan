@@ -59,11 +59,11 @@ export default observer(() => {
   }, [reqStore.params])
 
   const generateParamsUrl = () => {
-    if (!reqStore.currentRequest.url) return 
+    if (!reqStore.currentViewRequest.url) return 
     const paramsUrl = source
       .filter(item => item.name)
       .reduce((prev, item, i, arr) => prev + `${item.name}=${item.value}${i + 1 !== arr.length ? '&' : ''}`, "")
-    const plainUrl = reqStore.currentRequest.url.split('?')[0]
+    const plainUrl = reqStore.currentViewRequest.url.split('?')[0]
     reqStore.setUrl(
       `${plainUrl}?${paramsUrl}`
     )

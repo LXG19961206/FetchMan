@@ -48,8 +48,8 @@ export default observer(() => {
   useEffect(() => {
 
     if (
-      typeof reqStore.currentRequest.body === 'string' &&
-      reqStore.currentRequest.body.indexOf('=') > -1
+      typeof reqStore.currentViewRequest.body === 'string' &&
+      reqStore.currentViewRequest.body.indexOf('=') > -1
     ) {
       try {
         resume()
@@ -70,7 +70,7 @@ export default observer(() => {
   }, [])
 
   const resume = () => {
-    const formUrl = QueryString.parse(reqStore.currentRequest.body as string)
+    const formUrl = QueryString.parse(reqStore.currentViewRequest.body as string)
     const prevSource = Object.entries(formUrl).map(([key, val], idx) => ({
       name: key, value: val as string, id: idx.toString()
     }))
@@ -148,7 +148,7 @@ export default observer(() => {
         </span>
       )
     }))
-  }, [source, reqStore.currentRequest.body])
+  }, [source, reqStore.currentViewRequest.body])
 
   return (
     <Table

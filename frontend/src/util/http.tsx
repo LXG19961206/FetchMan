@@ -5,6 +5,8 @@ import { contains } from './native';
 import { RequestInfo } from '@/models/request'
 import { GetBaseUrl, GetSpecialFields } from "~/go/app/App"
 import { app } from '~/go/models'
+import { Resp } from '@/models/resp';
+import { SmartHeaders } from '@/dicts/headers';
 
 
 let baseUrl = ""
@@ -24,7 +26,7 @@ const initConfig = async () => {
 
 export const request = async (
   req: RequestInfo
-) => {
+): Promise<Resp> => {
   await initConfig()
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -46,15 +48,20 @@ export const request = async (
         xhr.setRequestHeader(key, val)
       })
     }
+
     xhr.send(req.body as XMLHttpRequestBodyInit);
+
     const startTime = getTimeStamp()
+
     xhr.onreadystatechange = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
+        const contentType = xhr.getResponseHeader(SmartHeaders.ContentType) || ''
         resolve({
           data: xhr.response,
+          contentType: contentType,
           dataAfterTrans: bodyParse(
             xhr.response,
-            xhr.getResponseHeader("Content-Type") || ''
+            contentType
           ),
           url: req.url,
           method: req.method,
@@ -64,9 +71,11 @@ export const request = async (
         })
       }
     };
+
     xhr.onerror = () => {
       reject(xhr.response)
     }
+    
   })
 }
 

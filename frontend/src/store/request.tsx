@@ -5,78 +5,91 @@ import qs from 'qs'
 import { Param } from '@/models/param'
 import { generate } from 'shortid'
 import { request } from '@/util/http'
+import { useRespStore } from './resp'
 
 class RequestStore {
 
   constructor () {
     makeAutoObservable(this)
     if (!this.requests.length) {
-      this.requests.push(this.currentRequest)
+      this.requests.push(this.currentViewRequest)
     }
   }
 
   requests: RequestInfo[] = []
 
-  url: string = ""
 
-  currentRequest: RequestInfo = {
+  /**
+   * 前端会缓存目前 tab 里的所有请求的信息
+   * 但是当前展示的只有一个
+   * 所以下方的所有 请求进行 增删改查的方法都是基于当前正在展示的那个请求进行的
+   * 如果切换 tab 后，currentViewRequest 就会发生变化
+   */
+
+  currentViewRequest: RequestInfo = {
     id: (+new Date()).toString(),
     url: '',
     method: RequestMethod.Get,
-    headers: {}
+    headers: {},
+    body: null
   }
 
   async execRequest () {
-    return request(
-      this.currentRequest
-    )
+    const respStore = useRespStore()
+    const resp = await request(this.currentViewRequest)
+    respStore.setCurrentViewResp(resp)
   }
 
   setUrl (url: string) {
-    this.currentRequest.url = url
-    this.url = url
+    this.currentViewRequest.url = url.trim()
   }
 
   setBinaryState (boo: boolean) {
-    this.currentRequest.isBinary = boo
+    this.currentViewRequest.isBinary = boo
   }
 
   setFormDataState (boo: boolean) {
-    this.currentRequest.isFormData = boo
+    this.currentViewRequest.isFormData = boo
   }
 
   setHeader (key: string, value: string) {
-    if (!this.currentRequest.headers) {
-      this.currentRequest.headers = {}
+    if (!this.currentViewRequest.headers) {
+      this.currentViewRequest.headers = {}
     }
-    this.currentRequest.headers[key] = value
+    this.currentViewRequest.headers[key] = value
+  }
+
+  getHeaderValue (key: string) {
+    if (!this.currentViewRequest.headers) {
+      return ""
+    }
+    return this.currentViewRequest.headers[key]
   }
 
   setMethod (method: RequestMethod) {
-    this.currentRequest.method = method
+    this.currentViewRequest.method = method
   }
 
   setBody (body: typeof XMLHttpRequest.prototype.response) {
-    this.currentRequest.body = body
+    this.currentViewRequest.body = body
   }
 
   delBody () {
-    this.currentRequest.body = ''
+    this.currentViewRequest.body = ''
   }
 
   delHeader (key: string) {
-    if (!this.currentRequest.headers) {
-      this.currentRequest.headers = {}
+    if (!this.currentViewRequest.headers) {
+      this.currentViewRequest.headers = {}
     }
-    delete this.currentRequest.headers[key]
+    delete this.currentViewRequest.headers[key]
   }
 
   get params () : Param [] {
-    if (!this.currentRequest.url) {
+    if (!this.currentViewRequest.url) {
       return []
     } else {
-      const params = qs.parse(this.currentRequest.url.split('?')[1])
-      console.log(params, 3333);
+      const params = qs.parse(this.currentViewRequest.url.split('?')[1])
       return Object.entries(params).map(([key, value]) => ({
         name: key, value: value as string || "", id: generate()
       }))

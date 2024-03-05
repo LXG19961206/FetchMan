@@ -52,8 +52,8 @@ export default observer(() => {
     try {
 
       if (
-        reqStore.currentRequest.isFormData && reqStore.currentRequest.body) {
-        setSource(JSON.parse(reqStore.currentRequest.body as string) as FormDataItem[])
+        reqStore.currentViewRequest.isFormData && reqStore.currentViewRequest.body) {
+        setSource(JSON.parse(reqStore.currentViewRequest.body as string) as FormDataItem[])
       }
 
       setTimeout(() => {
@@ -175,7 +175,7 @@ export default observer(() => {
         </span>
       )
     }))
-  }, [source, reqStore.currentRequest.body])
+  }, [source, reqStore.currentViewRequest.body])
 
   return (
     <Table
