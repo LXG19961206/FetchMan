@@ -3,6 +3,7 @@ import React ,{useEffect, useRef} from "react";
 import {px} from "../../style";
 
 export default (props: {
+    className?: string,
     left?: boolean | HTMLElement,
     min?: { width: number, height: number },
     max?: { width: number, height: number },
@@ -64,7 +65,7 @@ export default (props: {
     }, [props.min, props.max])
 
     return (
-        <div style={props.style}>
+        <div style={props.style} className={props.className}>
             <div ref={wrapper} style={{ height: "inherit", width: "inherit" }}>
                 { props.children }
             </div>

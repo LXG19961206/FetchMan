@@ -3,6 +3,7 @@ package app
 import (
 	"changeme/config"
 	"changeme/model"
+	req "changeme/models/request"
 	"changeme/service/db"
 	"changeme/service/request"
 )
@@ -25,4 +26,8 @@ func (a *App) GetRecordById(id int) map[string]interface{} {
 
 	return req[0]
 
+}
+
+func (a *App) GetRequestById(id int64) req.RequestRecord {
+	return req.RequestRecord{}
 }

@@ -1,4 +1,5 @@
 import { RenderIf } from "@/components/headerless/renderIf"
+import { SmartHeaders } from "@/dicts/headers"
 import { useRequestStore } from "@/store/request"
 import { Button, Space, Tag } from "@douyinfe/semi-ui"
 import { useEffect, useState } from "react"
@@ -32,17 +33,21 @@ export default () => {
   const upload = () => {
     cancel()
     NativeFileDialog({}, false).then(res => {
+      if (!res) return 
       reqStore.setBinaryState(true)
       reqStore.setFormDataState(false)
-      reqStore.setHeader("Content-Type" ,res.content_type)
+      reqStore.setHeader(SmartHeaders.ContentType ,res.content_type)
       reqStore.setBody(`${filePathPlaceholder}${res.path}`)
       setPath(res.path)
     })
   }
+
   return (
     <Space vertical align={"start"}>
       <br />
-      <img src={fileBaseUrl + (path)} alt="" />
+      <RenderIf when={!!path && reqStore.getHeaderValue(SmartHeaders.ContentType).indexOf('image') > -1}>
+        <img src={fileBaseUrl + (path)} alt="" />
+      </RenderIf>
       <RenderIf when={!!path}>
         <Tag onClose={cancel} closable size={"large"}> {path} </Tag>
       </RenderIf>

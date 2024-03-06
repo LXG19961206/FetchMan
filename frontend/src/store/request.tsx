@@ -27,11 +27,10 @@ class RequestStore {
    */
 
   currentViewRequest: RequestInfo = {
-    id: (+new Date()).toString(),
+    id: (+new Date()),
     url: '',
     method: RequestMethod.Get,
     headers: {},
-    body: null
   }
 
   async execRequest () {

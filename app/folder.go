@@ -34,7 +34,8 @@ func BindAncestors(current, parent folderTable.Folder) {
 }
 
 func (a *App) AddCollectionFolder(name string, parentId int64) *folderTable.Folder {
-	engine, err := dbUtil.GetSqLiteEngine()
+
+	engine, _ := dbUtil.GetSqLiteEngine()
 
 	exist, err := engine.Get(&folderTable.Folder{Name: name, ParentId: parentId})
 
@@ -101,15 +102,20 @@ func (a *App) RenameFolder(newName string, id int64) {
 }
 
 func (a *App) RemoveCollection(id int64) {
+
 	if engine, _ := dbUtil.GetSqLiteEngine(); engine != nil {
+
 		var toDel []folderTable.Folder2Ancestor
+
 		var toDelFolderIds = []int64{id}
+
 		var toDelMiddleIds []int64
+
+		var toDelFileFolderIds []int64
 
 		engine.Where("folder_id = ?", id).Delete(&folderTable.Folder2Ancestor{})
 
-		var err2 = engine.Find(&toDel, &folderTable.Folder2Ancestor{AncestorId: id})
-		fmt.Printf("err2: %v\n", err2)
+		engine.Find(&toDel, &folderTable.Folder2Ancestor{AncestorId: id})
 
 		lo.ForEach(toDel, func(item folderTable.Folder2Ancestor, i int) {
 			if !lo.Contains(toDelMiddleIds, item.Id) {
@@ -118,14 +124,17 @@ func (a *App) RemoveCollection(id int64) {
 			if !lo.Contains(toDelFolderIds, item.FolderId) {
 				toDelFolderIds = append(toDelFolderIds, item.FolderId)
 			}
-			engine.Delete(&fileTable.FileLike{FolderId: item.FolderId})
 		})
 
-		var _, err3 = engine.In("id", toDelFolderIds).Delete(&folderTable.Folder{})
-		fmt.Printf("err3: %v\n", err3)
+		toDelFileFolderIds = lo.Map(toDel, func(item folderTable.Folder2Ancestor, i int) int64 {
+			return item.FolderId
+		})
 
-		var _, err4 = engine.In("id", toDelMiddleIds).Delete(&folderTable.Folder{})
-		fmt.Printf("err4: %v\n", err4)
+		engine.In("folder_id", toDelFileFolderIds).Delete(&fileTable.FileLike{})
+
+		var _, _ = engine.In("id", toDelFolderIds).Delete(&folderTable.Folder{})
+
+		var _, _ = engine.In("id", toDelMiddleIds).Delete(&folderTable.Folder{})
 
 	}
 }

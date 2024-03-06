@@ -3,6 +3,7 @@ import { TextArea } from '@douyinfe/semi-ui'
 import { useEffect, useState } from 'react'
 import style from './bodyType.module.less'
 import { ContentType } from '@/dicts/contentType'
+import { SmartHeaders } from '@/dicts/headers'
 
 export default () => {
 
@@ -13,7 +14,7 @@ export default () => {
     reqStore.setBody(text)
     reqStore.setBinaryState(false)
     reqStore.setFormDataState(false)
-    reqStore.setHeader("Content-Type", ContentType.Text)
+    reqStore.setHeader(SmartHeaders.ContentType, ContentType.Text)
   }
 
   return (

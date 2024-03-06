@@ -10,6 +10,7 @@ import { Param } from '@/models/param';
 import shortid from 'shortid';
 import QueryString from 'qs';
 import { ContentType } from '@/dicts/contentType';
+import { SmartHeaders } from '@/dicts/headers';
 
 
 
@@ -86,7 +87,7 @@ export default observer(() => {
         ...prev,
         [item.name]: item.value
       }), {}))
-      reqStore.setHeader("Content-Type", ContentType.FormUrl)
+      reqStore.setHeader(SmartHeaders.ContentType, ContentType.FormUrl)
       reqStore.setBinaryState(false)
       reqStore.setFormDataState(false)
       reqStore.setBody(formUrl)

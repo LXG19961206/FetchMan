@@ -135,3 +135,46 @@ export namespace model {
 
 }
 
+export namespace request {
+	
+	export class RequestRecord {
+	    id: number;
+	    createTime: string;
+	    updateTime: string;
+	    collectionId: number;
+	    url: string;
+	    originUrl: string;
+	    method: string;
+	    headers: {[key: string]: string};
+	    contentType: string;
+	    bodyId: number;
+	    respId: number;
+	    body: string;
+	    isBinary: boolean;
+	    isFormData: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new RequestRecord(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.createTime = source["createTime"];
+	        this.updateTime = source["updateTime"];
+	        this.collectionId = source["collectionId"];
+	        this.url = source["url"];
+	        this.originUrl = source["originUrl"];
+	        this.method = source["method"];
+	        this.headers = source["headers"];
+	        this.contentType = source["contentType"];
+	        this.bodyId = source["bodyId"];
+	        this.respId = source["respId"];
+	        this.body = source["body"];
+	        this.isBinary = source["isBinary"];
+	        this.isFormData = source["isFormData"];
+	    }
+	}
+
+}
+

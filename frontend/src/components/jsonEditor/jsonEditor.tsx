@@ -53,7 +53,7 @@ export default (props: {
             }
 
 
-        })
+        }, 200)
 
         editor.set(jsonValue)
 

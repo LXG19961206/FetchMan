@@ -82,6 +82,7 @@ export default observer(() => {
 
   const upload = (item: FormDataItem) => {
     NativeFileDialog({}, false).then(res => {
+      if (!res) return 
       setSource(prev => (
         prev.map(formItem => formItem === item ? {
           ...formItem,

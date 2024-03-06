@@ -8,6 +8,7 @@ import {NativeFileDialog} from "~/go/app/App";
 import {paddingX, Reset} from "@/style/common";
 import {RenderIf} from "@/components/headerless/renderIf";
 import {ReqContext} from "@/context";
+import { SmartHeaders } from '@/dicts/headers';
 
 export type MulFormSource = {
     Type: string,
@@ -98,7 +99,7 @@ export default (props: {
     const syncValueToContext = () => {
 
         reqCtx.setHeaders(
-            reqCtx.headers.filter(item => item[0] !== "Content-Type")
+            reqCtx.headers.filter(item => item[0] !== SmartHeaders.ContentType)
         )
 
         props.syncHandler(source)

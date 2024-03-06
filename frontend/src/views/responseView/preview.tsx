@@ -4,6 +4,7 @@ import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import JsonEditor from "@/components/jsonEditor/jsonEditor";
 import {createStyle, OverFlow, percent, px} from "@/style";
 import {Match} from "@/components/headerless/match";
+import { SmartHeaders } from "@/dicts/headers";
 
 
 
@@ -16,7 +17,7 @@ export const Preview = () => {
 
     const [imgUrl, setUrl] = useState("")
 
-    const contentType = respCtx.respHeaders.find(([k,v]) => k === "Content-Type") || []
+    const contentType = respCtx.respHeaders.find(([k,v]) => k === SmartHeaders.ContentType) || []
 
     const [_, contentTypeVal] = contentType
 

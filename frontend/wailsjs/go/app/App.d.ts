@@ -3,6 +3,7 @@
 import {folder} from '../models';
 import {model} from '../models';
 import {filelike} from '../models';
+import {request} from '../models';
 import {app} from '../models';
 import {frontend} from '../models';
 
@@ -25,6 +26,8 @@ export function GetFileUrl():Promise<string>;
 export function GetPort():Promise<number>;
 
 export function GetRecordById(arg1:number):Promise<{[key: string]: any}>;
+
+export function GetRequestById(arg1:number):Promise<request.RequestRecord>;
 
 export function GetSpecialFields():Promise<app.SpecialReqHeaderFields>;
 

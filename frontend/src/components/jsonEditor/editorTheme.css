@@ -33,6 +33,6 @@
 }
 
 #root .ace_layer .ace_text-layer {
-    font-size: 13px !important;
+    font-size: 13px;
     line-height: var(--editor-line-height);
 }

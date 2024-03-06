@@ -29,28 +29,21 @@ export const Preview = () => {
         <Match fallback={<pre> {respStore.currentViewResp?.data as string} </pre>}>
             <Match.Option when={/application\/json/.test(respStore.currentViewResp?.contentType as string)}>
                 <JsonEditor
-                    height={"inherit"}
+                    height="auto"
                     json={respStore.currentViewResp?.data as string}
                     viewMode>
                 </JsonEditor>
             </Match.Option>
             <Match.Option when={/text\/html/.test(respStore.currentViewResp?.contentType as string)}>
                 <iframe
-                    style={{ resize: 'both' }}
+                    style={{ resize: 'both', width: '100%', height: 'inherit' }}
                     srcDoc={respStore.currentViewResp?.data as string}>
                 </iframe>
             </Match.Option>
-            <Match.Option when={/.*image.*/.test(respStore.currentViewResp?.contentType as string)}>
+            <Match.Option when={!!imgUrl && /.*image.*/.test(respStore.currentViewResp?.contentType as string)}>
                 <img src={imgUrl} alt="" />
             </Match.Option>
         </Match>
     )
 }
 
-const style = {
-    preview: createStyle({
-        height: `calc(${percent(100)} - ${px(40)})`,
-        width: percent(100),
-        overflow: OverFlow.auto,
-    })
-}

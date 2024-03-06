@@ -12,10 +12,9 @@ export default  () => {
             <Divider align='left' dashed margin={8}>
             </Divider>
             <Descriptions align={"left"} >
-                {/* <Descriptions.Item itemKey={"version"}> { respContext.respProto } </Descriptions.Item> */}
                 <Descriptions.Item itemKey={"status"}>
-                    <Match fallback={<> respContext.respStatus </>}>
-                        <Match.Option when={ /2\d\d .*/.test(respStore.currentViewResp?.status.toString() || "") }>
+                    <Match fallback={<> { respStore.currentViewResp?.status } </>}>
+                        <Match.Option when={ /2\d\d.*/.test(respStore.currentViewResp?.status.toString() || "") }>
                             <Tag color={"green"}>{ respStore.currentViewResp?.status }</Tag>
                         </Match.Option>
                         <Match.Option when={ /3\d\d.*/.test(respStore.currentViewResp?.status.toString() || "") }>
