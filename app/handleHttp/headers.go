@@ -1,6 +1,7 @@
 package handlehttp
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 )
@@ -23,9 +24,10 @@ const (
 	IS_FORMDATA = PREFIX + "FormDate"
 )
 
-func GetRealReqFromHeaders(r *http.Request) (*http.Request, error) {
+func GetRealReqFromHeaders(r *http.Request, bodyBuffer bytes.Buffer) (*http.Request, bool, bool, error) {
 
 	const YES = "1"
+
 	var (
 		headers    = r.Header
 		url        = headers.Get(FAKE_URL)
@@ -34,7 +36,7 @@ func GetRealReqFromHeaders(r *http.Request) (*http.Request, error) {
 		IsFormData = headers.Get(IS_FORMDATA) == YES
 	)
 
-	var body = GenerateRealBody(headers, r.Body, IsFormData, IsBinary)
+	var body = GenerateRealBody(headers, bodyBuffer, IsFormData, IsBinary)
 
 	fmt.Printf("headers.Get(\"Content-Type\"): %v\n", headers.Get("Content-Type"))
 
@@ -46,9 +48,9 @@ func GetRealReqFromHeaders(r *http.Request) (*http.Request, error) {
 
 	if newReq, err := http.NewRequest(method, url, body); err == nil {
 		newReq.Header = headers
-		return newReq, err
+		return newReq, IsBinary, IsFormData, err
 	} else {
-		return nil, err
+		return nil, IsBinary, IsFormData, err
 	}
 
 }

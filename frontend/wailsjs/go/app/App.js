@@ -42,8 +42,8 @@ export function GetRecordById(arg1) {
   return window['go']['app']['App']['GetRecordById'](arg1);
 }
 
-export function GetRequestById(arg1) {
-  return window['go']['app']['App']['GetRequestById'](arg1);
+export function GetRequestById() {
+  return window['go']['app']['App']['GetRequestById']();
 }
 
 export function GetSpecialFields() {

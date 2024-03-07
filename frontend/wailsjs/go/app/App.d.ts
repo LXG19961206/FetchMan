@@ -27,7 +27,7 @@ export function GetPort():Promise<number>;
 
 export function GetRecordById(arg1:number):Promise<{[key: string]: any}>;
 
-export function GetRequestById(arg1:number):Promise<request.RequestRecord>;
+export function GetRequestById():Promise<request.RequestRecord>;
 
 export function GetSpecialFields():Promise<app.SpecialReqHeaderFields>;
 

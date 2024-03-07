@@ -31,6 +31,7 @@ func GetReflectStringifyVal(value reflect.Value) string {
 }
 
 func GetFieldsAndValues(col interface{}) ([]string, []any) {
+	
 	var (
 		keyof   = reflect.TypeOf(col)
 		valueOf = reflect.ValueOf(col)

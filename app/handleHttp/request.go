@@ -19,6 +19,7 @@ func ForwardRequest(originRespWriter http.ResponseWriter, req *http.Request) *ht
 		defer func() {
 			client.CloseIdleConnections()
 			resp.Body.Close()
+			req.Body.Close()
 		}()
 
 		var bytes, _ = io.ReadAll(resp.Body)

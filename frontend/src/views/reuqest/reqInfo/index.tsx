@@ -2,7 +2,18 @@ import { Tabs, TabPane, } from '@douyinfe/semi-ui'
 import Params from './params'
 import Headers from './headers'
 import Body from './body'
+import { GetRequestById } from '~/go/app/App'
+import { useEffect } from 'react'
 export default () => {
+
+  useEffect(() => {
+
+    GetRequestById().then((...res) => {
+      console.log(res)
+    })
+
+  }, [])
+
   return (
     <div>
       <Tabs type="line" lazyRender>

@@ -1,6 +1,8 @@
 package request
 
-import "changeme/models"
+import (
+	"changeme/models"
+)
 
 type RequestRecord struct {
 	models.BaseFields `xorm:"extends"`
