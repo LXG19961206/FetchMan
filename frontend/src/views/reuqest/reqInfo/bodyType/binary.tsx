@@ -16,8 +16,18 @@ export default () => {
 
 
   useEffect(() => {
+    
     getBaseUrlAction.then(setBaseUrl)
-    getPlaceholderAction.then(setPlaceholder)
+    getPlaceholderAction.then(setPlaceholder).then(() => {
+      if (reqStore.currentViewRequest.isBinary) {
+       setPlaceholder(val => {
+        setPath(reqStore.currentViewRequest.body?.replaceAll(val, "") || "")
+        return val
+       })
+      }
+    })
+    
+
   }, [])
 
   const reqStore = useRequestStore()

@@ -24,8 +24,11 @@ func (a *App) GetRecordById(id int) map[string]interface{} {
 
 func (a *App) GetRequestById() *req.RequestRecord {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+
 		var record = &req.RequestRecord{}
+
 		engine.ID(5).Get(record)
+
 		return record
 	} else {
 		return nil

@@ -29,11 +29,11 @@ const columns = [
   {
     title: 'value',
     dataIndex: 'value',
-    width: 300
   },
   {
     title: 'edit',
     dataIndex: 'edit',
+    width: 120
   },
 ];
 

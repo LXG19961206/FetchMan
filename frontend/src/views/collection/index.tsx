@@ -16,11 +16,20 @@ export default observer(() => {
   const [wrapperSize, setWrapperSize] = useState([0, 0])
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!wrapper) return
-      setWrapperSize([wrapper.clientWidth, wrapper.clientHeight])
-    })
+    const resize = () => {
+      if (wrapper) {
+        const { width, height } = wrapper.getBoundingClientRect()
+        setWrapperSize([width, height])
+      }
+    }
+    setTimeout(resize)
+    window.addEventListener('resize', resize)
+    return () => {
+      window.removeEventListener('resize', resize)
+    }
   }, [wrapper])
+
+  
 
   return (
     <div

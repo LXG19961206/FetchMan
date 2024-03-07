@@ -1,7 +1,8 @@
 import { useRequestStore } from '@/store/request'
-import { Tabs, TabPane, Tag } from '@douyinfe/semi-ui'
+import { Tabs, TabPane, Tag, Dropdown } from '@douyinfe/semi-ui'
 import style from './style.module.less'
 import { observer } from 'mobx-react'
+import { IconPlus } from '@douyinfe/semi-icons'
 
 const DEFAULT_TAB_NAME = "unamed request"
 
@@ -13,6 +14,7 @@ export default observer(() => {
     <div className={style.wrapper}>
       <Tabs
         size="large"
+        className={style.tabs}
         type="card"
         lazyRender
         defaultActiveKey="1">
@@ -25,12 +27,15 @@ export default observer(() => {
                 </span>
               }
               closable={reqStore.requests.length > 1}
-              itemKey={req.id}
+              itemKey={String(req.id)}
               key={req.id}>
             </TabPane>
           )
         }
       </Tabs>
+      <div className={style.add_icon}>
+        <IconPlus></IconPlus>
+      </div>
     </div>
   )
 })

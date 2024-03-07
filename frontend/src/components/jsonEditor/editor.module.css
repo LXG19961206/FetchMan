@@ -2,4 +2,5 @@
   width: 100%;
   height: calc(100% - 50px) !important;
   overflow: scroll;
+  font-size: 13px !important;
 }

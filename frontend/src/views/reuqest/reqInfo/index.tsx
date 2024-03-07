@@ -1,15 +1,25 @@
-import { Tabs, TabPane, } from '@douyinfe/semi-ui'
+import { Tabs, TabPane } from '@douyinfe/semi-ui'
 import Params from './params'
 import Headers from './headers'
 import Body from './body'
 import { GetRequestById } from '~/go/app/App'
 import { useEffect } from 'react'
+import { useRequestStore } from '@/store/request'
+import { RequestMethod } from '@/dicts/methods'
 export default () => {
 
   useEffect(() => {
 
-    GetRequestById().then((...res) => {
-      console.log(res)
+    GetRequestById().then((res) => {
+      const reqStore = useRequestStore()
+      reqStore.setBinaryState(res.isBinary)
+      reqStore.setFormDataState(res.isFormData)
+      reqStore.setBody(res.body)
+      reqStore.setUrl(res.url)
+      reqStore.setMethod(res.method as RequestMethod)
+      Object.entries(res.headers).forEach(([key, val]) => {
+        reqStore.setHeader(key, val)
+      })
     })
 
   }, [])

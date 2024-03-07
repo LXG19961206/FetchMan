@@ -1,5 +1,28 @@
 .wrapper {
   width: 100%;
+  display: flex;
+  align-items: center;
+  .tabs {
+    max-width: 90%;
+  }
+  
+}
+
+.add_icon {
+  width: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  svg {
+    fill: #999;
+    color: #999;
+    cursor: pointer;
+    &:hover {
+      fill: var(--semi-color-primary);
+      color: var(--semi-color-primary);
+    }
+  }
 }
 
 .tabItem {

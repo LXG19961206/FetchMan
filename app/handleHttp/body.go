@@ -30,8 +30,9 @@ func GenerateRealBody(
 	if isBinary {
 		var path = strings.Split((bodyBuffer.String()), config.AppConfigForClient.FilePlaceholderPath)[1]
 		if file, err := os.Open(path); err == nil {
-			defer file.Close()
-			return file
+			var fileBytes = bytes.Buffer{}
+			io.Copy(&fileBytes, file)
+			return bytes.NewReader(fileBytes.Bytes())
 		}
 		return nil
 	} else if isFormData {

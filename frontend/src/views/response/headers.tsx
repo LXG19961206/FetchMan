@@ -8,7 +8,6 @@ export default  () => {
 
     return (
         <div style={style.desc}>
-            <Typography.Title heading={6} style={style.title} > First Line </Typography.Title>
             <Divider align='left' dashed margin={8}>
             </Divider>
             <Descriptions align={"left"} >

@@ -34,7 +34,8 @@ func ForwardRequest(originRespWriter http.ResponseWriter, req *http.Request) *ht
 
 		fmt.Printf("err: %v\n", err)
 
-		originRespWriter.Write([]byte("hello world"))
+		originRespWriter.Write([]byte(err.Error()))
+		originRespWriter.WriteHeader(http.StatusInternalServerError)
 
 		return nil
 
