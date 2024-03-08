@@ -49,7 +49,7 @@ export default observer(() => {
   useEffect(() => {
 
     if (
-      typeof reqStore.currentViewRequest.body === 'string' &&
+      typeof reqStore.currentViewRequest?.body === 'string' &&
       reqStore.currentViewRequest.body.indexOf('=') > -1
     ) {
       try {
@@ -71,7 +71,7 @@ export default observer(() => {
   }, [])
 
   const resume = () => {
-    const formUrl = QueryString.parse(reqStore.currentViewRequest.body as string)
+    const formUrl = QueryString.parse(reqStore.currentViewRequest?.body as string)
     const prevSource = Object.entries(formUrl).map(([key, val], idx) => ({
       name: key, value: val as string, id: idx.toString()
     }))
@@ -149,7 +149,7 @@ export default observer(() => {
         </span>
       )
     }))
-  }, [source, reqStore.currentViewRequest.body])
+  }, [source, reqStore.currentViewRequest?.body])
 
   return (
     <Table

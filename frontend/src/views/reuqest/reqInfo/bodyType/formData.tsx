@@ -51,6 +51,8 @@ export default observer(() => {
 
     try {
 
+      if (!reqStore.currentViewRequest) return 
+
       if (
         reqStore.currentViewRequest.isFormData && reqStore.currentViewRequest.body) {
         setSource(JSON.parse(reqStore.currentViewRequest.body as string) as FormDataItem[])
@@ -112,7 +114,6 @@ export default observer(() => {
         ...prev, { id: shortid.generate(), name: '', value: '', isFile: false, filePath: "" }
       ]
     })
-    sync()
   }
 
   const changevalue = (evt: Event, key: string, name: string) => {
@@ -176,7 +177,7 @@ export default observer(() => {
         </span>
       )
     }))
-  }, [source, reqStore.currentViewRequest.body])
+  }, [source, reqStore.currentViewRequest?.body])
 
   return (
     <Table

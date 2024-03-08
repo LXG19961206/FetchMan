@@ -15,37 +15,3 @@ type Tab struct {
 func init() {
 	models.CheckOrAppendTable(&Tab{})
 }
-
-func CreateNewTab(name string) {
-	var engine, err = models.GetSqLiteEngine()
-	if err == nil {
-		var tab = &Tab{Name: name}
-		engine.Insert(tab)
-	}
-}
-
-func CloseTab(id int64) {
-	models.BasePhyDel(id, &Tab{})
-}
-
-func CloseTabMul(ids []int64) {
-	var engine, err = models.GetSqLiteEngine()
-	if err == nil {
-		engine.In("id", ids).Delete(&Tab{})
-	}
-}
-
-func RenameTab(newName string, id int64) {
-	models.BaseRename(newName, id, &Tab{})
-}
-
-func DuplicateTab(id int64) {
-	var engine, err = models.GetSqLiteEngine()
-	if err == nil {
-		var current = &Tab{}
-		engine.ID(id).Get(current)
-		current.Id = 0
-		current.Name = current.Name + " copy"
-		engine.Insert(current)
-	}
-}

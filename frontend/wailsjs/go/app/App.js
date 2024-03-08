@@ -6,20 +6,36 @@ export function AddCollectionFolder(arg1, arg2) {
   return window['go']['app']['App']['AddCollectionFolder'](arg1, arg2);
 }
 
-export function AddRequest(arg1) {
-  return window['go']['app']['App']['AddRequest'](arg1);
-}
-
 export function AddRequestToCollection(arg1, arg2) {
   return window['go']['app']['App']['AddRequestToCollection'](arg1, arg2);
+}
+
+export function ClientLsTabs() {
+  return window['go']['app']['App']['ClientLsTabs']();
 }
 
 export function CloseTab(arg1) {
   return window['go']['app']['App']['CloseTab'](arg1);
 }
 
+export function CloseTabMul(arg1) {
+  return window['go']['app']['App']['CloseTabMul'](arg1);
+}
+
+export function CreateBlankRequest() {
+  return window['go']['app']['App']['CreateBlankRequest']();
+}
+
+export function CreateNewTab() {
+  return window['go']['app']['App']['CreateNewTab']();
+}
+
 export function DelFileLikeRecord(arg1) {
   return window['go']['app']['App']['DelFileLikeRecord'](arg1);
+}
+
+export function DuplicateTab(arg1) {
+  return window['go']['app']['App']['DuplicateTab'](arg1);
 }
 
 export function GetBaseUrl() {
@@ -38,20 +54,12 @@ export function GetPort() {
   return window['go']['app']['App']['GetPort']();
 }
 
-export function GetRecordById(arg1) {
-  return window['go']['app']['App']['GetRecordById'](arg1);
-}
-
-export function GetRequestById() {
-  return window['go']['app']['App']['GetRequestById']();
+export function GetRequestById(arg1) {
+  return window['go']['app']['App']['GetRequestById'](arg1);
 }
 
 export function GetSpecialFields() {
   return window['go']['app']['App']['GetSpecialFields']();
-}
-
-export function LsAllTabs() {
-  return window['go']['app']['App']['LsAllTabs']();
 }
 
 export function LsCollectionFolder(arg1) {
@@ -82,14 +90,10 @@ export function RenameFolder(arg1, arg2) {
   return window['go']['app']['App']['RenameFolder'](arg1, arg2);
 }
 
-export function SimpleRequest(arg1) {
-  return window['go']['app']['App']['SimpleRequest'](arg1);
+export function RenameTab(arg1, arg2) {
+  return window['go']['app']['App']['RenameTab'](arg1, arg2);
 }
 
-export function StartNewTab() {
-  return window['go']['app']['App']['StartNewTab']();
-}
-
-export function UpdateTabInfo(arg1) {
-  return window['go']['app']['App']['UpdateTabInfo'](arg1);
+export function UpdateRequestInfo(arg1) {
+  return window['go']['app']['App']['UpdateRequestInfo'](arg1);
 }

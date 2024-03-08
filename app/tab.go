@@ -1,47 +1,74 @@
 package app
 
 import (
-	"changeme/config"
-	"changeme/model"
-	"changeme/service/db"
-	"time"
+	dbUtil "changeme/models"
+	tabTable "changeme/models/tab"
 )
 
-func (a *App) StartNewTab() int {
-
-	var newTab = &model.TabPage{
-		WorkplaceId: 0,
-		CreateTime:  time.Now().String(),
-	}
-
-	id, _ := db.InsertColByTemplate(config.Table_tab_page, *newTab)
-
-	return id
-
-}
-
-func (a *App) UpdateTabInfo(info *model.TabPage) string {
-
-	var id = info.Id
-
-	var err = db.UpadteColById(config.Table_tab_page, *info, id)
-
-	if err != nil {
-		return err.Error()
+func (a *App) CreateNewTab() (*tabTable.Tab, error) {
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		// 创建一个 新的窗口 tab 其实是创建一个新的请求实例
+		if newReq, createErr := CreateBlankRequest(); createErr == nil {
+			// 然后将 req 实例和 tab窗口关联起来
+			var tab = &tabTable.Tab{
+				RequestId: newReq.Id,
+				Method:    newReq.Method,
+				Name:      "新建请求",
+			}
+			var _, InsertErr = engine.Insert(tab)
+			return tab, InsertErr
+		} else {
+			return nil, createErr
+		}
 	} else {
-		return ""
+		return nil, err
 	}
-
 }
 
-func (a *App) CloseTab(id int) {
-
-	db.DeleteColById(config.Table_tab_page, id)
-
+func LsTabs() []*tabTable.Tab {
+	var tabs []*tabTable.Tab
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		engine.Find(&tabs)
+		return tabs
+	} else {
+		return tabs
+	}
 }
 
-func (a *App) LsAllTabs() []map[string]interface{} {
+// 返还客户端当前所有的 tab
+func (a *App) ClientLsTabs() []*tabTable.Tab {
+	var tabs = LsTabs()
+	if len(tabs) > 0 {
+		return tabs
+	} else {
+		var newTab, _ = Application.CreateNewTab()
+		tabs = append(tabs, newTab)
+		return tabs
+	}
+}
 
-	return db.SelectFieldByMap(config.Table_tab_page, []string{"*"}, map[string]any{})
+func (a *App) CloseTab(id int64) {
+	dbUtil.BasePhyDel(id, &tabTable.Tab{})
+}
 
+func (a *App) CloseTabMul(ids []int64) {
+	var engine, err = dbUtil.GetSqLiteEngine()
+	if err == nil {
+		engine.In("id", ids).Delete(&tabTable.Tab{})
+	}
+}
+
+func (a *App) RenameTab(newName string, id int64) {
+	dbUtil.BaseRename(newName, id, &tabTable.Tab{})
+}
+
+func (a *App) DuplicateTab(id int64) {
+	var engine, err = dbUtil.GetSqLiteEngine()
+	if err == nil {
+		var current = &tabTable.Tab{}
+		engine.ID(id).Get(current)
+		current.Id = 0
+		current.Name = current.Name + " copy"
+		engine.Insert(current)
+	}
 }

@@ -37,14 +37,14 @@ export default observer(() => {
       <Menu></Menu>
       <div ref={setWrapper} className={style.req_and_resp}>
         <Request></Request>
-        <RenderIf when={!!respStore.currentViewResp}>
+        <RenderIf when={respStore.showView}>
           <ResizeableWrapper
             min={{ height: 200, width: 0 }}
             // max={{ height: statusCtx.size.height * 0.8, width: statusCtx.size.width }}
             top={true}
             className={style.resp}
             style={{ width: wrapperSize[0] + 'px', height: wrapperSize[1] * 0.5 + 'px' }}>
-            <Response onClose={() => respStore.currentViewResp = null}>
+            <Response onClose={() => respStore.setShowState(false)}>
             </Response>
           </ResizeableWrapper>
         </RenderIf>

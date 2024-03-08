@@ -45,8 +45,8 @@ export default observer(() => {
 
   useEffect(() => {
 
-    if (Object.values(reqStore.currentViewRequest.headers || {}).length > 0) {
-      const source = Object.entries(reqStore.currentViewRequest.headers!)
+    if (Object.values(reqStore.currentViewRequest?.headers || {}).length > 0) {
+      const source = Object.entries(reqStore.currentViewRequest?.headers!)
         .map(([key, val], i) => ({
           name: key,
           value: val,
@@ -54,11 +54,9 @@ export default observer(() => {
         })
       )
       setSource(source)
-    } else {
-      addRow()
     }
 
-  }, [reqStore.currentViewRequest.headers, reqStore.currentViewRequest.body])
+  }, [reqStore.currentViewRequest?.headers, reqStore.currentViewRequest?.body])
 
   const updateHeader = () => {
     source.forEach(item => {

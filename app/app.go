@@ -7,6 +7,8 @@ import (
 	"context"
 )
 
+var Application = &App{}
+
 // App struct
 type App struct {
 	ctx context.Context

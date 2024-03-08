@@ -6,30 +6,19 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/gommon/log"
 )
 
-func HandleFunc(w http.ResponseWriter, r *http.Request) {
-	/*
-		  因为请求是使用 webview(大部分api和逻辑和请求蓝旗一致)
-			首先处理客户端发送请求的跨域问题
-	*/
-	var _, isOption = HanleClientCors(w, r)
-
-	if isOption {
-		return
-	}
+func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
 
 	/*
 		  请求体的数据在下方多个功能里都需要用到
 			将其存到一个 buffer 缓冲区中
 	*/
-
 	var bodyBuffer = bytes.Buffer{}
-
 	io.Copy(&bodyBuffer, r.Body)
-
 	/*
 	  从请求头中拿到真实的请求首行，然后拼成一个新的请求
 	*/
@@ -49,7 +38,6 @@ func HandleFunc(w http.ResponseWriter, r *http.Request) {
 				如果存储一个真实请求，后续可能还需要把复杂的请求体再次解析回去
 		*/
 		go SaveRequest(req, isBinary, isFormData, bodyBuffer)
-
 		/*
 			在某些时候，需要将响应的信息也存起来
 		*/
@@ -59,7 +47,22 @@ func HandleFunc(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		log.Error(err)
 	}
+}
 
+func GetPrevRespInstance(w http.ResponseWriter, r *http.Request) {
+	var reqId = strings.TrimPrefix(r.URL.String(), config.AppConfig.RequestBaseUrl)
+	fmt.Printf("reqId: %v\n", reqId)
+}
+
+func HandleFunc(w http.ResponseWriter, r *http.Request) {
+	HanleClientCors(w, r)
+	if r.Method == http.MethodOptions {
+		return
+	} else if r.Method == http.MethodPost {
+		CreateRealReqAndForward(w, r)
+	} else if r.Method == http.MethodGet {
+		GetPrevRespInstance(w, r)
+	}
 }
 
 func StartServer() {

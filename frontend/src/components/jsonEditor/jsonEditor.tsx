@@ -3,6 +3,7 @@ import 'jsoneditor/dist/jsoneditor.css'
 import './editorTheme.css'
 import style from './editor.module.css'
 import {useEffect, useMemo, useRef} from "react";
+import JSONEditor from 'jsoneditor';
 
 
 export default (props: {
@@ -17,46 +18,48 @@ export default (props: {
 }) => {
 
     const wrapper = useRef<HTMLDivElement>(null)
-
-    const jsonValue = useMemo(() => {
-        try {
-            return JSON.parse(props.json)
-        } catch (err) {
-            return {}
+    const editor = useRef<JSONEditor>()
+    useEffect(() => {
+        if (wrapper.current) {
+            try {
+                const val = JSON.parse(props.json)
+                editor.current?.set(val)
+            } catch {
+    
+            }
         }
-    }, [props.json])
+    }, [props.json, wrapper.current])
 
     useEffect(() => {
-
+        
         if (!wrapper.current) return
-
-        const editor = new Editor(wrapper.current, {
+        
+        editor.current = new Editor(wrapper.current, {
             mode: "code",
             limitDragging: true,
             navigationBar: true,
             mainMenuBar: false,
             statusBar: false,
             onChange () {
-                props.onChange?.call(void 0, editor.getText())
+                props.onChange?.call(void 0, editor.current?.get())
             },
             onBlur () {
-                props.onBlur?.call(void 0, editor.getText())
+                props.onBlur?.call(void 0, editor.current?.get())
             }
         })
 
         setTimeout(() => {
-
             if (props.viewMode) {
-                editor.aceEditor.setReadOnly(true)
+                editor.current?.aceEditor.setReadOnly(true)
             }
-
-
         }, 200)
 
-        editor.set(jsonValue)
-
-        return () => {
-            editor.destroy()
+        try {
+            editor.current?.set(JSON.parse(props.json))
+        } finally {
+            return () => {
+                editor.current?.destroy()
+            }
         }
 
     }, [wrapper])

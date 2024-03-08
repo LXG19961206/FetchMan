@@ -1,23 +1,43 @@
-import { makeObservable,makeAutoObservable, action, observable, computed, reaction, flow } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import { RequestInfo } from '@/models/request'
-import { RequestMethod } from '@/dicts/methods'
+import { Methods, RequestMethod } from '@/dicts/methods'
 import qs from 'qs'
 import { Param } from '@/models/param'
 import { generate } from 'shortid'
 import { request } from '@/util/http'
 import { useRespStore } from './resp'
+import { GetRequestById, UpdateRequestInfo } from '~/go/app/App'
+import { SmartHeaders } from '@/dicts/headers'
+
+
+
+const createBlankRequest = (record?: RequestInfo) => {
+  return {
+    url: record?.url || '',
+    id: record?.id || 0,
+    body: record?.body || '',
+    headers: record?.headers || {},
+    isBinary: record?.isBinary || false,
+    isFormData: record?.isFormData || false,
+    method: record?.method || Methods.get,
+  }
+}
 
 class RequestStore {
 
-  constructor () {
+  constructor() {
     makeAutoObservable(this)
-    if (!this.requests.length) {
-      this.requests.push(this.currentViewRequest)
-    }
   }
 
-  requests: RequestInfo[] = []
 
+  async swtichCurrent(id: number) {
+
+    const current = await GetRequestById(id);
+
+    await UpdateRequestInfo(this.currentViewRequest as any)
+
+    this.currentViewRequest = createBlankRequest(current);
+  }
 
   /**
    * 前端会缓存目前 tab 里的所有请求的信息
@@ -26,65 +46,87 @@ class RequestStore {
    * 如果切换 tab 后，currentViewRequest 就会发生变化
    */
 
-  currentViewRequest: RequestInfo = {
-    id: (+new Date()),
-    url: '',
-    method: RequestMethod.Get,
-    headers: {},
-  }
+  currentViewRequest: RequestInfo = createBlankRequest()
 
-  async execRequest () {
+  async execRequest() {
+    if (!this.currentViewRequest) return 
     const respStore = useRespStore()
+    respStore.setPending(true)
+    respStore.setShowState(true)
     const resp = await request(this.currentViewRequest)
     respStore.setCurrentViewResp(resp)
+    respStore.setPending(false)
   }
 
-  setUrl (url: string) {
+  setUrl(url: string) {
+    if (!this.currentViewRequest) return 
     this.currentViewRequest.url = url.trim()
   }
 
-  setBinaryState (boo: boolean) {
+  setId(id: number) {
+    if (!this.currentViewRequest) return 
+    this.currentViewRequest.id = id
+  }
+
+  setBinaryState(boo: boolean) {
+    if (!this.currentViewRequest) return 
     this.currentViewRequest.isBinary = boo
   }
 
-  setFormDataState (boo: boolean) {
+  getBody () {
+    return this.currentViewRequest.body || ""
+  }
+
+  setFormDataState(boo: boolean) {
+    if (!this.currentViewRequest) return 
     this.currentViewRequest.isFormData = boo
   }
 
-  setHeader (key: string, value: string) {
+  setHeader(key: string, value: string) {
+    if (!this.currentViewRequest) return 
     if (!this.currentViewRequest.headers) {
       this.currentViewRequest.headers = {}
     }
     this.currentViewRequest.headers[key] = value
   }
 
-  getHeaderValue (key: string) {
+  getHeaderValue(key: string) {
     if (!this.currentViewRequest.headers) {
       return ""
     }
-    return this.currentViewRequest.headers[key]
+    return this.currentViewRequest.headers[key] || ""
   }
 
-  setMethod (method: RequestMethod) {
+  setMethod(method: RequestMethod) {
+    if (!this.currentViewRequest) return 
     this.currentViewRequest.method = method
   }
 
-  setBody (body: typeof XMLHttpRequest.prototype.response) {
+  setBody(body: typeof XMLHttpRequest.prototype.response) {
+    if (!this.currentViewRequest) return 
     this.currentViewRequest.body = body
   }
 
-  delBody () {
+  delBody() {
+    if (!this.currentViewRequest) return 
     this.currentViewRequest.body = ''
   }
 
-  delHeader (key: string) {
+  delHeader(key: string) {
+    if (!this.currentViewRequest) return 
     if (!this.currentViewRequest.headers) {
       this.currentViewRequest.headers = {}
     }
     delete this.currentViewRequest.headers[key]
   }
 
-  get params () : Param [] {
+  getContentType () {
+    if (!this.currentViewRequest?.headers) return ""
+    return this.currentViewRequest.headers[SmartHeaders.ContentType] || ''
+  }
+
+  get params(): Param[] {
+    if (!this.currentViewRequest) return []
     if (!this.currentViewRequest.url) {
       return []
     } else {

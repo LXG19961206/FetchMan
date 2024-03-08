@@ -12,7 +12,7 @@ export default observer(() => {
       <Select
         filter
         size={"large"}
-        defaultValue={RequestMethod.Get}
+        value={reqStore.currentViewRequest.method || RequestMethod.Get}
         onChange={val => reqStore.setMethod(val as RequestMethod)}
         style={{ width: 150 }}>
         {
@@ -26,14 +26,14 @@ export default observer(() => {
         }
       </Select>
       <Input
-        value={reqStore.currentViewRequest.url}
+        value={reqStore.currentViewRequest?.url}
         onChange={val => reqStore.setUrl(val)}
         spellCheck={false}
         placeholder='Please enter your url' 
         size={"large"}>
       </Input>
       <Button
-        disabled={!reqStore.currentViewRequest.url}
+        disabled={!reqStore.currentViewRequest?.url}
         className={style.button}
         onClick={() => reqStore.execRequest()}
         size={"large"}

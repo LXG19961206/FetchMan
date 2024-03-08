@@ -13,30 +13,37 @@ export const Json = () => {
 
   useEffect(() => {
 
-    if (reqStore.currentViewRequest.isBinary || reqStore.currentViewRequest.isFormData) {
+
+    if (!reqStore.currentViewRequest) return 
+
+    if (reqStore.currentViewRequest.isFormData) {
       return 
     }
 
+    const maybeJson = reqStore.currentViewRequest.body as string
+
     const currentContentType = reqStore.getHeaderValue(SmartHeaders.ContentType)
+
+    console.log(maybeJson, currentContentType)
    
-    if (currentContentType.indexOf(ContentType.Json) > - 1) {
-      setJson(reqStore.currentViewRequest.body as string)
+    if (currentContentType && currentContentType.indexOf(ContentType.Json) > - 1) {
+      setJson(maybeJson)
     }
 
-  }, [])
+  }, [reqStore.currentViewRequest.body])
 
   const sync = (newVal: string) => {
     reqStore.setHeader('Content-Type', ContentType.Json)
     reqStore.setBinaryState(false)
     reqStore.setFormDataState(false)
-    reqStore.setBody(newVal)
+    reqStore.setBody(JSON.stringify(newVal))
   }
 
   return (
     <div className={style.editor}>
       <Editor
         height={"400px"}
-        onBlur={sync}
+        onChange={sync}
         editMode
         json={jsonStr as string}>
       </Editor>

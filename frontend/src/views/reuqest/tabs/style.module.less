@@ -2,22 +2,36 @@
   width: 100%;
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  position: relative;
+
   .tabs {
-    max-width: 90%;
+    left: 0;
+    width: 100%;
+    overflow-x: auto;
+
+    
+
+    // :global(.semi-tabs-content) {
+    //   display: none;
+    // }
   }
-  
 }
 
 .add_icon {
-  width: 44px;
+  width: 33px;
+  height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 24px;
+
   svg {
     fill: #999;
     color: #999;
     cursor: pointer;
+
     &:hover {
       fill: var(--semi-color-primary);
       color: var(--semi-color-primary);
@@ -25,10 +39,8 @@
   }
 }
 
-.tabItem {
-  max-width: 240px;
-  padding-right: 40px;
-  display: block;
-  text-overflow: ellipsis;
-  overflow: hidden;
+.content {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 10px;
 }
