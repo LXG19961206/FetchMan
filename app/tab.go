@@ -36,14 +36,9 @@ func LsTabs() []*tabTable.Tab {
 
 // 返还客户端当前所有的 tab
 func (a *App) ClientLsTabs() []*tabTable.Tab {
-	var tabs = LsTabs()
-	if len(tabs) > 0 {
-		return tabs
-	} else {
-		var newTab, _ = Application.CreateNewTab()
-		tabs = append(tabs, newTab)
-		return tabs
-	}
+	var tabs []*tabTable.Tab
+	tabs = append(tabs, LsTabs()...)
+	return tabs
 }
 
 func (a *App) CloseTab(id int64) {

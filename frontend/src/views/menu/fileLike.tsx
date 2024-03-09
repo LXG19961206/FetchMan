@@ -40,7 +40,7 @@ export default observer((
         files.map(item => (
           <div
             key={item.id}
-            onClick={() => workplaceStore.viewRequest(item.id, item.name, item.tag)}
+            onClick={() => workplaceStore.viewRequest(props.parentId, item.requestId, item.name, item.tag)}
             style={{ marginLeft: 7 * props.depth + 'px' }}
             onContextMenu={evt => showMenu(evt, `${style.more_icon + item.id + 'folder'}`)}
             className={style.file_item}>
@@ -62,7 +62,7 @@ export default observer((
             </div>
             <Dropdown
               clickToHide
-              mouseLeaveDelay={0}
+              mouseLeaveDelay={100}
               trigger={"click"}
               render={
                 <Dropdown.Menu>

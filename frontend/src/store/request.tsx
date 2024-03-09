@@ -8,6 +8,8 @@ import { request } from '@/util/http'
 import { useRespStore } from './resp'
 import { GetRequestById, UpdateRequestInfo } from '~/go/app/App'
 import { SmartHeaders } from '@/dicts/headers'
+import { useTabStore } from './tab'
+import { useWorkplaceStore } from './workplace'
 
 
 
@@ -37,7 +39,6 @@ class RequestStore {
 
   async swtichCurrent(id: number) {
     const current = await GetRequestById(id);
-    await UpdateRequestInfo(this.currentViewRequest as any)
     this.currentViewRequest = createBlankRequest(current);
   }
 
@@ -55,11 +56,17 @@ class RequestStore {
     if (!this.currentViewRequest) return 
     const reqId = this.currentViewRequest.id || 0
     const respStore = useRespStore()
+    const tabStore = useTabStore()
+    const workplaceStore = useWorkplaceStore()
     respStore.wait(reqId)
     const resp = await request(this.currentViewRequest)
     respStore.setCurrentViewResp(resp, reqId)
     respStore.removePendingTarget(reqId)
     this.updateReqInfo(reqId)
+    tabStore.getAllWindow()
+    workplaceStore.lsFilesOfFolder(
+      workplaceStore.currentViewFolderId
+    )
   }
 
   setUrl(url: string) {

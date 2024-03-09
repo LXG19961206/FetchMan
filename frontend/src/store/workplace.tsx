@@ -21,6 +21,8 @@ class WorkplaceStore {
 
   currentEditFolderId = 0
 
+  currentViewFolderId = 0
+
   folderMap = observable.map<number, Folder []>()
 
   fileLikeMap = observable.map<number, FileLike []>()
@@ -28,8 +30,7 @@ class WorkplaceStore {
   whichAreOpened = observable.set<number>()
 
   async lsTargetFolder (id: number = 0) {
-    const res = await LsCollectionFolder(id || 0)
-    if (!res?.length) return
+    const res = await LsCollectionFolder(id || 0) || []
     const folders = res.map(node => ({
       ...node, 
       isFold: !this.whichAreOpened.has(node.id), 
@@ -44,15 +45,16 @@ class WorkplaceStore {
     this.fileLikeMap.set(id, files)
   }
 
-  async viewRequest (id: number, name: string, tag: string)  {
+  async viewRequest (folderId: number, reqId: number, name: string, tag: string)  {
     const tabStore = useTabStore()
-    tabStore.createOrUseExist(id, name, tag)
+    this.currentViewFolderId = folderId
+    tabStore.createOrUseExist(reqId, name, tag)
   }
 
   async renameRequest (name: string, id: number, folderId: number) {
     this.currentEditRequestId = 0
     await RenameFileLikeRequest(name, id)
-    await this.lsTargetFolder(folderId)
+    await this.lsFilesOfFolder(folderId)
   }
 
   async delRequest (id: number, folderId: number) {
@@ -93,7 +95,10 @@ class WorkplaceStore {
     this.currentEditFolderId = id
   }
 
-  async addRequest (folderId: number) {
+  async addRequest (folder: Folder) {
+    const folderId = folder.id
+    folder.isFold = false
+    this.whichAreOpened.add(folderId)
     const { id } = await AddRequestToCollection(
       folderId, `新请求${shortid.generate()}`
     )

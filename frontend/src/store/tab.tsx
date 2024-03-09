@@ -14,7 +14,7 @@ class TabStore {
   }
 
   get currentViewReqId () {
-    return this.tabs.find(item => item.id === this.currentId)?.requestId
+    return this.tabs?.find(item => item.id === this.currentId)?.requestId
   }
 
   async createOrUseExist (id: number, name: string, tag: string) {
@@ -31,7 +31,7 @@ class TabStore {
   }
 
   async getAllWindow () {
-    this.tabs = await ClientLsTabs()
+    this.tabs = await ClientLsTabs() || []
     return this.tabs
   }
 

@@ -2,7 +2,6 @@ package app
 
 import (
 	dbUtil "changeme/models"
-	fileTable "changeme/models/fileLike"
 	folderTable "changeme/models/folder"
 	"fmt"
 	"log"
@@ -101,22 +100,27 @@ func (a *App) RenameFolder(newName string, id int64) {
 	dbUtil.BaseRename(newName, id, &folderTable.Folder{})
 }
 
+/*
+	   移除一个工作区，要删除很多东西
+		 首先要根据中间表，找到工作区所有的 后代 工作区
+
+		 然后找到后代工作区关联的所有文件
+		 需要将这些文件也进行删除
+		 文件又和请求是一对一的对应关系，因此请求也应该被删除
+		 此外还有和请求关联的 tab 页也统统进行删除
+*/
 func (a *App) RemoveCollection(id int64) {
 
 	if engine, _ := dbUtil.GetSqLiteEngine(); engine != nil {
 
 		var toDel []folderTable.Folder2Ancestor
-
 		var toDelFolderIds = []int64{id}
-
 		var toDelMiddleIds []int64
+		var toDelFileFolderIds = []int64{id}
 
-		var toDelFileFolderIds []int64
-
-		engine.Where("folder_id = ?", id).Delete(&folderTable.Folder2Ancestor{})
-
+		// 从中间表中找到所有和这个工作区有关的内容进行批量删除
+		// 包括子文件夹、以及请求记录
 		engine.Find(&toDel, &folderTable.Folder2Ancestor{AncestorId: id})
-
 		lo.ForEach(toDel, func(item folderTable.Folder2Ancestor, i int) {
 			if !lo.Contains(toDelMiddleIds, item.Id) {
 				toDelMiddleIds = append(toDelMiddleIds, item.Id)
@@ -126,14 +130,12 @@ func (a *App) RemoveCollection(id int64) {
 			}
 		})
 
-		toDelFileFolderIds = lo.Map(toDel, func(item folderTable.Folder2Ancestor, i int) int64 {
-			return item.FolderId
-		})
+		for _, record := range toDel {
+			toDelFileFolderIds = append(toDelFileFolderIds, record.FolderId)
+		}
 
-		engine.In("folder_id", toDelFileFolderIds).Delete(&fileTable.FileLike{})
-
+		BatchPhyDeleteFileLikeRequest(toDelFileFolderIds)
 		var _, _ = engine.In("id", toDelFolderIds).Delete(&folderTable.Folder{})
-
 		var _, _ = engine.In("id", toDelMiddleIds).Delete(&folderTable.Folder{})
 
 	}

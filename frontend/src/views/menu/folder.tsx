@@ -80,7 +80,7 @@ export const FolderTree = observer((props: {
                   </span>
                   <Dropdown
                     clickToHide
-                    mouseLeaveDelay={0}
+                    mouseLeaveDelay={100}
                     trigger={"click"}
                     render={
                       <Dropdown.Menu>
@@ -96,7 +96,7 @@ export const FolderTree = observer((props: {
                           onClick={() => workplaceStore.addFolder(node.id)}
                         > Add Sub Folder </Dropdown.Item>
                         <Dropdown.Item
-                          onClick={() => workplaceStore.addRequest(node.id)}
+                          onClick={() => workplaceStore.addRequest(node)}
                         > Add New Request </Dropdown.Item>
                       </Dropdown.Menu>
                     }>

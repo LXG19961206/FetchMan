@@ -13,7 +13,6 @@ export const Json = () => {
 
   useEffect(() => {
 
-
     if (!reqStore.currentViewRequest) return 
 
     if (reqStore.currentViewRequest.isFormData) {

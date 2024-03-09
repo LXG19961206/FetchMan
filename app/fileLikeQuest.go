@@ -3,7 +3,10 @@ package app
 import (
 	dbUtil "changeme/models"
 	fileLikeTable "changeme/models/fileLike"
+	reqTable "changeme/models/request"
+	tabTable "changeme/models/tab"
 	"errors"
+	"fmt"
 )
 
 func (a *App) LsRequestOfCollection(collectionId int64) []fileLikeTable.FileLike {
@@ -57,5 +60,31 @@ func (a *App) AddRequestToCollection(collectionId int64, name string) *fileLikeT
 		}
 	} else {
 		return nil
+	}
+}
+
+func BatchPhyDeleteFileLikeRequest(folderIds []int64) {
+
+	fmt.Printf("folderIds: %v\n", folderIds)
+
+	if engine, _ := dbUtil.GetSqLiteEngine(); engine != nil {
+
+		var toDelRecords []fileLikeTable.FileLike
+		var reqIds = []int64{}
+		var toDel = []int64{}
+
+		engine.In("folder_id", folderIds).Select("request_id, id").Find(&toDelRecords)
+
+		fmt.Printf("toDelRecords: %v\n", toDelRecords)
+
+		for _, record := range toDelRecords {
+			reqIds = append(reqIds, record.RequestId)
+			toDel = append(toDel, record.Id)
+		}
+
+		engine.In("id", toDel).Delete(&fileLikeTable.FileLike{})
+		engine.In("id", reqIds).Delete(&reqTable.RequestRecord{})
+		engine.In("request_id", reqIds).Delete(&tabTable.Tab{})
+
 	}
 }
