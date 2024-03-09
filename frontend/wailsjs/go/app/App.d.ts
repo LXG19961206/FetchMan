@@ -17,13 +17,17 @@ export function CloseTab(arg1:number):Promise<void>;
 
 export function CloseTabMul(arg1:Array<number>):Promise<void>;
 
+export function CopyRequest(arg1:number):Promise<request.RequestRecord>;
+
 export function CreateBlankRequest():Promise<request.RequestRecord>;
 
 export function CreateNewTab():Promise<tab.Tab>;
 
+export function CreateOrUseExistTab(arg1:number,arg2:string,arg3:string):Promise<number>;
+
 export function DelFileLikeRecord(arg1:number):Promise<void>;
 
-export function DuplicateTab(arg1:number):Promise<void>;
+export function DuplicateTab(arg1:number):Promise<Array<tab.Tab>>;
 
 export function GetBaseUrl():Promise<string>;
 

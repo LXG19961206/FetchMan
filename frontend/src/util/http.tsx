@@ -8,11 +8,12 @@ import { app } from '~/go/models'
 import { Resp } from '@/models/resp';
 import { SmartHeaders } from '@/dicts/headers';
 
+const UNSAFE_HEADER = new Set<string>(["Accept-Encoding", "Connection", "Content-Length", "Origin"])
 
 let baseUrl = ""
 
 let fakeFields = {
-  method: "", url: "", times: "", isBinary: "", isFormData: ""
+  method: "", url: "", times: "", isBinary: "", isFormData: "", instanceId: ""
 } as app.SpecialReqHeaderFields
 
 const initConfig = async () => {
@@ -33,7 +34,7 @@ export const request = async (
     xhr.open(RequestMethod.Post, baseUrl);
     xhr.setRequestHeader(fakeFields.url, req.url)
     xhr.setRequestHeader(fakeFields.method, req.method)
-
+    xhr.setRequestHeader(fakeFields.instanceId, String(req.id))
     if (req.isBinary) {
       xhr.setRequestHeader(fakeFields.isBinary, "1")
     }
@@ -44,7 +45,7 @@ export const request = async (
 
     if (req.headers) {
       Object.entries(req.headers).forEach(([key, val]) => {
-        if (!key) return 
+        if (!key || UNSAFE_HEADER.has(key)) return 
         xhr.setRequestHeader(key, val)
       })
     }

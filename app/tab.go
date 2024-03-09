@@ -13,7 +13,6 @@ func (a *App) CreateNewTab() (*tabTable.Tab, error) {
 			var tab = &tabTable.Tab{
 				RequestId: newReq.Id,
 				Method:    newReq.Method,
-				Name:      "新建请求",
 			}
 			var _, InsertErr = engine.Insert(tab)
 			return tab, InsertErr
@@ -62,13 +61,35 @@ func (a *App) RenameTab(newName string, id int64) {
 	dbUtil.BaseRename(newName, id, &tabTable.Tab{})
 }
 
-func (a *App) DuplicateTab(id int64) {
+func (a *App) DuplicateTab(id int64) []*tabTable.Tab {
 	var engine, err = dbUtil.GetSqLiteEngine()
 	if err == nil {
 		var current = &tabTable.Tab{}
 		engine.ID(id).Get(current)
+		var newReq = Application.CopyRequest(current.RequestId)
+		current.RequestId = newReq.Id
 		current.Id = 0
 		current.Name = current.Name + " copy"
 		engine.Insert(current)
 	}
+	return Application.ClientLsTabs()
+}
+
+func (a *App) CreateOrUseExistTab(reqId int64, name string, tag string) int64 {
+
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		var record = &tabTable.Tab{RequestId: reqId}
+		engine.Get(record)
+		// if not find
+		if record.Id == 0 {
+			record.Name = name
+			record.Method = tag
+			engine.Insert(record)
+			return record.Id
+		} else {
+			return record.Id
+		}
+	}
+
+	return 0
 }

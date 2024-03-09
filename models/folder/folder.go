@@ -15,10 +15,10 @@ const (
 type Folder struct {
 	models.BaseFields `xorm:"extends"`
 	CreaterId         string `json:"createrId"`
-	Name              string `json:"name"`
+	Name              string `xorm:"varchar(32)" json:"name"`
 	Depth             int64  `json:"depth"`
 	ParentId          int64  `json:"parentId"`
-	Type              string `json:"type"`
+	Type              string `xorm:"varchar(32)" json:"type"`
 }
 
 type Folder2Ancestor struct {

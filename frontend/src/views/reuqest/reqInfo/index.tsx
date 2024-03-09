@@ -2,10 +2,7 @@ import { Tabs, TabPane } from '@douyinfe/semi-ui'
 import Params from './params'
 import Headers from './headers'
 import Body from './body'
-import { GetRequestById } from '~/go/app/App'
 import { useEffect } from 'react'
-import { useRequestStore } from '@/store/request'
-import { RequestMethod } from '@/dicts/methods'
 export default () => {
 
   useEffect(() => {

@@ -1,10 +1,9 @@
 package app
 
 import (
+	handleHttp "changeme/app/handleHttp"
 	dbUtil "changeme/models"
 	req "changeme/models/request"
-	tabTable "changeme/models/tab"
-	"fmt"
 	"net/http"
 )
 
@@ -21,7 +20,7 @@ import (
 // 	return req[0]
 // }
 
-func (a *App) GetRequestById(id int) *req.RequestRecord {
+func (a *App) GetRequestById(id int64) *req.RequestRecord {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
 		var record = &req.RequestRecord{}
 		engine.ID(id).Get(record)
@@ -31,23 +30,19 @@ func (a *App) GetRequestById(id int) *req.RequestRecord {
 	}
 }
 
-func (a *App) UpdateRequestInfo(record *req.RequestRecord) {
-
+func (a *App) CopyRequest(id int64) *req.RequestRecord {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-
-		engine.Table(&req.RequestRecord{}).ID(record.Id).AllCols().Update(record)
-
-		var tab = &tabTable.Tab{}
-
-		engine.Where(`request_id = ?`, record.Id).Get(tab)
-
-		fmt.Printf("tab: %v\n", tab)
-
-		tab.Name = record.Url
-		tab.Method = record.Method
-		engine.ID(tab.Id).Update(tab)
+		var record = &req.RequestRecord{}
+		engine.ID(id).Get(record)
+		record.Id = 0
+		engine.Insert(record)
+		return record
 	}
+	return nil
+}
 
+func (a *App) UpdateRequestInfo(record *req.RequestRecord) {
+	handleHttp.UpdateRequestInfo(record)
 }
 
 func CreateBlankRequest() (*req.RequestRecord, error) {

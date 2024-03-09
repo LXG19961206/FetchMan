@@ -12,7 +12,6 @@ import (
 )
 
 func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
-
 	/*
 		  请求体的数据在下方多个功能里都需要用到
 			将其存到一个 buffer 缓冲区中
@@ -22,14 +21,13 @@ func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
 	/*
 	  从请求头中拿到真实的请求首行，然后拼成一个新的请求
 	*/
-	if req, isBinary, isFormData, err := GetRealReqFromHeaders(r, bodyBuffer); err == nil {
+	if req, record, err := GetRealReqFromHeaders(r, bodyBuffer); err == nil {
 		/*
 			  帮客户端去发送这个新的请求，并将结果转发给客户端
 				我需要转发并且可能需要把结果记录入库，需要知晓这个请求的结果
 				因此不能直接使用 Proxy（代理），这个转发的过程不是透明的
 		*/
 		var resp = ForwardRequest(w, req)
-
 		/*
 			  如果需要同步请求信息到数据库或者其他额外的 io 操作
 				为这个行为开启一个协程，无需阻塞
@@ -37,7 +35,7 @@ func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
 				这样方便客户端后续的反显
 				如果存储一个真实请求，后续可能还需要把复杂的请求体再次解析回去
 		*/
-		go SaveRequest(req, isBinary, isFormData, bodyBuffer)
+		go UpdateRequestInfo(record)
 		/*
 			在某些时候，需要将响应的信息也存起来
 		*/

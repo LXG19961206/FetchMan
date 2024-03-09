@@ -22,12 +22,20 @@ export function CloseTabMul(arg1) {
   return window['go']['app']['App']['CloseTabMul'](arg1);
 }
 
+export function CopyRequest(arg1) {
+  return window['go']['app']['App']['CopyRequest'](arg1);
+}
+
 export function CreateBlankRequest() {
   return window['go']['app']['App']['CreateBlankRequest']();
 }
 
 export function CreateNewTab() {
   return window['go']['app']['App']['CreateNewTab']();
+}
+
+export function CreateOrUseExistTab(arg1, arg2, arg3) {
+  return window['go']['app']['App']['CreateOrUseExistTab'](arg1, arg2, arg3);
 }
 
 export function DelFileLikeRecord(arg1) {

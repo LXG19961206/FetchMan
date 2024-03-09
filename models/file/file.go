@@ -18,7 +18,7 @@ const (
 
 type File struct {
 	models.BaseFields `xorm:"extends"`
-	Path              string `json:"path"`
-	ContentType       string `json:"contentType"`
-	Name              string `json:"name"`
+	Path              string `xorm:"varchar(32)" json:"path"`
+	ContentType       string `xorm:"varchar(127)" json:"contentType"`
+	Name              string `xorm:"varchar(32)" json:"name"`
 }

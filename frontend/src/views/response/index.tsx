@@ -1,5 +1,5 @@
 import { TabPane, Tabs, Divider, Spin, Tag } from '@douyinfe/semi-ui';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Preview } from "./preview";
 import { Match } from "@/components/headerless/match";
 import Headers from './headers'
@@ -9,6 +9,7 @@ import style from './index.module.less'
 import { IconClose } from '@douyinfe/semi-icons'
 import { RenderIf } from '@/components/headerless/renderIf';
 import { divide } from 'lodash';
+import { useTabStore } from '@/store/tab';
 
 export default observer((
     props?: {
@@ -22,8 +23,11 @@ export default observer((
         Response = "Response"
     }
 
-    const [currentIdx, setIdx] = useState(TabItem.Header as string)
+    const tabStore = useTabStore()
+
     const respStore = useRespStore()
+
+    const [currentIdx, setIdx] = useState(TabItem.Header as string)
 
     return (
         <div
@@ -34,7 +38,7 @@ export default observer((
                         <Spin tip="loading" size='large'></Spin>
                     </div>
                 }
-                when={!respStore.isPending}>
+                when={!!respStore.currentView}>
                 <IconClose onClick={props?.onClose} className={style.close_icon}>
                 </IconClose>
                 <Tabs type="button"
@@ -60,7 +64,7 @@ export default observer((
                     <Match.Option when={currentIdx === TabItem.Response}>
                         <div className={style.plain_text}>
                             <span>
-                                {respStore.currentViewResp?.data}
+                                {respStore.currentView?.data}
                             </span>
                         </div>
                     </Match.Option>

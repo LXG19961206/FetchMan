@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 import { tab } from '~/go/models'
-import { ClientLsTabs, CreateNewTab, CloseTab } from '~/go/app/App'
+import { ClientLsTabs, CreateNewTab, CloseTab, RenameTab, DuplicateTab, CreateOrUseExistTab } from '~/go/app/App'
 import { useRequestStore } from './request'
 
 class TabStore {
@@ -13,9 +13,31 @@ class TabStore {
     makeAutoObservable(this)
   }
 
+  get currentViewReqId () {
+    return this.tabs.find(item => item.id === this.currentId)?.requestId
+  }
+
+  async createOrUseExist (id: number, name: string, tag: string) {
+    await this.changeTab(0)
+    const tabId = await CreateOrUseExistTab(id, name, tag)
+    await this.getAllWindow()
+    setTimeout(() => {
+      this.changeTab(tabId)
+    })
+  }
+
+  async duplicateTab (id: number) {
+    this.tabs = await DuplicateTab(id)
+  }
+
   async getAllWindow () {
     this.tabs = await ClientLsTabs()
     return this.tabs
+  }
+
+  async rename (name: string, id: number) {
+    await RenameTab(name, id)
+    await this.getAllWindow()
   }
 
   async changeTab (id: number) {

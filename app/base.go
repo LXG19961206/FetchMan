@@ -26,6 +26,7 @@ func (a *App) GetSpecialFields() *SpecialReqHeaderFields {
 		Times:      handleHttp.FAKE_TIMES,
 		IsBinary:   handleHttp.IS_BINARY,
 		IsFormData: handleHttp.IS_FORMDATA,
+		InstanceId: handleHttp.INSTANCE_ID,
 	}
 }
 
@@ -39,4 +40,5 @@ type SpecialReqHeaderFields struct {
 	Times      string `json:"times"`
 	IsBinary   string `json:"isBinary"`
 	IsFormData string `json:"isFormData"`
+	InstanceId string `json:"instanceId"`
 }

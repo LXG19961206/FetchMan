@@ -29,15 +29,18 @@ class RequestStore {
     makeAutoObservable(this)
   }
 
-
-  async swtichCurrent(id: number) {
-
+  async updateReqInfo (id: number) {
     const current = await GetRequestById(id);
-
-    await UpdateRequestInfo(this.currentViewRequest as any)
-
     this.currentViewRequest = createBlankRequest(current);
   }
+
+
+  async swtichCurrent(id: number) {
+    const current = await GetRequestById(id);
+    await UpdateRequestInfo(this.currentViewRequest as any)
+    this.currentViewRequest = createBlankRequest(current);
+  }
+
 
   /**
    * 前端会缓存目前 tab 里的所有请求的信息
@@ -50,12 +53,13 @@ class RequestStore {
 
   async execRequest() {
     if (!this.currentViewRequest) return 
+    const reqId = this.currentViewRequest.id || 0
     const respStore = useRespStore()
-    respStore.setPending(true)
-    respStore.setShowState(true)
+    respStore.wait(reqId)
     const resp = await request(this.currentViewRequest)
-    respStore.setCurrentViewResp(resp)
-    respStore.setPending(false)
+    respStore.setCurrentViewResp(resp, reqId)
+    respStore.removePendingTarget(reqId)
+    this.updateReqInfo(reqId)
   }
 
   setUrl(url: string) {

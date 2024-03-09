@@ -26,6 +26,7 @@ export namespace app {
 	    times: string;
 	    isBinary: string;
 	    isFormData: string;
+	    instanceId: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new SpecialReqHeaderFields(source);
@@ -38,6 +39,7 @@ export namespace app {
 	        this.times = source["times"];
 	        this.isBinary = source["isBinary"];
 	        this.isFormData = source["isFormData"];
+	        this.instanceId = source["instanceId"];
 	    }
 	}
 
@@ -162,6 +164,7 @@ export namespace tab {
 	    showFlag: boolean;
 	    isCurrent: boolean;
 	    method: string;
+	    url: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Tab(source);
@@ -178,6 +181,7 @@ export namespace tab {
 	        this.showFlag = source["showFlag"];
 	        this.isCurrent = source["isCurrent"];
 	        this.method = source["method"];
+	        this.url = source["url"];
 	    }
 	}
 

@@ -14,11 +14,11 @@ const (
 type FileLike struct {
 	models.BaseFields `xorm:"extends"`
 	FolderId          int64  `json:"folderId"`
-	Name              string `json:"name"`
-	Type              string `json:"type"`
+	Name              string `xorm:"varchar(64)" json:"name"`
+	Type              string `xorm:"varchar(32)" json:"type"`
 	FileId            int64  `json:"fileId"`
 	RequestId         int64  `json:"requestId"`
-	Tag               string `json:"tag"`
+	Tag               string `xorm:"varchar(32)" json:"tag"`
 }
 
 func init() {
