@@ -45,7 +45,7 @@ func (a *App) AddRequestToCollection(collectionId int64, name string) *fileLikeT
 		return nil
 	}
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-		if newReq, reqCrtErr := CreateBlankRequest(); reqCrtErr == nil {
+		if newReq, reqCrtErr := CreateBlankRequest(true); reqCrtErr == nil {
 			var file = &fileLikeTable.FileLike{
 				FolderId:  collectionId,
 				Name:      name,

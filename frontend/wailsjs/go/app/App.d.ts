@@ -35,6 +35,8 @@ export function GetFilePathPlaceholder():Promise<string>;
 
 export function GetFileUrl():Promise<string>;
 
+export function GetFolderIdByReqId(arg1:number):Promise<number>;
+
 export function GetPort():Promise<number>;
 
 export function GetRequestById(arg1:number):Promise<request.RequestRecord>;

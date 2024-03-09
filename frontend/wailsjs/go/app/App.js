@@ -58,6 +58,10 @@ export function GetFileUrl() {
   return window['go']['app']['App']['GetFileUrl']();
 }
 
+export function GetFolderIdByReqId(arg1) {
+  return window['go']['app']['App']['GetFolderIdByReqId'](arg1);
+}
+
 export function GetPort() {
   return window['go']['app']['App']['GetPort']();
 }

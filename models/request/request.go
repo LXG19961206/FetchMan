@@ -17,6 +17,7 @@ type RequestRecord struct {
 	Body              string            `xorm:"text" json:"body"`
 	IsBinary          bool              `json:"isBinary"`
 	IsFormData        bool              `json:"isFormData"`
+	IsReferenced      bool              `json:"isReferenced"`
 }
 
 func init() {

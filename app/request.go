@@ -3,6 +3,7 @@ package app
 import (
 	handleHttp "changeme/app/handleHttp"
 	dbUtil "changeme/models"
+	fileLike "changeme/models/fileLike"
 	req "changeme/models/request"
 	"net/http"
 )
@@ -45,10 +46,11 @@ func (a *App) UpdateRequestInfo(record *req.RequestRecord) {
 	handleHttp.UpdateRequestInfo(record)
 }
 
-func CreateBlankRequest() (*req.RequestRecord, error) {
+func CreateBlankRequest(isRef bool) (*req.RequestRecord, error) {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
 		var record = &req.RequestRecord{
-			Method: http.MethodGet,
+			Method:       http.MethodGet,
+			IsReferenced: isRef,
 		}
 		var _, InsertErr = engine.Insert(record)
 		return record, InsertErr
@@ -58,5 +60,16 @@ func CreateBlankRequest() (*req.RequestRecord, error) {
 }
 
 func (a *App) CreateBlankRequest() (*req.RequestRecord, error) {
-	return CreateBlankRequest()
+	return CreateBlankRequest(false)
+}
+
+func (a *App) GetFolderIdByReqId(id int64) int64 {
+	var file = &fileLike.FileLike{
+		RequestId: id,
+	}
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		engine.Get(file)
+		return file.FolderId
+	}
+	return 0
 }

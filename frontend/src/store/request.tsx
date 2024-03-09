@@ -6,7 +6,7 @@ import { Param } from '@/models/param'
 import { generate } from 'shortid'
 import { request } from '@/util/http'
 import { useRespStore } from './resp'
-import { GetRequestById, UpdateRequestInfo } from '~/go/app/App'
+import { GetRequestById, UpdateRequestInfo, GetFolderIdByReqId } from '~/go/app/App'
 import { SmartHeaders } from '@/dicts/headers'
 import { useTabStore } from './tab'
 import { useWorkplaceStore } from './workplace'
@@ -22,6 +22,7 @@ const createBlankRequest = (record?: RequestInfo) => {
     isBinary: record?.isBinary || false,
     isFormData: record?.isFormData || false,
     method: record?.method || Methods.get,
+    isReferenced: record?.isReferenced || false,
   }
 }
 
@@ -55,6 +56,7 @@ class RequestStore {
   async execRequest() {
     if (!this.currentViewRequest) return 
     const reqId = this.currentViewRequest.id || 0
+    const folderId = await GetFolderIdByReqId(reqId)
     const respStore = useRespStore()
     const tabStore = useTabStore()
     const workplaceStore = useWorkplaceStore()
@@ -64,9 +66,7 @@ class RequestStore {
     respStore.removePendingTarget(reqId)
     this.updateReqInfo(reqId)
     tabStore.getAllWindow()
-    workplaceStore.lsFilesOfFolder(
-      workplaceStore.currentViewFolderId
-    )
+    workplaceStore.lsFilesOfFolder(folderId)
   }
 
   setUrl(url: string) {

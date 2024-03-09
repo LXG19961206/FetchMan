@@ -21,8 +21,6 @@ class WorkplaceStore {
 
   currentEditFolderId = 0
 
-  currentViewFolderId = 0
-
   folderMap = observable.map<number, Folder []>()
 
   fileLikeMap = observable.map<number, FileLike []>()
@@ -45,9 +43,8 @@ class WorkplaceStore {
     this.fileLikeMap.set(id, files)
   }
 
-  async viewRequest (folderId: number, reqId: number, name: string, tag: string)  {
+  async viewRequest (reqId: number, name: string, tag: string)  {
     const tabStore = useTabStore()
-    this.currentViewFolderId = folderId
     tabStore.createOrUseExist(reqId, name, tag)
   }
 

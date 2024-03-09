@@ -126,6 +126,7 @@ export namespace request {
 	    body: string;
 	    isBinary: boolean;
 	    isFormData: boolean;
+	    isReferenced: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new RequestRecord(source);
@@ -147,6 +148,7 @@ export namespace request {
 	        this.body = source["body"];
 	        this.isBinary = source["isBinary"];
 	        this.isFormData = source["isFormData"];
+	        this.isReferenced = source["isReferenced"];
 	    }
 	}
 
