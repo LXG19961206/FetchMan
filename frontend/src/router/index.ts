@@ -1,7 +1,6 @@
 import { IconAppCenter, IconSend, IconGlobe } from '@douyinfe/semi-icons';
 import Collection from '../views/collection'
-import React from 'react';
-
+import Env from '@/views/env'
 
 export const RouterDict = {
   Collection: 'Collection',
@@ -47,12 +46,12 @@ export const router = [
     title: RouterDict.Environment,
     icon: IconGlobe,
     inSideMenu: true,
-    element: Collection
+    element: Env
   },
   {
     path: Util.GenerateFullPath(RouterDict.QuickRequest),
     name: Util.GenerateFullName(RouterDict.QuickRequest),
-    title: RouterDict.QuickRequest,
+    title: 'Utils',
     icon: IconSend,
     inSideMenu: true,
     element: Collection

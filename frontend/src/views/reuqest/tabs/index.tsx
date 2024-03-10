@@ -17,9 +17,9 @@ export default observer(() => {
 
   useEffect(() => {
     tabStore.getAllWindow().then(res => {
-      // if (res.length) {
-      //   tabStore.changeTab(res[res.length - 1].id)
-      // }
+      if (res.length) {
+        tabStore.changeTab(res[res.length - 1].id)
+      }
     })
   }, [])
 

@@ -7,6 +7,13 @@ import { observer } from 'mobx-react'
 
 function App() {
 
+  useEffect(() => {
+
+    window.addEventListener('contextmenu', (evt) => {
+      // evt.preventDefault()
+    })
+
+  }, [])
 
   return <>
     {/* <Side></Side> */}

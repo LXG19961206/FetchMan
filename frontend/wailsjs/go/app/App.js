@@ -6,8 +6,16 @@ export function AddCollectionFolder(arg1, arg2) {
   return window['go']['app']['App']['AddCollectionFolder'](arg1, arg2);
 }
 
+export function AddEnv() {
+  return window['go']['app']['App']['AddEnv']();
+}
+
 export function AddRequestToCollection(arg1, arg2) {
   return window['go']['app']['App']['AddRequestToCollection'](arg1, arg2);
+}
+
+export function AddVariable(arg1, arg2) {
+  return window['go']['app']['App']['AddVariable'](arg1, arg2);
 }
 
 export function ClientLsTabs() {
@@ -38,8 +46,16 @@ export function CreateOrUseExistTab(arg1, arg2, arg3) {
   return window['go']['app']['App']['CreateOrUseExistTab'](arg1, arg2, arg3);
 }
 
+export function DelEnv(arg1) {
+  return window['go']['app']['App']['DelEnv'](arg1);
+}
+
 export function DelFileLikeRecord(arg1) {
   return window['go']['app']['App']['DelFileLikeRecord'](arg1);
+}
+
+export function DelVars(arg1) {
+  return window['go']['app']['App']['DelVars'](arg1);
 }
 
 export function DuplicateTab(arg1) {
@@ -74,12 +90,24 @@ export function GetSpecialFields() {
   return window['go']['app']['App']['GetSpecialFields']();
 }
 
+export function GetVarsByEnvId(arg1) {
+  return window['go']['app']['App']['GetVarsByEnvId'](arg1);
+}
+
+export function LsAllEnv() {
+  return window['go']['app']['App']['LsAllEnv']();
+}
+
 export function LsCollectionFolder(arg1) {
   return window['go']['app']['App']['LsCollectionFolder'](arg1);
 }
 
 export function LsRequestOfCollection(arg1) {
   return window['go']['app']['App']['LsRequestOfCollection'](arg1);
+}
+
+export function ModifyVariable(arg1, arg2) {
+  return window['go']['app']['App']['ModifyVariable'](arg1, arg2);
 }
 
 export function NativeFileDialog(arg1, arg2) {
@@ -92,6 +120,10 @@ export function NativeMessageDialog(arg1) {
 
 export function RemoveCollection(arg1) {
   return window['go']['app']['App']['RemoveCollection'](arg1);
+}
+
+export function RenameEnv(arg1, arg2) {
+  return window['go']['app']['App']['RenameEnv'](arg1, arg2);
 }
 
 export function RenameFileLikeRequest(arg1, arg2) {

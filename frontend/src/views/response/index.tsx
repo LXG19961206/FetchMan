@@ -1,5 +1,5 @@
-import { TabPane, Tabs, Divider, Spin, Tag } from '@douyinfe/semi-ui';
-import { useMemo, useState } from 'react';
+import { TabPane, Tabs, Spin } from '@douyinfe/semi-ui';
+import { useState } from 'react';
 import { Preview } from "./preview";
 import { Match } from "@/components/headerless/match";
 import Headers from './headers'
@@ -8,7 +8,6 @@ import { observer } from 'mobx-react'
 import style from './index.module.less'
 import { IconClose } from '@douyinfe/semi-icons'
 import { RenderIf } from '@/components/headerless/renderIf';
-import { divide } from 'lodash';
 import { useTabStore } from '@/store/tab';
 
 export default observer((

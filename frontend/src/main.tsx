@@ -6,8 +6,10 @@ import App from './App'
 
 
 
-if (!window.go) {
-  location.replace('/')
+if (!window.go?.app) {
+  
+  window.location.href = '/'
+
 } else {
   ReactDOM.render(
     <React.StrictMode>

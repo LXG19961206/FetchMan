@@ -2,22 +2,22 @@ package env
 
 import "changeme/models"
 
-type EnvCollection struct {
+type Env struct {
 	models.BaseFields `xorm:"extends"`
 	Name              string `json:"name"`
 	IsCurrent         bool   `json:"isCurrent"`
+	CreaterId         int64  `json:"createrId"`
 }
 
-type Env struct {
+type Vars struct {
 	models.BaseFields `xorm:"extends"`
-	CollectionId      int64  `json:"collectionId"`
-	Current           string `json:"current"`
-	IsSecret          bool   `json:"isSecret"`
-	CreaterId         int64  `json:"createrId"`
-	InitialValue      string `json:"initialValue"`
+	EnvId             int64  `json:"envId"`
+	Value             string `xorm:"text" json:"value"`
+	InitialValue      string `xorm:"text" json:"initialValue"`
+	Name              string `xorm:"varchar(64)" json:"name"`
 }
 
 func init() {
-	models.CheckOrAppendTable(&EnvCollection{})
+	models.CheckOrAppendTable(&Vars{})
 	models.CheckOrAppendTable(&Env{})
 }

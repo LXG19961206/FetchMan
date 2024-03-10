@@ -45,12 +45,73 @@ export namespace app {
 
 }
 
+export namespace env {
+	
+	export class Env {
+	    id: number;
+	    createTime: string;
+	    updateTime: string;
+	    deleteTime: string;
+	    remark: string;
+	    name: string;
+	    isCurrent: boolean;
+	    createrId: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Env(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.createTime = source["createTime"];
+	        this.updateTime = source["updateTime"];
+	        this.deleteTime = source["deleteTime"];
+	        this.remark = source["remark"];
+	        this.name = source["name"];
+	        this.isCurrent = source["isCurrent"];
+	        this.createrId = source["createrId"];
+	    }
+	}
+	export class Vars {
+	    id: number;
+	    createTime: string;
+	    updateTime: string;
+	    deleteTime: string;
+	    remark: string;
+	    envId: number;
+	    value: string;
+	    initialValue: string;
+	    name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Vars(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.createTime = source["createTime"];
+	        this.updateTime = source["updateTime"];
+	        this.deleteTime = source["deleteTime"];
+	        this.remark = source["remark"];
+	        this.envId = source["envId"];
+	        this.value = source["value"];
+	        this.initialValue = source["initialValue"];
+	        this.name = source["name"];
+	    }
+	}
+
+}
+
 export namespace filelike {
 	
 	export class FileLike {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
+	    deleteTime: string;
+	    remark: string;
 	    folderId: number;
 	    name: string;
 	    type: string;
@@ -67,6 +128,8 @@ export namespace filelike {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
+	        this.deleteTime = source["deleteTime"];
+	        this.remark = source["remark"];
 	        this.folderId = source["folderId"];
 	        this.name = source["name"];
 	        this.type = source["type"];
@@ -84,6 +147,8 @@ export namespace folder {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
+	    deleteTime: string;
+	    remark: string;
 	    createrId: string;
 	    name: string;
 	    depth: number;
@@ -99,6 +164,8 @@ export namespace folder {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
+	        this.deleteTime = source["deleteTime"];
+	        this.remark = source["remark"];
 	        this.createrId = source["createrId"];
 	        this.name = source["name"];
 	        this.depth = source["depth"];
@@ -115,6 +182,8 @@ export namespace request {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
+	    deleteTime: string;
+	    remark: string;
 	    collectionId: number;
 	    url: string;
 	    originUrl: string;
@@ -137,6 +206,8 @@ export namespace request {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
+	        this.deleteTime = source["deleteTime"];
+	        this.remark = source["remark"];
 	        this.collectionId = source["collectionId"];
 	        this.url = source["url"];
 	        this.originUrl = source["originUrl"];
@@ -160,6 +231,8 @@ export namespace tab {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
+	    deleteTime: string;
+	    remark: string;
 	    name: string;
 	    requestId: number;
 	    responseId: number;
@@ -177,6 +250,8 @@ export namespace tab {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
+	        this.deleteTime = source["deleteTime"];
+	        this.remark = source["remark"];
 	        this.name = source["name"];
 	        this.requestId = source["requestId"];
 	        this.responseId = source["responseId"];

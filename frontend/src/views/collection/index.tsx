@@ -1,4 +1,4 @@
-import Menu from '../menu'
+import Menu from '../reuqest/menu'
 import style from './index.module.less'
 import Request from '@/views/reuqest'
 import Response from '@/views/response'

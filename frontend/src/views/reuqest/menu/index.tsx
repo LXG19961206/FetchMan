@@ -1,8 +1,8 @@
 import { Tooltip } from '@douyinfe/semi-ui'
 import style from './index.module.less'
 import { FolderTree } from './folder'
-import addFile from './addFile.png'
-import refresh from './refresh.png'
+import addFile from '@/assets/addFile.png'
+import refresh from '@/assets/refresh.png'
 import { BaseProps } from '@/models/base'
 import { workplaceStore } from '@/store/workplace'
 
@@ -26,6 +26,7 @@ export default (props: BaseProps) => {
           content="Get the lasted collection list" 
           trigger='hover'>
           <div
+            onClick={() => workplaceStore.flush()}
             className={style.toolbar_item}>
             <img src={refresh} alt="" />
           </div>

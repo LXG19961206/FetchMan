@@ -1,11 +1,11 @@
-import ReactJson from "react-json-view";
-import { RespContext, StatusContext } from "@/context";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import JsonEditor from "@/components/jsonEditor/jsonEditor";
-import { createStyle, OverFlow, percent, px } from "@/style";
 import { Match } from "@/components/headerless/match";
 import { useRespStore } from "@/store/resp";
-import { Resp } from "@/models/resp";
+import CodeMirror from '@uiw/react-codemirror';
+import { StreamLanguage } from '@codemirror/language';
+import { xml } from '@codemirror/legacy-modes/mode/xml';
+import { ContentType } from "@/dicts/contentType";
 
 
 export const Preview = (
@@ -13,7 +13,7 @@ export const Preview = (
 
     const respStore = useRespStore()
     const resp = respStore.currentView!
-    const [imgUrl, setUrl] = useState("")
+    const [mediaUrl, setUrl] = useState("")
 
     useEffect(() => {
         const contentTypeVal = resp.contentType as string
@@ -24,21 +24,34 @@ export const Preview = (
 
     return (
         <Match fallback={<pre> {resp.data as string} </pre>}>
-            <Match.Option when={/application\/json/.test(resp.contentType as string)}>
+            <Match.Option when={resp.contentType.indexOf(ContentType.Json) > -1}>
                 <JsonEditor
                     height="auto"
                     json={resp.data as string}
                     viewMode>
                 </JsonEditor>
             </Match.Option>
-            <Match.Option when={/text\/html/.test(resp.contentType as string)}>
+            <Match.Option when={resp.contentType.indexOf(ContentType.XmlCommonSign) > -1}>
+                <CodeMirror
+                    value={resp.data}
+                    height="100%"
+                    extensions={[StreamLanguage.define(xml)]}
+                />
+            </Match.Option>
+            <Match.Option when={resp.contentType.indexOf(ContentType.Html) > -1}>
                 <iframe
                     style={{ resize: 'both', width: '100%', height: 'inherit' }}
                     srcDoc={resp.data as string}>
                 </iframe>
             </Match.Option>
-            <Match.Option when={!!imgUrl && /.*image.*/.test(resp.contentType as string)}>
-                <img src={imgUrl} alt="" />
+            <Match.Option when={resp.contentType.indexOf(ContentType.Image) > -1}>
+                <img src={mediaUrl} alt="" />
+            </Match.Option>
+            <Match.Option when={resp.contentType.indexOf(ContentType.Video) > -1}>
+                <video src={mediaUrl}></video>
+            </Match.Option>
+            <Match.Option when={resp.contentType.indexOf(ContentType.Audio) > -1}>
+                <audio src={mediaUrl}></audio>
             </Match.Option>
         </Match>
     )

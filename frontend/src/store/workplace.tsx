@@ -115,6 +115,13 @@ class WorkplaceStore {
     node.isFold = !node.isFold
   }
 
+  async flush () {
+    this.fileLikeMap.clear()
+    this.folderMap.clear()
+    this.lsTargetFolder(0)
+    this.lsFilesOfFolder(0)
+  }
+
 
 }
 

@@ -1,6 +1,6 @@
 import style from './layout.module.css'
 import Side from './side'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import { router } from '@/router/index'
 import Header from './header'
 

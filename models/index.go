@@ -10,6 +10,8 @@ type BaseFields struct {
 	Id         int64  `xorm:"pk autoincr" json:"id"`
 	CreateTime string `xorm:"created" json:"createTime"`
 	UpdateTime string `xorm:"updated" json:"updateTime"`
+	DeleteTime string `xorm:"deleted" json:"deleteTime"`
+	Remark     string `xorm:"varchar(255)" json:"remark"`
 }
 
 func init() {
