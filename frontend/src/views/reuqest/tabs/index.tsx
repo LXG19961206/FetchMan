@@ -17,9 +17,9 @@ export default observer(() => {
 
   useEffect(() => {
     tabStore.getAllWindow().then(res => {
-      if (res.length) {
-        tabStore.changeTab(res[res.length - 1].id)
-      }
+      // if (res.length) {
+      //   tabStore.changeTab(res[res.length - 1].id)
+      // }
     })
   }, [])
 
@@ -53,7 +53,7 @@ export default observer(() => {
                   <span className={style.tabItem}>
                     <MethodTag method={tab.method}></MethodTag>
                     <RenderIf 
-                      fallback={<span> {tab.name || tab.url} </span>}
+                      fallback={<span> {tab.name || tab.url || '待命名请求' } </span>}
                       when={editId === tab.id}>
                       <Input
                         onBlur={(evt) => {
@@ -68,7 +68,7 @@ export default observer(() => {
                   </span>
                 </Dropdown>
               }
-              closable={!editId}
+              closable={!editId && tabStore.tabs.length > 1}
               itemKey={String(tab.id)}
               key={tab.id}>
               <div className={style.content}>

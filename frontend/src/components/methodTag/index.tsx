@@ -1,5 +1,6 @@
 import { Tag } from '@douyinfe/semi-ui'
 import { TagColor } from '@douyinfe/semi-ui/lib/es/tag'
+
 const MethodColor = {
   GET: `green`,
   POST: `yellow`,

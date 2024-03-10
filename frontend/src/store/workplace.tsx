@@ -3,6 +3,7 @@ import { useTabStore } from './tab'
 import { RenameFileLikeRequest, DelFileLikeRecord, AddRequestToCollection, LsRequestOfCollection, LsCollectionFolder, AddCollectionFolder, RenameFolder, RemoveCollection } from '~/go/app/App'
 import { filelike, folder } from '~/go/models'
 import shortid from 'shortid'
+import { useRequestStore } from './request'
 
 
 type Folder = folder.Folder & {
@@ -55,8 +56,10 @@ class WorkplaceStore {
   }
 
   async delRequest (id: number, folderId: number) {
+    const tabStore = useTabStore()
     await DelFileLikeRecord(id)
     await this.lsFilesOfFolder(folderId)
+    await tabStore.getAllWindow()
   }
 
   async delFolder (id: number, parentId: number = 0) {

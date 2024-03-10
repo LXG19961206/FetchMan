@@ -50,7 +50,7 @@ class TabStore {
     const reqStore = useRequestStore()
     const reqId = this.tabs.find(item => item.id === id)?.requestId
     if (reqId) {
-      await reqStore.swtichCurrent(reqId)
+      await reqStore.swtichCurrent(reqId, id)
     }
     await this.getAllWindow()
   }

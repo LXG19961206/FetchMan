@@ -40,13 +40,14 @@ export default observer((
         files.map(item => (
           <div
             key={item.id}
-            onClick={() => workplaceStore.viewRequest(item.requestId, item.name, item.tag)}
             style={{ marginLeft: 7 * props.depth + 'px' }}
             onContextMenu={evt => showMenu(evt, `${style.more_icon + item.id + 'folder'}`)}
             className={style.file_item}>
             {/* <div className={style.file_item_method}> GET </div> */}
             <MethodTag method={item.tag}></MethodTag>
-            <div className={style.file_item_title}>
+            <div
+              onClick={() => workplaceStore.viewRequest(item.requestId, item.name, item.tag)}
+              className={style.file_item_title}>
               <RenderIf
                 fallback={
                   <Input

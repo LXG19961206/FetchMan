@@ -6,10 +6,11 @@ import { Param } from '@/models/param'
 import { generate } from 'shortid'
 import { request } from '@/util/http'
 import { useRespStore } from './resp'
-import { GetRequestById, UpdateRequestInfo, GetFolderIdByReqId } from '~/go/app/App'
+import { GetRequestById, UpdateRequestInfo, GetFolderIdByReqId, NativeMessageDialog } from '~/go/app/App'
 import { SmartHeaders } from '@/dicts/headers'
 import { useTabStore } from './tab'
 import { useWorkplaceStore } from './workplace'
+import { request as goRequest } from '~/go/models'
 
 
 
@@ -28,21 +29,47 @@ const createBlankRequest = (record?: RequestInfo) => {
 
 class RequestStore {
 
+  isPending = false
+
   constructor() {
     makeAutoObservable(this)
   }
 
-  async updateReqInfo (id: number) {
+  async updateReqInfo(id: number) {
     const current = await GetRequestById(id);
     this.currentViewRequest = createBlankRequest(current);
   }
 
-
-  async swtichCurrent(id: number) {
-    const current = await GetRequestById(id);
-    this.currentViewRequest = createBlankRequest(current);
+  async flushView (reqId: number) {
+    const tabStore = useTabStore()
+    const workplaceStore = useWorkplaceStore()
+    const folderId = await GetFolderIdByReqId(reqId)
+    tabStore.getAllWindow()
+    workplaceStore.lsFilesOfFolder(folderId)
   }
 
+
+  async swtichCurrent(id: number, tabId: number) {
+    await this.syncReqInfoToServer()
+    const current = await GetRequestById(id);
+    const tabStore = useTabStore()
+    if (current.id) {
+      this.currentViewRequest = createBlankRequest(current);
+    } else {
+      NativeMessageDialog({
+        Message: "This request has been removed.",
+        Title: "Warning"
+      })
+      await tabStore.delTab(tabId)
+      tabStore.getAllWindow()
+    }
+  }
+
+  async syncReqInfoToServer() {
+    const prevId = this.currentViewRequest.id || 0
+    await UpdateRequestInfo(this.currentViewRequest as goRequest.RequestRecord)
+    await this.flushView(prevId || 0)
+  }
 
   /**
    * 前端会缓存目前 tab 里的所有请求的信息
@@ -54,47 +81,43 @@ class RequestStore {
   currentViewRequest: RequestInfo = createBlankRequest()
 
   async execRequest() {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     const reqId = this.currentViewRequest.id || 0
-    const folderId = await GetFolderIdByReqId(reqId)
     const respStore = useRespStore()
-    const tabStore = useTabStore()
-    const workplaceStore = useWorkplaceStore()
     respStore.wait(reqId)
     const resp = await request(this.currentViewRequest)
     respStore.setCurrentViewResp(resp, reqId)
     respStore.removePendingTarget(reqId)
     this.updateReqInfo(reqId)
-    tabStore.getAllWindow()
-    workplaceStore.lsFilesOfFolder(folderId)
+    this.flushView(reqId)
   }
 
   setUrl(url: string) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.url = url.trim()
   }
 
   setId(id: number) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.id = id
   }
 
   setBinaryState(boo: boolean) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.isBinary = boo
   }
 
-  getBody () {
+  getBody() {
     return this.currentViewRequest.body || ""
   }
 
   setFormDataState(boo: boolean) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.isFormData = boo
   }
 
   setHeader(key: string, value: string) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     if (!this.currentViewRequest.headers) {
       this.currentViewRequest.headers = {}
     }
@@ -109,29 +132,29 @@ class RequestStore {
   }
 
   setMethod(method: RequestMethod) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.method = method
   }
 
   setBody(body: typeof XMLHttpRequest.prototype.response) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.body = body
   }
 
   delBody() {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     this.currentViewRequest.body = ''
   }
 
   delHeader(key: string) {
-    if (!this.currentViewRequest) return 
+    if (!this.currentViewRequest) return
     if (!this.currentViewRequest.headers) {
       this.currentViewRequest.headers = {}
     }
     delete this.currentViewRequest.headers[key]
   }
 
-  getContentType () {
+  getContentType() {
     if (!this.currentViewRequest?.headers) return ""
     return this.currentViewRequest.headers[SmartHeaders.ContentType] || ''
   }

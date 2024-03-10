@@ -43,14 +43,15 @@ func (a *App) CopyRequest(id int64) *req.RequestRecord {
 }
 
 func (a *App) UpdateRequestInfo(record *req.RequestRecord) {
-	handleHttp.UpdateRequestInfo(record)
+	if record.Id > 0 {
+		handleHttp.UpdateRequestInfo(record)
+	}
 }
 
-func CreateBlankRequest(isRef bool) (*req.RequestRecord, error) {
+func CreateBlankRequest() (*req.RequestRecord, error) {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
 		var record = &req.RequestRecord{
-			Method:       http.MethodGet,
-			IsReferenced: isRef,
+			Method: http.MethodGet,
 		}
 		var _, InsertErr = engine.Insert(record)
 		return record, InsertErr
@@ -60,7 +61,7 @@ func CreateBlankRequest(isRef bool) (*req.RequestRecord, error) {
 }
 
 func (a *App) CreateBlankRequest() (*req.RequestRecord, error) {
-	return CreateBlankRequest(false)
+	return CreateBlankRequest()
 }
 
 func (a *App) GetFolderIdByReqId(id int64) int64 {

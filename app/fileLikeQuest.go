@@ -31,13 +31,24 @@ func (a *App) RenameFileLikeRequest(name string, id int64) error {
 	}
 }
 
-func (a *App) DelFileLikeRecord(id int64) error {
+func (a *App) DelFileLikeRecord(id int64) {
+
 	if id == 0 {
-		return errors.New("id is not apply")
-	} else {
-		err := dbUtil.BasePhyDel(id, &fileLikeTable.FileLike{})
-		return err
+		return
 	}
+
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		var record = &fileLikeTable.FileLike{}
+		engine.ID(id).Get(record)
+		var reqId = record.RequestId
+		engine.Delete(&tabTable.Tab{RequestId: reqId})
+		engine.ID(reqId).Delete(&reqTable.RequestRecord{})
+		engine.ID(record.Id).Delete(record)
+		fmt.Printf("reqId: %v\n", reqId)
+	} else {
+		return
+	}
+
 }
 
 func (a *App) AddRequestToCollection(collectionId int64, name string) *fileLikeTable.FileLike {
@@ -45,7 +56,7 @@ func (a *App) AddRequestToCollection(collectionId int64, name string) *fileLikeT
 		return nil
 	}
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-		if newReq, reqCrtErr := CreateBlankRequest(true); reqCrtErr == nil {
+		if newReq, reqCrtErr := CreateBlankRequest(); reqCrtErr == nil {
 			var file = &fileLikeTable.FileLike{
 				FolderId:  collectionId,
 				Name:      name,

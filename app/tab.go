@@ -2,6 +2,7 @@ package app
 
 import (
 	dbUtil "changeme/models"
+	filelike "changeme/models/fileLike"
 	"changeme/models/request"
 	tabTable "changeme/models/tab"
 )
@@ -9,7 +10,7 @@ import (
 func (a *App) CreateNewTab() (*tabTable.Tab, error) {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
 		// 创建一个 新的窗口 tab 其实是创建一个新的请求实例
-		if newReq, createErr := CreateBlankRequest(false); createErr == nil {
+		if newReq, createErr := CreateBlankRequest(); createErr == nil {
 			// 然后将 req 实例和 tab窗口关联起来
 			var tab = &tabTable.Tab{
 				RequestId: newReq.Id,
@@ -47,16 +48,21 @@ func (a *App) ClientLsTabs() []*tabTable.Tab {
 	}
 }
 
+/*
+	   关闭 tab 的时候，首先会删掉这个 tab record 本身
+		 然后查询这个 tab 对应的 request 是否和 工作区的实体有联动
+		 如果没有，证明是个临时游离的请求，也会随着 tab 的关闭也一起关闭
+		 如果有，那它对应的请求暂时还不能被删除
+*/
 func (a *App) CloseTab(id int64) {
-	var reqRecord = &request.RequestRecord{}
 	var tabRecord = &tabTable.Tab{}
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
 		engine.ID(id).Get(tabRecord)
-		engine.ID(tabRecord.RequestId).Get(reqRecord)
-		if reqRecord.Id != 0 && !reqRecord.IsReferenced {
-			engine.ID(reqRecord.Id).Delete(reqRecord)
+		engine.ID(id).Delete(tabRecord)
+		var count, _ = engine.Where("request_id = ?", tabRecord.RequestId).Count(&filelike.FileLike{})
+		if count == 0 {
+			engine.ID(tabRecord.RequestId).Delete(&request.RequestRecord{})
 		}
-		dbUtil.BasePhyDel(id, tabRecord)
 	}
 }
 
