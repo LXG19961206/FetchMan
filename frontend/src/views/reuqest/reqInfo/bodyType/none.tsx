@@ -8,7 +8,7 @@ export const None = () => {
   const  reqStore =  useRequestStore()
 
   useEffect(() => {
-    reqStore.setHeader('Content-Type', "")
+    reqStore.setContentType("")
     reqStore.setBinaryState(false)
     reqStore.setFormDataState(false)
     reqStore.setBody(null)

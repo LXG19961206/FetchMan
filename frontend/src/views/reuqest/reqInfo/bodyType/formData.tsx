@@ -9,6 +9,7 @@ import shortid from 'shortid';
 import { FormDataItem } from '@/models/formData';
 import { NativeFileDialog, GetFilePathPlaceholder } from '~/go/app/App';
 import { RenderIf } from '@/components/headerless/renderIf';
+import InjectVarInput from '@/views/env/injectVarInput';
 
 const getPlaceholderAction = GetFilePathPlaceholder()
 
@@ -116,9 +117,8 @@ export default observer(() => {
     })
   }
 
-  const changevalue = (evt: Event, key: string, name: string) => {
-    const input = evt.target as HTMLInputElement
-    setSource(source.map(item => item.id !== key ? item : { ...item, [name]: input.value }))
+  const changevalue = (value: string, key: string, name: string) => {
+    setSource(source.map(item => item.id !== key ? item : { ...item, [name]: value }))
   }
 
   const del = (key: string) => {
@@ -134,7 +134,7 @@ export default observer(() => {
           className={style.input}
           spellCheck={false}
           placeholder="Please enter key"
-          onInput={(evt) => changevalue(evt as unknown as Event, item.id, 'name')}
+          onInput={(evt) => changevalue((evt.target as HTMLInputElement).value, item.id, 'name')}
           value={item.name}>
         </Input>
       ),
@@ -150,7 +150,8 @@ export default observer(() => {
             </Tag>
           }
           when={!item.isFile}>
-          <Input
+            
+          <InjectVarInput
             spellCheck={false}
             className={style.input}
             suffix={
@@ -161,9 +162,9 @@ export default observer(() => {
             }
             onBlur={sync}
             placeholder="Please enter value"
-            onInput={(evt) => changevalue(evt as unknown as Event, item.id, 'value')}
+            onChange={(val) => changevalue(val, item.id, 'value')}
             value={item.value}>
-          </Input>
+          </InjectVarInput>
         </RenderIf>
       ),
 

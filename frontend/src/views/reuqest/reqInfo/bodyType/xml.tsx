@@ -23,8 +23,7 @@ export default () => {
   const sync = () => {
     setXmlStr(newVal => {
       reqStore.setBody(newVal)
-      reqStore.setHeader(
-        SmartHeaders.ContentType,
+      reqStore.setContentType(
         ContentType.ApplicaitonXml
       )
       return newVal

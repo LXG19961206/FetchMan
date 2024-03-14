@@ -1,9 +1,9 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, observable, autorun } from 'mobx'
 import { RequestInfo } from '@/models/request'
 import { Methods, RequestMethod } from '@/dicts/methods'
 import qs from 'qs'
 import { Param } from '@/models/param'
-import { generate } from 'shortid'
+import shortid, { generate } from 'shortid'
 import { request } from '@/util/http'
 import { useRespStore } from './resp'
 import { GetRequestById, UpdateRequestInfo, GetFolderIdByReqId, NativeMessageDialog } from '~/go/app/App'
@@ -11,19 +11,21 @@ import { SmartHeaders } from '@/dicts/headers'
 import { useTabStore } from './tab'
 import { useWorkplaceStore } from './workplace'
 import { request as goRequest } from '~/go/models'
-
-
+import { isNil, omit } from 'lodash'
 
 const createBlankRequest = (record?: RequestInfo) => {
   return {
     url: record?.url || '',
     id: record?.id || 0,
     body: record?.body || '',
-    headers: record?.headers || {},
+    headers: record?.headers,
     isBinary: record?.isBinary || false,
     isFormData: record?.isFormData || false,
     method: record?.method || Methods.get,
     isReferenced: record?.isReferenced || false,
+    headerList: observable.array(
+      Object.entries(record?.headers || {}).map(item => [...item, shortid.generate()])
+    )
   }
 }
 
@@ -33,6 +35,9 @@ class RequestStore {
 
   constructor() {
     makeAutoObservable(this)
+    autorun(() => {
+      this.currentViewRequest.headers = this.getTheLastHeaders()
+    })
   }
 
   async updateReqInfo(id: number) {
@@ -65,9 +70,20 @@ class RequestStore {
     }
   }
 
+  getTheLastHeaders () {
+    const headers = this.currentViewRequest.headerList
+    const res = {} as Record<string, string>
+    if (headers?.length) {
+      headers.forEach(([key, val]) => {
+        res[key] = val
+      })
+    }
+    return res
+  }
+
   async syncReqInfoToServer() {
     const prevId = this.currentViewRequest.id || 0
-    await UpdateRequestInfo(this.currentViewRequest as goRequest.RequestRecord)
+    await UpdateRequestInfo(omit(this.currentViewRequest as goRequest.RequestRecord, 'headerList'))
     await this.flushView(prevId || 0)
   }
 
@@ -85,7 +101,7 @@ class RequestStore {
     const reqId = this.currentViewRequest.id || 0
     const respStore = useRespStore()
     respStore.wait(reqId)
-    const resp = await request(this.currentViewRequest)
+    const resp = await request(omit(this.currentViewRequest, 'headerList'))
     respStore.setCurrentViewResp(resp, reqId)
     respStore.removePendingTarget(reqId)
     this.updateReqInfo(reqId)
@@ -116,12 +132,13 @@ class RequestStore {
     this.currentViewRequest.isFormData = boo
   }
 
-  setHeader(key: string, value: string) {
+  setHeader(item: string[], key: string | void, value: string | void) {
     if (!this.currentViewRequest) return
-    if (!this.currentViewRequest.headers) {
-      this.currentViewRequest.headers = {}
+    if (isNil(key)) {
+      item[1] = value as string
+    } else {
+      item[0] = key as string
     }
-    this.currentViewRequest.headers[key] = value
   }
 
   getHeaderValue(key: string) {
@@ -146,13 +163,28 @@ class RequestStore {
     this.currentViewRequest.body = ''
   }
 
-  delHeader(key: string) {
+  delHeader(item: string[]) {
     if (!this.currentViewRequest) return
-    if (!this.currentViewRequest.headers) {
-      this.currentViewRequest.headers = {}
-    }
-    delete this.currentViewRequest.headers[key]
+    this.currentViewRequest.headerList = (
+      this.currentViewRequest.headerList?.filter(header => header !== item)
+    )
   }
+
+  addHeader (name ='', value = "") {
+    this.currentViewRequest.headerList?.push([name, value, shortid.generate()])
+  }
+
+  setContentType(type: string) {
+    if (!this.currentViewRequest) return
+    const target = this.currentViewRequest.headerList?.find(([key]) => key === SmartHeaders.ContentType)
+    if (target) {
+      target[1] = type
+    } else {
+      this.addHeader(SmartHeaders.ContentType, type)
+    }
+
+  }
+
 
   getContentType() {
     if (!this.currentViewRequest?.headers) return ""
@@ -170,6 +202,7 @@ class RequestStore {
       }))
     }
   }
+
 
 
 }

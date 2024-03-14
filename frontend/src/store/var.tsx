@@ -18,6 +18,18 @@ class EnvStore {
     this.varsOfCurrentEnv = resp
   }
 
+  get currentVarDict () {
+    return this.varsOfCurrentEnv.reduce((prev, item) => {
+      return {
+        ...prev, [item.name]: item.value
+      }
+    }, {})
+  }
+
+  getVar (name: string) {
+    return this.varsOfCurrentEnv.find(item => item.name === name)?.value || '-'
+  }
+
 
   async setCurrent (id: number) {
     this.currentEnvId = id

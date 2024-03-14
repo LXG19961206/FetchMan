@@ -8,6 +8,7 @@ import { useRequestStore } from '@/store/request';
 import { cloneDeep } from 'lodash'
 import { Param } from '@/models/param';
 import shortid from 'shortid';
+import InjectVarInput from '@/views/env/injectVarInput';
 
 
 
@@ -79,9 +80,8 @@ export default observer(() => {
     })
   }
 
-  const changevalue = (evt: Event, key: string, name: string) => {
-    const input = evt.target as HTMLInputElement
-    setSource(source.map(item => item.id !== key ? item : { ...item, [name]: input.value }))
+  const changevalue = (value: string, key: string, name: string) => {
+    setSource(source.map(item => item.id !== key ? item : { ...item, [name]: value }))
   }
 
   const del = (key: string) => {
@@ -99,19 +99,19 @@ export default observer(() => {
           className={style.input}
           spellCheck={false}
           placeholder="Please enter key"
-          onInput={(evt) => changevalue(evt as unknown as Event, item.id, 'name')}
+          onInput={(evt) => changevalue((evt.target as HTMLInputElement).value as string, item.id, 'name')}
           value={item.name}>
         </Input>
       ),
       value: (
-        <Input
+        <InjectVarInput
+          onChange={(value) => changevalue(value, item.id, 'value')}
           className={style.input}
           onBlur={generateParamsUrl}
           placeholder="Please enter value"
           spellCheck={false}
-          onInput={(evt) => changevalue(evt as unknown as Event, item.id, 'value')}
           value={item.value}>
-        </Input>
+        </InjectVarInput>
       ),
 
       edit: (

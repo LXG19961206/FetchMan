@@ -1,0 +1,74 @@
+.env_icon {
+  cursor: pointer;
+}
+
+.option_selector {
+  width: 700px;
+}
+.search_input {
+  width: 340px;
+}
+
+.input_like {
+  width: 100%;
+  display: flex;
+  border: 1px solid #eee;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 40px;
+  display: flex;
+  align-items: center;
+  color: #333;
+  border: #eee 1px solid;
+  outline: 0;
+  background: transparent;
+  padding-left: 4px;  
+  span:not(.var) {
+    min-width: 2px;
+  }
+}
+
+.injecter {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.fake_input_div {
+  // padding-left: 14px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+  // word-wrap: break-word;
+  overflow-x: auto;
+  white-space: nowrap;
+  transition: .3s all;
+  
+  &::-webkit-scrollbar { width: 0 !important;height: 0; }
+  // &:hover {
+  //   position: absolute;
+  //   display: block;
+  // }
+}
+
+.var {
+  font-weight: 500;
+  flex-grow: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.var_not_exist {
+  .var;
+  text-decoration: line-through;
+  &:hover {
+    text-decoration: line-through;
+  }
+}
+
+.empty {
+  color: #999;
+}

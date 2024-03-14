@@ -3,6 +3,9 @@ import style from './index.module.less'
 import { RequestMethod } from '@/dicts/methods'
 import { useRequestStore } from '@/store/request'
 import { observer } from 'mobx-react'
+import InjectVarInput from '@/views/env/injectVarInput';
+
+
 export default observer(() => {
 
   const reqStore = useRequestStore()
@@ -25,13 +28,13 @@ export default observer(() => {
           ))
         }
       </Select>
-      <Input
+      <InjectVarInput
         value={reqStore.currentViewRequest?.url}
         onChange={val => reqStore.setUrl(val)}
         spellCheck={false}
         placeholder='Please enter your url' 
         size={"large"}>
-      </Input>
+      </InjectVarInput>
       <Button
         disabled={!reqStore.currentViewRequest?.url}
         className={style.button}

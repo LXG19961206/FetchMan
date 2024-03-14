@@ -48,7 +48,7 @@ export default () => {
       if (!res) return 
       reqStore.setBinaryState(true)
       reqStore.setFormDataState(false)
-      reqStore.setHeader(SmartHeaders.ContentType ,res.content_type)
+      reqStore.setContentType(res.content_type)
       reqStore.setBody(`${filePathPlaceholder}${res.path}`)
       setPath(res.path)
     })

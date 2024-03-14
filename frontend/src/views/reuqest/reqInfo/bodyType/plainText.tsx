@@ -14,7 +14,7 @@ export default () => {
     reqStore.setBody(text)
     reqStore.setBinaryState(false)
     reqStore.setFormDataState(false)
-    reqStore.setHeader(SmartHeaders.ContentType, ContentType.Text)
+    reqStore.setContentType(ContentType.Text)
   }
 
   return (

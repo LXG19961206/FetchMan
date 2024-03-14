@@ -8,6 +8,8 @@ import { useRequestStore } from '@/store/request';
 import shortid from 'shortid';
 import { Header } from '@/models/headers';
 import { SmartHeaders } from '@/dicts/headers';
+import InjectVarInput from '@/views/env/injectVarInput';
+import { useEnvStore } from '@/store/var';
 
 const smartHeaderList = Object.values(SmartHeaders)
 
@@ -39,90 +41,7 @@ const columns = [
 
 export default observer(() => {
 
-  const [source, setSource] = useState<Header[]>([])
-
   const reqStore = useRequestStore()
-
-  useEffect(() => {
-
-    if (Object.values(reqStore.currentViewRequest?.headers || {}).length > 0) {
-      const source = Object.entries(reqStore.currentViewRequest?.headers!)
-        .map(([key, val], i) => ({
-          name: key,
-          value: val,
-          id: i.toString()
-        })
-      )
-      setSource(source)
-    }
-
-  }, [reqStore.currentViewRequest?.headers, reqStore.currentViewRequest?.body])
-
-  const updateHeader = () => {
-    source.forEach(item => {
-      reqStore.setHeader(item.name, item.value)
-    })
-  }
-
-
-  const addRow = () => {
-    setSource(prev => {
-      return [
-        ...prev,
-        { id: shortid.generate(), name: '', value: '' }
-      ]
-    })
-  }
-
-  const changeValue = (evt: Event, key: string, name: string) => {
-    const input = evt.target as HTMLInputElement
-    setSource(source.map(item => item.id !== key ? item : { ...item, [name]: input.value }))
-  }
-
-  const autoCompleteChange = (val: string, key: string, name: string) => {
-    setSource(source.map(item => item.id !== key ? item : { ...item, [name]: val }))
-  }
-
-  const del = (key: string) => {
-    setSource(source.filter(item => item.id !== key))
-    setTimeout(() => {
-    })
-  }
-
-  const tableSource = useMemo(() => {
-    return source.map((item, i) => ({
-      key: item.id,
-      name: (
-        <AutoComplete
-          className={style.input}
-          onChange={(val: string | number) => autoCompleteChange(val as string, item.id, 'name')}
-          placeholder='Please enter key'
-          data={smartHeaderList}
-          value={item.name}>
-        </AutoComplete>
-      ),
-      value: (
-        <Input
-          className={style.input}
-          onBlur={updateHeader}
-          placeholder="Please enter value"
-          spellCheck={false}
-          onInput={(evt) => changeValue(evt as unknown as Event, item.id, 'value')}
-          value={item.value}>
-        </Input>
-      ),
-
-      edit: (
-        <span
-          className={style.operate_icon}>
-          <IconDelete
-            color='lightblue'
-            onClick={del.bind(null, item.id)}>
-          </IconDelete>
-        </span>
-      )
-    }))
-  }, [source])
 
   return (
     <Table
@@ -132,13 +51,47 @@ export default observer(() => {
       pagination={false}
       size={Size.small}
       footer={
-        <div className={style.footer} onClick={addRow.bind(null)}>
+        <div className={style.footer} 
+          onClick={() => reqStore.addHeader()}>
           <IconPlus></IconPlus>
         </div>
       }
       sticky
       columns={columns}
-      dataSource={tableSource}>
+      dataSource={
+        (reqStore.currentViewRequest.headerList || []).map((item, i) => {
+          return ({
+            key: item[2],
+            name: (
+              <AutoComplete
+                className={style.input}
+                onChange={(val: string | number) => reqStore.setHeader(item, val as string, undefined) }
+                placeholder='Please enter key'
+                data={smartHeaderList}
+                value={item[0]}>
+              </AutoComplete>
+            ),
+            value: (
+              <InjectVarInput
+                className={style.input}
+                placeholder="Please enter value"
+                spellCheck={false}
+                onChange={(val: string | number) => reqStore.setHeader(item, undefined,val as string)}
+                value={item[1]}>
+              </InjectVarInput>
+            ),
+            edit: (
+              <span
+                className={style.operate_icon}>
+                <IconDelete
+                  color='lightblue'
+                  onClick={() => { reqStore.delHeader(item) }}>
+                </IconDelete>
+              </span>
+            )
+          })
+        })
+      }>
     </Table>
   )
 }
