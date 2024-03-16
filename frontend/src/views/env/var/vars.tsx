@@ -7,7 +7,6 @@ import { useEnvStore } from '@/store/var';
 import { RenderIf } from '@/components/headerless/renderIf';
 import { env } from '~/go/models'
 import { wait } from '@/util/sync'
-import InjectVarInput from '../injectVarInput';
 
 
 

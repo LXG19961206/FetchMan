@@ -76,4 +76,6 @@ export function RenameFolder(arg1:string,arg2:number):Promise<void>;
 
 export function RenameTab(arg1:string,arg2:number):Promise<void>;
 
+export function SetCurrent(arg1:number):Promise<void>;
+
 export function UpdateRequestInfo(arg1:request.RequestRecord):Promise<void>;

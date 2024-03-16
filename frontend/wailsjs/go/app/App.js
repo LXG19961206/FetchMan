@@ -138,6 +138,10 @@ export function RenameTab(arg1, arg2) {
   return window['go']['app']['App']['RenameTab'](arg1, arg2);
 }
 
+export function SetCurrent(arg1) {
+  return window['go']['app']['App']['SetCurrent'](arg1);
+}
+
 export function UpdateRequestInfo(arg1) {
   return window['go']['app']['App']['UpdateRequestInfo'](arg1);
 }

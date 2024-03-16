@@ -5,6 +5,18 @@ import (
 	"changeme/models/env"
 )
 
+func (a *App) SetCurrent(id int64) {
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		var prev = &env.Env{IsCurrent: true}
+		engine.Get(prev)
+		prev.IsCurrent = false
+		var curret = &env.Env{}
+		engine.ID(id).Get(curret)
+		curret.IsCurrent = true
+		engine.Update([]env.Env{*prev, *curret})
+	}
+}
+
 func (a *App) LsAllEnv() []env.Env {
 	var envs = []env.Env{}
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
