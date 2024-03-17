@@ -3,6 +3,7 @@ package handlehttp
 import (
 	dbUtil "changeme/models"
 	"changeme/models/env"
+	"fmt"
 	"regexp"
 )
 
@@ -11,9 +12,18 @@ func ReplaceVarWithItsRealValue(
 	varValueMap map[string]string,
 ) string {
 
-	reg := regexp.MustCompile(`{{\w+}}`)
+	if chunkStr == "" {
+		return chunkStr
+	}
+
+	reg := regexp.MustCompile(`{{(\w+)}}`)
 
 	return reg.ReplaceAllStringFunc(chunkStr, func(withVarWrapper string) string {
+
+		fmt.Printf("withVarWrapper: %v\n", withVarWrapper)
+
+		fmt.Printf("reg.FindStringSubmatch(withVarWrapper): %v\n", reg.FindStringSubmatch(withVarWrapper))
+
 		var name = reg.FindStringSubmatch(withVarWrapper)[1]
 		if realVal, ok := varValueMap[name]; ok {
 			return realVal

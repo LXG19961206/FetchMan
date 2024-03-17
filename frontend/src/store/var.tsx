@@ -86,4 +86,7 @@ class EnvStore {
 }
 
 export const envStore = new EnvStore()
+
+envStore.getAllEnv()
+
 export const useEnvStore = () => envStore

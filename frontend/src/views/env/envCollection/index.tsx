@@ -29,7 +29,7 @@ export default observer((props: BaseProps) => {
           </div>
         </Tooltip>
         <div
-            className={style.toolbar_item}>
+            className={`${style.toolbar_item} ${style.at_right}`}>
             <Select
               prefix="current:"
               onChange={(envId) => envStore.setCurrentEnv(envId as number)} 
