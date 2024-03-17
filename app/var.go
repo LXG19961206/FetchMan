@@ -6,14 +6,18 @@ import (
 )
 
 func (a *App) SetCurrent(id int64) {
+
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-		var prev = &env.Env{IsCurrent: true}
-		engine.Get(prev)
-		prev.IsCurrent = false
-		var curret = &env.Env{}
-		engine.ID(id).Get(curret)
-		curret.IsCurrent = true
-		engine.Update([]env.Env{*prev, *curret})
+
+		var envs = []env.Env{}
+
+		engine.Find(&envs)
+
+		for idx := range envs {
+			envs[idx].IsCurrent = envs[idx].Id == id
+			engine.Table(&env.Env{}).ID(envs[idx].Id).AllCols().Update(envs[idx])
+		}
+
 	}
 }
 

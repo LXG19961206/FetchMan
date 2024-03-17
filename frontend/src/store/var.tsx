@@ -1,6 +1,6 @@
 import { makeAutoObservable, observable } from 'mobx'
 import { env } from '~/go/models'
-import { GetVarsByEnvId, LsAllEnv, AddVariable,ModifyVariable, AddEnv, RenameEnv, DelEnv, DelVars } from '~/go/app/App'
+import { SetCurrent, GetVarsByEnvId, LsAllEnv, AddVariable,ModifyVariable, AddEnv, RenameEnv, DelEnv, DelVars } from '~/go/app/App'
 
 class EnvStore {
 
@@ -9,8 +9,9 @@ class EnvStore {
   }
 
   currentEdit = 0
+  viewEnvId = 0
   currentEnvId = 0
-  env: env.Env[] = []
+  env: env.Env[] = observable.array([])
   varsOfCurrentEnv: env.Vars[] = []
 
   async getVarsByEnvId (envId: number) {
@@ -31,14 +32,24 @@ class EnvStore {
   }
 
 
-  async setCurrent (id: number) {
-    this.currentEnvId = id
+  async setEnvView (id: number) {
+    this.viewEnvId = id
     await this.getVarsByEnvId(id)
+  }
+
+  async setCurrentEnv (id: number) {
+    this.currentEnvId = id
+    await SetCurrent(id)
   }
 
   async getAllEnv () {
     const resp = await LsAllEnv() || []
+    const current = resp.find(item => item.isCurrent)
     this.env = resp
+    if (current) { 
+      this.currentEnvId = current.id
+      this.setEnvView(current.id)
+    }
   }
 
   async renameEnv (id: number, name: string) {
@@ -60,7 +71,7 @@ class EnvStore {
 
   async delVar (id: number) {
     await DelVars(id)
-    await this.getVarsByEnvId(this.currentEnvId)
+    await this.getVarsByEnvId(this.viewEnvId)
   }
 
   async modifyVar (record: env.Vars) {
@@ -68,8 +79,8 @@ class EnvStore {
   }
 
   async addVariable () {
-    await AddVariable(this.currentEnvId, "")
-    await this.getVarsByEnvId(this.currentEnvId)
+    await AddVariable(this.viewEnvId, "")
+    await this.getVarsByEnvId(this.viewEnvId)
   }
 
 }

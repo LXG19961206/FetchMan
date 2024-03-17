@@ -34,11 +34,11 @@ export const Envs = observer(() => {
         {
           envStore.env.map((node) => (
             <div
-              onClick={() => envStore.setCurrent(node.id)}
+              onClick={() => envStore.setEnvView(node.id)}
               onContextMenu={throttle((evt) => showMenu(evt, `${style.more_icon}${node.id}`), 200)}
               key={node.id}>
               <div className={
-                envStore.currentEnvId === node.id
+                envStore.viewEnvId === node.id
                   ? `${style.folder} ${style.active}`
                   : style.folder
               }>

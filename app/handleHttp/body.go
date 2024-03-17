@@ -25,6 +25,7 @@ func GenerateRealBody(
 	bodyBuffer bytes.Buffer,
 	isFormData bool,
 	isBinary bool,
+	envMap map[string]string,
 ) io.Reader {
 
 	if isBinary {
@@ -63,7 +64,8 @@ func GenerateRealBody(
 					fmt.Printf("err: %v\n", err)
 				}
 			} else {
-				_ = writer.WriteField(formItem.Name, formItem.Value)
+				realValue := ReplaceVarWithItsRealValue(formItem.Value, envMap)
+				_ = writer.WriteField(formItem.Name, realValue)
 			}
 		}
 		var contentType = writer.FormDataContentType()
@@ -71,6 +73,7 @@ func GenerateRealBody(
 		header.Set("Content-Type", contentType)
 		return buf
 	} else {
-		return bytes.NewReader(bodyBuffer.Bytes())
+		var bodyStr = ReplaceVarWithItsRealValue(bodyBuffer.String(), envMap)
+		return bytes.NewReader([]byte(bodyStr))
 	}
 }

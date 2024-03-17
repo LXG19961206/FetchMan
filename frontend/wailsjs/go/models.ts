@@ -51,7 +51,6 @@ export namespace env {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
-	    deleteTime: string;
 	    remark: string;
 	    name: string;
 	    isCurrent: boolean;
@@ -66,7 +65,6 @@ export namespace env {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
-	        this.deleteTime = source["deleteTime"];
 	        this.remark = source["remark"];
 	        this.name = source["name"];
 	        this.isCurrent = source["isCurrent"];
@@ -77,7 +75,6 @@ export namespace env {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
-	    deleteTime: string;
 	    remark: string;
 	    envId: number;
 	    value: string;
@@ -93,7 +90,6 @@ export namespace env {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
-	        this.deleteTime = source["deleteTime"];
 	        this.remark = source["remark"];
 	        this.envId = source["envId"];
 	        this.value = source["value"];
@@ -110,7 +106,6 @@ export namespace filelike {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
-	    deleteTime: string;
 	    remark: string;
 	    folderId: number;
 	    name: string;
@@ -128,7 +123,6 @@ export namespace filelike {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
-	        this.deleteTime = source["deleteTime"];
 	        this.remark = source["remark"];
 	        this.folderId = source["folderId"];
 	        this.name = source["name"];
@@ -147,7 +141,6 @@ export namespace folder {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
-	    deleteTime: string;
 	    remark: string;
 	    createrId: string;
 	    name: string;
@@ -164,7 +157,6 @@ export namespace folder {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
-	        this.deleteTime = source["deleteTime"];
 	        this.remark = source["remark"];
 	        this.createrId = source["createrId"];
 	        this.name = source["name"];
@@ -182,7 +174,6 @@ export namespace request {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
-	    deleteTime: string;
 	    remark: string;
 	    collectionId: number;
 	    url: string;
@@ -206,7 +197,6 @@ export namespace request {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
-	        this.deleteTime = source["deleteTime"];
 	        this.remark = source["remark"];
 	        this.collectionId = source["collectionId"];
 	        this.url = source["url"];
@@ -231,7 +221,6 @@ export namespace tab {
 	    id: number;
 	    createTime: string;
 	    updateTime: string;
-	    deleteTime: string;
 	    remark: string;
 	    name: string;
 	    requestId: number;
@@ -250,7 +239,6 @@ export namespace tab {
 	        this.id = source["id"];
 	        this.createTime = source["createTime"];
 	        this.updateTime = source["updateTime"];
-	        this.deleteTime = source["deleteTime"];
 	        this.remark = source["remark"];
 	        this.name = source["name"];
 	        this.requestId = source["requestId"];

@@ -23,22 +23,22 @@ func ReplaceVarWithItsRealValue(
 	})
 }
 
-func GetEnvVarsMap(envId int64) map[string]string {
+func GetEnvVarsMap() map[string]string {
 
 	var vars = []env.Vars{}
-
-	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-		engine.Find(vars, &env.Vars{
-			EnvId: envId,
-		})
+	var currentEnv = &env.Env{
+		IsCurrent: true,
 	}
 
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		engine.Get(&currentEnv)
+		engine.Find(&vars, &env.Vars{
+			EnvId: currentEnv.Id,
+		})
+	}
 	var envMap = map[string]string{}
-
 	for _, item := range vars {
 		envMap[item.Name] = item.Value
 	}
-
 	return envMap
-
 }

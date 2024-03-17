@@ -5,16 +5,12 @@ import (
 	fileLike "changeme/models/fileLike"
 	req "changeme/models/request"
 	tabTable "changeme/models/tab"
-	"fmt"
 	"net/http"
 )
 
 func UpdateRequestInfo(record *req.RequestRecord) {
 
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-
-		fmt.Printf("record.Id: %v\n", record.Id)
-		fmt.Printf("record.Url: %v\n", record.Url)
 
 		engine.Table(&req.RequestRecord{}).ID(record.Id).AllCols().Update(record)
 
@@ -29,8 +25,6 @@ func UpdateRequestInfo(record *req.RequestRecord) {
 		}
 
 		engine.Get(filelikeRecord)
-
-		fmt.Printf("filelikeRecord: %v\n", filelikeRecord)
 
 		filelikeRecord.Tag = record.Method
 
