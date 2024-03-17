@@ -6,6 +6,9 @@ class EnvStore {
 
   constructor () {
     makeAutoObservable(this)
+    setTimeout(() => {
+      this.getAllEnv()
+    })
   }
 
   currentEdit = 0
@@ -87,6 +90,5 @@ class EnvStore {
 
 export const envStore = new EnvStore()
 
-envStore.getAllEnv()
 
 export const useEnvStore = () => envStore
