@@ -180,6 +180,8 @@ export namespace request {
 	    originUrl: string;
 	    method: string;
 	    headers: {[key: string]: string};
+	    preScript: string;
+	    postTestScript: string;
 	    contentType: string;
 	    bodyId: number;
 	    respId: number;
@@ -203,6 +205,8 @@ export namespace request {
 	        this.originUrl = source["originUrl"];
 	        this.method = source["method"];
 	        this.headers = source["headers"];
+	        this.preScript = source["preScript"];
+	        this.postTestScript = source["postTestScript"];
 	        this.contentType = source["contentType"];
 	        this.bodyId = source["bodyId"];
 	        this.respId = source["respId"];

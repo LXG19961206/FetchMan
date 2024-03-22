@@ -1,48 +1,36 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { StreamLanguage } from '@codemirror/language';
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import style from './index.module.less'
-import { inject } from 'mobx-react';
 import { Tag, Banner } from '@douyinfe/semi-ui'
+import { useScriptStore } from '@/store/script';
+import { useRequestStore } from '@/store/request';
 
-
-const codeSnippets = [
-
-  {
-    name: 'Get response data',
-    code: `let respData = getData();`
-  },
-  {
-    name: 'Get response data(as JSON)',
-    code: `let respDataJSON = (() => {\n\ \ try {\n\ \ \ \ return JSON.parse(getData());\n\ \ } catch (e) {\n\ \ \ \ return null;\n\ \ }\n\})();`
-  },
-  {
-    name: 'Get some env-variable current value',
-    code: `let value = await getEnvVariable('someEnvVariableName');`
-  },
-  {
-    name: 'Update some env-variable value',
-    code: `await setEnvVariable('name', 'newValue');`
-  },
-  {
-    name: 'Unset some env-variable value',
-    code: `await setEnvVariable('name', '');`
-  },
-  {
-    name: 'Send a request',
-    code: `let resp = await fetch('http://yourhostname:yourport/yourpath', {});\n\nlet respJson = await resp.json();`
-  }
-
-]
 
 export default () => {
 
-  const [htmlStr, setHtmlStr] = useState("")
+  const [scriptStr, setScriptStr] = useState("")
+  const reqStore = useRequestStore()
+
+  const scriptStore = useScriptStore()
+
+  useEffect(() => {
+    if (reqStore.currentViewRequest.postTestScript) {
+      setScriptStr(reqStore.currentViewRequest.postTestScript)
+    }
+  }, [])
 
   const injectCode = (code: string) => {
-    setHtmlStr(prev => {
-      return prev + code + '\n\n'
+    setScriptStr(prev => {
+      return prev + code + '\r'
+    })
+  }
+
+  const sync = () => {
+    setScriptStr(newVal => {
+      reqStore.setPostTestScript(newVal)
+      return newVal
     })
   }
 
@@ -50,12 +38,12 @@ export default () => {
 
   // useEffect(() => {
   //   if (reqStore.getContentType().indexOf(ContentType.Html) > -1) {
-  //     setHtmlStr(reqStore.currentViewRequest.body as string)
+  //     setScriptStr(reqStore.currentViewRequest.body as string)
   //   }
   // }, [])
 
   // const sync = () => {
-  //   setHtmlStr(newVal => {
+  //   setScriptStr(newVal => {
   //     reqStore.setBody(newVal)
   //     reqStore.setContentType(
   //       ContentType.Html
@@ -66,7 +54,6 @@ export default () => {
 
   return (
     <Fragment>
-
       <Banner
         type='warning'
         icon=''
@@ -79,8 +66,9 @@ export default () => {
       <div className={style.wrapper}>
         <div className={style.script_code_after_req}>
           <CodeMirror
-            onChange={setHtmlStr}
-            value={htmlStr}
+            onBlur={sync}
+            onChange={setScriptStr}
+            value={scriptStr}
             height="100%"
             extensions={[StreamLanguage.define(javascript)]}
           />
@@ -88,7 +76,7 @@ export default () => {
         <ul className={style.feature_list}>
           <p> CodeSnippets </p>
           {
-            codeSnippets.map(item => (
+            scriptStore.codeSnippetsAfterReqeust.map(item => (
               <li
                 key={item.name}
                 onClick={() => injectCode(item.code)}>

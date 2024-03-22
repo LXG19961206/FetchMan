@@ -12,8 +12,10 @@ import { useTabStore } from './tab'
 import { useWorkplaceStore } from './workplace'
 import { request as goRequest } from '~/go/models'
 import { isNil, omit } from 'lodash'
+import { useScriptStore } from './script'
 
 const createBlankRequest = (record?: RequestInfo) => {
+  console.log(record)
   return {
     url: record?.url || '',
     id: record?.id || 0,
@@ -23,6 +25,8 @@ const createBlankRequest = (record?: RequestInfo) => {
     isFormData: record?.isFormData || false,
     method: record?.method || Methods.get,
     isReferenced: record?.isReferenced || false,
+    preScript: record?.preScript || '',
+    postTestScript: record?.postTestScript || '',
     headerList: observable.array(
       Object.entries(record?.headers || {}).map(item => [...item, shortid.generate()])
     )
@@ -83,6 +87,7 @@ class RequestStore {
 
   async syncReqInfoToServer() {
     const prevId = this.currentViewRequest.id || 0
+    console.log(this.currentViewRequest)
     await UpdateRequestInfo(omit(this.currentViewRequest as goRequest.RequestRecord, 'headerList'))
     await this.flushView(prevId || 0)
   }
@@ -100,12 +105,15 @@ class RequestStore {
     if (!this.currentViewRequest) return
     const reqId = this.currentViewRequest.id || 0
     const respStore = useRespStore()
+    const scriptStore = useScriptStore()
     respStore.wait(reqId)
     const resp = await request(omit(this.currentViewRequest, 'headerList'))
     respStore.setCurrentViewResp(resp, reqId)
     respStore.removePendingTarget(reqId)
     this.updateReqInfo(reqId)
+    await scriptStore.execAfterReqScript(resp, this.currentViewRequest.postTestScript)
     this.flushView(reqId)
+    
   }
 
   setUrl(url: string) {
@@ -203,6 +211,17 @@ class RequestStore {
     }
   }
 
+  setPreScript (scriptStr: string) {
+    if (!this.currentViewRequest) return 
+    this.currentViewRequest.preScript = scriptStr
+    this.syncReqInfoToServer()
+  }
+
+  setPostTestScript (scriptStr: string) {
+    if (!this.currentViewRequest) return 
+    this.currentViewRequest.postTestScript = scriptStr
+    this.syncReqInfoToServer()
+  }
 
 
 }

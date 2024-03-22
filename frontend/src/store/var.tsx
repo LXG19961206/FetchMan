@@ -31,7 +31,7 @@ class EnvStore {
   }
 
   getVar (name: string) {
-    return this.varsOfCurrentEnv.find(item => item.name === name)?.value || '-'
+    return this.varsOfCurrentEnv.find(item => item.name === name)?.value || ''
   }
 
 
@@ -79,6 +79,15 @@ class EnvStore {
 
   async modifyVar (record: env.Vars) {
     await ModifyVariable(record.id ,record)
+    await this.getVarsByEnvId(record.envId)
+  }
+
+  async modifyVarByName (name: string, value: string) {
+    const record = this.varsOfCurrentEnv.find(varItem => varItem.name === name)
+    if (record) {
+      record.value = value
+      await this.modifyVar(record)
+    }
   }
 
   async addVariable () {

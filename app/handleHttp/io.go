@@ -8,26 +8,24 @@ import (
 	"net/http"
 )
 
-func UpdateRequestInfo(record *req.RequestRecord) {
-
+func UpdateRequestInfo(record *req.RequestRecord, usePrevScript bool) {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-
+		if usePrevScript {
+			var prev = &req.RequestRecord{}
+			engine.ID(record.Id).Get(prev)
+			record.PostTestScript = prev.PostTestScript
+			record.PreScript = prev.PreScript
+		}
 		engine.Table(&req.RequestRecord{}).ID(record.Id).AllCols().Update(record)
-
 		var tab = &tabTable.Tab{
 			RequestId: record.Id,
 		}
-
 		engine.Get(tab)
-
 		var filelikeRecord = &fileLike.FileLike{
 			RequestId: record.Id,
 		}
-
 		engine.Get(filelikeRecord)
-
 		filelikeRecord.Tag = record.Method
-
 		if record.Url != "" {
 			if len(record.Url) > 20 {
 				tab.Url = record.Url[0:20]

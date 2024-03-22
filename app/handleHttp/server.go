@@ -35,7 +35,7 @@ func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
 				这样方便客户端后续的反显
 				如果存储一个真实请求，后续可能还需要把复杂的请求体再次解析回去
 		*/
-		go UpdateRequestInfo(record)
+		go UpdateRequestInfo(record, true)
 		/*
 			在某些时候，需要将响应的信息也存起来
 		*/
