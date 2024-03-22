@@ -102,11 +102,12 @@ class RequestStore {
   currentViewRequest: RequestInfo = createBlankRequest()
 
   async execRequest() {
+    const scriptStore = useScriptStore()
+    const respStore = useRespStore()
     if (!this.currentViewRequest) return
     await this.syncReqInfoToServer()
+    await scriptStore.execBeforeReqScript(this.currentViewRequest.preScript)
     const reqId = this.currentViewRequest.id || 0
-    const respStore = useRespStore()
-    const scriptStore = useScriptStore()
     respStore.wait(reqId)
     const resp = await request(omit(this.currentViewRequest, 'headerList'))
     respStore.setCurrentViewResp(resp, reqId)
@@ -180,7 +181,12 @@ class RequestStore {
   }
 
   addHeader (name ='', value = "") {
-    this.currentViewRequest.headerList?.push([name, value, shortid.generate()])
+    const prev = this.currentViewRequest.headerList?.find(header => header[0] === name)
+    if (prev) {
+      this.setHeader(prev, name, value)
+    } else {
+      this.currentViewRequest.headerList?.push([name, value, shortid.generate()])
+    }
   }
 
   setContentType(type: string) {

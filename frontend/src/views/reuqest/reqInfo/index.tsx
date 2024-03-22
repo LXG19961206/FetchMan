@@ -16,15 +16,19 @@ export default () => {
         <TabPane tab="Params" itemKey="Params">
           <Params></Params>
         </TabPane>
+        <TabPane tab="Pre-Script" itemKey="Pre-Script">
+          {/* <Body></Body> */}
+          <Script isPrev={true}></Script>
+        </TabPane>
         <TabPane tab="Headers" itemKey="Headers">
             <Headers></Headers>
         </TabPane>
         <TabPane tab="Body" itemKey="Body">
           <Body></Body>
         </TabPane>
-        <TabPane tab="ScriptAfterReqeust" itemKey="ScriptAfterReqeust">
+        <TabPane tab="Post-Script" itemKey="Post-Script">
           {/* <Body></Body> */}
-          <Script></Script>
+          <Script isPrev={false}></Script>
         </TabPane>
       </Tabs>
     </div>

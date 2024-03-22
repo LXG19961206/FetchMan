@@ -3,7 +3,8 @@ import { Resp } from '@/models/resp'
 import { useRespStore } from './resp'
 import { useEnvStore } from './var'
 import { NativeMessageDialog } from '~/go/app/App'
-
+import { reqStore, useRequestStore } from './request'
+import { SmartHeaders } from '@/dicts/headers'
 
 
 class ScriptStore {
@@ -39,7 +40,34 @@ class ScriptStore {
     }
   ]
 
-  callbacksAfterReq = {
+  codeSnippetsBeforeReqeust = [
+    {
+      name: 'Set/update request header',
+      code: `await setHeader('key', 'newValue');`
+    },
+    {
+      name: 'Set/update ContentType',
+      code: `await setHeader('${SmartHeaders.ContentType}', 'newValue');`
+    },
+    {
+      name: 'Get some env-variable current value',
+      code: `let value = await getEnvVariable('someEnvVariableName');`
+    },
+    {
+      name: 'Update some env-variable value',
+      code: `await setEnvVariable('name', 'newValue');`
+    },
+    {
+      name: 'Unset some env-variable value',
+      code: `await setEnvVariable('name', '');`
+    },
+    {
+      name: 'Send a request',
+      code: `let resp = await fetch('http://yourhostname:yourport/yourpath', {});\rlet respJson = await resp.json();`
+    }
+  ]
+
+  callbacksOfRequest = {
 
     getData () {
       const respStore = useRespStore()
@@ -56,6 +84,10 @@ class ScriptStore {
       await envStore.modifyVarByName(name, value)
     },
 
+    async setHeader (key: string, value: string) {
+      const reqStore = useRequestStore()
+      reqStore.addHeader(key, value)
+    },
 
   }
 
@@ -63,15 +95,9 @@ class ScriptStore {
 
     if (!scriptText) return
 
-    const dynamicFunction = new Function(
-      "getData", 
-      "setEnvVariable", 
-      "getEnvVariable", 
-      "statusCode", 
-      `return (async (GetData, setEnvVariable, getEnvVariable, statusCode) => {
-        ${scriptText};
-      })(getData,setEnvVariable, getEnvVariable, statusCode);`
-    )
+    const args = "getData,setEnvVariable,getEnvVariable,statusCode,window,document"
+
+    const dynamicFunction = this.createDynamicFunction(args, scriptText)
 
     window.onunhandledrejection = (e) => {
       NativeMessageDialog({
@@ -82,12 +108,49 @@ class ScriptStore {
     }
 
     dynamicFunction(
-      this.callbacksAfterReq.getData,
-      this.callbacksAfterReq.setEnvVariable,
-      this.callbacksAfterReq.getEnvVariable,
-      resp.status
+      this.callbacksOfRequest.getData,
+      this.callbacksOfRequest.setEnvVariable,
+      this.callbacksOfRequest.getEnvVariable,
+      resp.status,
+      null,
+      null
     )
 
+  }
+
+  async execBeforeReqScript(scriptText: string) {
+
+    if (!scriptText) return
+
+    const args = "setHeader,setEnvVariable,getEnvVariable,window,document"
+
+    const dynamicFunction = this.createDynamicFunction(args, scriptText)
+
+    window.onunhandledrejection = (e) => {
+      NativeMessageDialog({
+        title: 'script exec error !',
+        message: e.reason
+      })
+      window.onunhandledrejection = null;
+    }
+
+    await (dynamicFunction(
+      this.callbacksOfRequest.setHeader,
+      this.callbacksOfRequest.setEnvVariable,
+      this.callbacksOfRequest.getEnvVariable,
+      null,
+      null
+    ));
+
+  }
+
+  createDynamicFunction(args: string, scriptText: string) {
+    return new Function(
+      ...args.split(","),
+      `return (async (${args}) => {
+        ${scriptText};
+      })(${args});`
+    )
   }
 
 }

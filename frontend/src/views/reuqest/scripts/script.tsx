@@ -8,15 +8,18 @@ import { useScriptStore } from '@/store/script';
 import { useRequestStore } from '@/store/request';
 
 
-export default () => {
+export default (props: {
+  isPrev: boolean
+}) => {
 
   const [scriptStr, setScriptStr] = useState("")
   const reqStore = useRequestStore()
-
   const scriptStore = useScriptStore()
 
   useEffect(() => {
-    if (reqStore.currentViewRequest.postTestScript) {
+    if (props.isPrev) {
+      setScriptStr(reqStore.currentViewRequest.preScript)
+    } else {
       setScriptStr(reqStore.currentViewRequest.postTestScript)
     }
   }, [])
@@ -29,28 +32,15 @@ export default () => {
 
   const sync = () => {
     setScriptStr(newVal => {
-      reqStore.setPostTestScript(newVal)
+      if (props.isPrev) {
+        reqStore.setPreScript(newVal)
+      } else {
+        reqStore.setPostTestScript(newVal)
+      }
       return newVal
     })
   }
 
-  // const reqStore = useRequestStore()
-
-  // useEffect(() => {
-  //   if (reqStore.getContentType().indexOf(ContentType.Html) > -1) {
-  //     setScriptStr(reqStore.currentViewRequest.body as string)
-  //   }
-  // }, [])
-
-  // const sync = () => {
-  //   setScriptStr(newVal => {
-  //     reqStore.setBody(newVal)
-  //     reqStore.setContentType(
-  //       ContentType.Html
-  //     )
-  //     return newVal
-  //   })  
-  // }
 
   return (
     <Fragment>
@@ -66,6 +56,7 @@ export default () => {
       <div className={style.wrapper}>
         <div className={style.script_code_after_req}>
           <CodeMirror
+            placeholder={"// write your script here"}
             onBlur={sync}
             onChange={setScriptStr}
             value={scriptStr}
@@ -76,7 +67,9 @@ export default () => {
         <ul className={style.feature_list}>
           <p> CodeSnippets </p>
           {
-            scriptStore.codeSnippetsAfterReqeust.map(item => (
+            (
+              props.isPrev ? scriptStore.codeSnippetsBeforeReqeust : scriptStore.codeSnippetsAfterReqeust
+            ).map(item => (
               <li
                 key={item.name}
                 onClick={() => injectCode(item.code)}>
