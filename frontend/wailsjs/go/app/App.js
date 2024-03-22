@@ -86,10 +86,6 @@ export function GetRequestById(arg1) {
   return window['go']['app']['App']['GetRequestById'](arg1);
 }
 
-export function GetSpecialFields() {
-  return window['go']['app']['App']['GetSpecialFields']();
-}
-
 export function GetVarsByEnvId(arg1) {
   return window['go']['app']['App']['GetVarsByEnvId'](arg1);
 }

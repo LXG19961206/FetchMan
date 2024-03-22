@@ -103,6 +103,7 @@ class RequestStore {
 
   async execRequest() {
     if (!this.currentViewRequest) return
+    await this.syncReqInfoToServer()
     const reqId = this.currentViewRequest.id || 0
     const respStore = useRespStore()
     const scriptStore = useScriptStore()

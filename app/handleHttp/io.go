@@ -8,14 +8,9 @@ import (
 	"net/http"
 )
 
-func UpdateRequestInfo(record *req.RequestRecord, usePrevScript bool) {
+func UpdateRequestInfo(record *req.RequestRecord) {
 	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
-		if usePrevScript {
-			var prev = &req.RequestRecord{}
-			engine.ID(record.Id).Get(prev)
-			record.PostTestScript = prev.PostTestScript
-			record.PreScript = prev.PreScript
-		}
+
 		engine.Table(&req.RequestRecord{}).ID(record.Id).AllCols().Update(record)
 		var tab = &tabTable.Tab{
 			RequestId: record.Id,

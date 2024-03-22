@@ -7,6 +7,11 @@ import (
 	"regexp"
 )
 
+func IsVar(str string) bool {
+	reg := regexp.MustCompile(`.*{{(\w+)}}.*`)
+	return reg.MatchString(str)
+}
+
 func ReplaceVarWithItsRealValue(
 	chunkStr string,
 	varValueMap map[string]string,

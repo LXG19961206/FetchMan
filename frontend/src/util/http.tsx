@@ -3,8 +3,7 @@ import { getTimeStamp } from './time';
 import { ContentType } from '@/dicts/contentType';
 import { contains } from './native';
 import { RequestInfo } from '@/models/request'
-import { GetBaseUrl, GetSpecialFields } from "~/go/app/App"
-import { app } from '~/go/models'
+import { GetBaseUrl } from "~/go/app/App"
 import { Resp } from '@/models/resp';
 import { SmartHeaders } from '@/dicts/headers';
 
@@ -12,16 +11,12 @@ const UNSAFE_HEADER = new Set<string>(["Accept-Encoding", "Connection", "Content
 
 let baseUrl = ""
 
-let fakeFields = {
-  method: "", url: "", times: "", isBinary: "", isFormData: "", instanceId: ""
-} as app.SpecialReqHeaderFields
+
 
 const initConfig = async () => {
-  if (baseUrl && fakeFields.method) {
+  if (baseUrl) {
     return 
   }
-  fakeFields = await GetSpecialFields()
-  console.log(fakeFields)
   baseUrl = await GetBaseUrl()
 }
 
@@ -30,19 +25,11 @@ export const request = async (
 ): Promise<Resp> => {
   await initConfig()
   return new Promise((resolve, reject) => {
+    
     const xhr = new XMLHttpRequest();
-    xhr.open(RequestMethod.Post, baseUrl);
-    xhr.setRequestHeader(fakeFields.url, req.url)
-    xhr.setRequestHeader(fakeFields.method, req.method)
-    xhr.setRequestHeader(fakeFields.instanceId, String(req.id))
-    if (req.isBinary) {
-      xhr.setRequestHeader(fakeFields.isBinary, "1")
-    }
-
-    if (req.isFormData) {
-      xhr.setRequestHeader(fakeFields.isFormData, "1")
-    }
-
+    
+    xhr.open(RequestMethod.Get, `${baseUrl}/${req.id}`);
+    
     if (req.headers) {
       Object.entries(req.headers).forEach(([key, val]) => {
         if (!key || UNSAFE_HEADER.has(key)) return 

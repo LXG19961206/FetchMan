@@ -5,7 +5,6 @@ import (
 	dbUtil "changeme/models"
 	fileLike "changeme/models/fileLike"
 	req "changeme/models/request"
-	"fmt"
 	"net/http"
 )
 
@@ -45,10 +44,8 @@ func (a *App) CopyRequest(id int64) *req.RequestRecord {
 
 func (a *App) UpdateRequestInfo(record *req.RequestRecord) {
 
-	fmt.Printf("record: %v\n", record)
-
 	if record.Id > 0 {
-		handleHttp.UpdateRequestInfo(record, false)
+		handleHttp.UpdateRequestInfo(record)
 	}
 }
 

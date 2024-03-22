@@ -1,7 +1,6 @@
 package app
 
 import (
-	handleHttp "changeme/app/handleHttp"
 	"changeme/config"
 	"strconv"
 )
@@ -17,17 +16,6 @@ func (a *App) GetBaseUrl() string {
 
 func (a *App) GetFileUrl() string {
 	return "http://localhost" + ":" + strconv.Itoa(config.AppConfigForClient.FileServerPort) + config.AppConfigForClient.RequestFileUrl
-}
-
-func (a *App) GetSpecialFields() *SpecialReqHeaderFields {
-	return &SpecialReqHeaderFields{
-		Method:     handleHttp.FAKE_METHOD,
-		Url:        handleHttp.FAKE_URL,
-		Times:      handleHttp.FAKE_TIMES,
-		IsBinary:   handleHttp.IS_BINARY,
-		IsFormData: handleHttp.IS_FORMDATA,
-		InstanceId: handleHttp.INSTANCE_ID,
-	}
 }
 
 func (a *App) GetFilePathPlaceholder() string {

@@ -22,14 +22,14 @@ type FormDataItem struct {
 
 func GenerateRealBody(
 	header http.Header,
-	bodyBuffer bytes.Buffer,
+	body string,
 	isFormData bool,
 	isBinary bool,
 	envMap map[string]string,
 ) io.Reader {
 
 	if isBinary {
-		var path = strings.Split((bodyBuffer.String()), config.AppConfigForClient.FilePlaceholderPath)[1]
+		var path = strings.Split(body, config.AppConfigForClient.FilePlaceholderPath)[1]
 		if file, err := os.Open(path); err == nil {
 			var fileBytes = bytes.Buffer{}
 			io.Copy(&fileBytes, file)
@@ -40,7 +40,7 @@ func GenerateRealBody(
 		var buf = &bytes.Buffer{}
 		writer := multipart.NewWriter(buf)
 		var formData = []FormDataItem{}
-		json.Unmarshal(bodyBuffer.Bytes(), &formData)
+		json.Unmarshal([]byte(body), &formData)
 		for _, formItem := range formData {
 			if len(formItem.Name) == 0 || (len(formItem.Value) == 0 && len(formItem.FilePath) == 0) {
 				continue
@@ -73,7 +73,7 @@ func GenerateRealBody(
 		header.Set("Content-Type", contentType)
 		return buf
 	} else {
-		var bodyStr = ReplaceVarWithItsRealValue(bodyBuffer.String(), envMap)
+		var bodyStr = ReplaceVarWithItsRealValue(body, envMap)
 		return bytes.NewReader([]byte(bodyStr))
 	}
 }

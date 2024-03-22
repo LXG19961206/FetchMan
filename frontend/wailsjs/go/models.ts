@@ -20,28 +20,6 @@ export namespace app {
 	        this.content_type = source["content_type"];
 	    }
 	}
-	export class SpecialReqHeaderFields {
-	    method: string;
-	    url: string;
-	    times: string;
-	    isBinary: string;
-	    isFormData: string;
-	    instanceId: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new SpecialReqHeaderFields(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.method = source["method"];
-	        this.url = source["url"];
-	        this.times = source["times"];
-	        this.isBinary = source["isBinary"];
-	        this.isFormData = source["isFormData"];
-	        this.instanceId = source["instanceId"];
-	    }
-	}
 
 }
 

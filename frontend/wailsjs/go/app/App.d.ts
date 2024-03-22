@@ -5,8 +5,8 @@ import {env} from '../models';
 import {filelike} from '../models';
 import {tab} from '../models';
 import {request} from '../models';
-import {app} from '../models';
 import {frontend} from '../models';
+import {app} from '../models';
 
 export function AddCollectionFolder(arg1:string,arg2:number):Promise<folder.Folder>;
 
@@ -49,8 +49,6 @@ export function GetFolderIdByReqId(arg1:number):Promise<number>;
 export function GetPort():Promise<number>;
 
 export function GetRequestById(arg1:number):Promise<request.RequestRecord>;
-
-export function GetSpecialFields():Promise<app.SpecialReqHeaderFields>;
 
 export function GetVarsByEnvId(arg1:number):Promise<Array<env.Vars>>;
 

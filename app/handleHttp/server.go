@@ -1,27 +1,28 @@
 package handlehttp
 
 import (
-	"bytes"
 	"changeme/config"
+	dbUtil "changeme/models"
+	reqTable "changeme/models/request"
 	"fmt"
-	"io"
 	"net/http"
+	"strconv"
 	"strings"
-
-	"github.com/labstack/gommon/log"
 )
 
 func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
-	/*
-		  请求体的数据在下方多个功能里都需要用到
-			将其存到一个 buffer 缓冲区中
-	*/
-	var bodyBuffer = bytes.Buffer{}
-	io.Copy(&bodyBuffer, r.Body)
-	/*
-	  从请求头中拿到真实的请求首行，然后拼成一个新的请求
-	*/
-	if req, record, err := GetRealReqFromHeaders(r, bodyBuffer); err == nil {
+
+	var idFromPath = strings.TrimPrefix(r.URL.String(), config.AppConfig.RequestBaseUrl+"/")
+
+	var intId, _ = strconv.Atoi(idFromPath)
+
+	var record = &reqTable.RequestRecord{}
+
+	if engine, err := dbUtil.GetSqLiteEngine(); err == nil {
+		engine.ID(int64(intId)).Get(record)
+	}
+
+	if req, err := CreateRealReqInstance(*record); err == nil {
 		/*
 			  帮客户端去发送这个新的请求，并将结果转发给客户端
 				我需要转发并且可能需要把结果记录入库，需要知晓这个请求的结果
@@ -35,42 +36,35 @@ func CreateRealReqAndForward(w http.ResponseWriter, r *http.Request) {
 				这样方便客户端后续的反显
 				如果存储一个真实请求，后续可能还需要把复杂的请求体再次解析回去
 		*/
-		go UpdateRequestInfo(record, true)
+		record.Headers = TransBackHeaders(req.Header, record.Headers)
+		go UpdateRequestInfo(record)
 		/*
 			在某些时候，需要将响应的信息也存起来
 		*/
 		go SaveResp(resp)
 
 	} else {
-		w.Write([]byte(err.Error()))
-		log.Error(err)
+		fmt.Printf("err: %v\n", err)
 	}
-}
 
-func GetPrevRespInstance(w http.ResponseWriter, r *http.Request) {
-	var reqId = strings.TrimPrefix(r.URL.String(), config.AppConfig.RequestBaseUrl)
-	fmt.Printf("reqId: %v\n", reqId)
 }
 
 func HandleFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("(\"hadas\"): %v\n", ("hadas"))
 	HanleClientCors(w, r)
 	if r.Method == http.MethodOptions {
+		fmt.Printf("(\"option\"): %v\n", ("option"))
 		return
-	} else if r.Method == http.MethodPost {
-		CreateRealReqAndForward(w, r)
 	} else if r.Method == http.MethodGet {
-		GetPrevRespInstance(w, r)
+		CreateRealReqAndForward(w, r)
+	} else {
+		fmt.Print("eaweaweljae")
 	}
 }
 
 func StartServer() {
 	go func() {
 		/*
-			实现的思路是客户端无论真正什么请求的 url、method 都固定向这个 url:port 发送 post 请求
-			真实的请求行放在请求头的几个约定好的字段中
-			服务端根据这些字段来还原客户端原本的请求, 然后转发结果给客户端
-
-			这么做的初衷主要有几点：
 
 			1.客户端只负责描述请求的样子，而不去实际发送请求。
 				因为 浏览器以及 webview存在同一域名下的最大请求并发队列，
@@ -83,7 +77,7 @@ func StartServer() {
 
 		*/
 		var port = fmt.Sprintf(":%d", config.AppConfig.RequestServerPort)
-		http.HandleFunc(config.AppConfig.RequestBaseUrl, HandleFunc)
+		http.HandleFunc(config.AppConfig.RequestBaseUrl+"/", HandleFunc)
 		http.ListenAndServe(port, nil)
 	}()
 
