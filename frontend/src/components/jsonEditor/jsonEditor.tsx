@@ -12,7 +12,7 @@ export default (props: {
     json: string,
     children?: unknown [],
     onChange?: (json: string) => void,
-    onBlur?: (json: string) => void,
+    onBlur?: (json: object) => void,
     editMode?: boolean,
     viewMode?: boolean
 }) => {

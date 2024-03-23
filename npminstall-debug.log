@@ -3,9 +3,9 @@
   registry: 'https://registry.npmmirror.com',
   pkgs: [
     {
-      name: '@types/codemirror6-bootstrap-theme',
-      version: 'latest',
-      type: 'tag',
+      name: '',
+      version: '/Users/liuxingang/Documents/code/self/FetchMan/@codemirror/legacy-modes/mode',
+      type: 'directory',
       alias: undefined,
       arg: [Result]
     }
@@ -15,7 +15,7 @@
   cacheDir: '/Users/liuxingang/.npminstall_tarball',
   env: {
     npm_config_registry: 'https://registry.npmmirror.com',
-    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=/Users/liuxingang/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@types/codemirror6-bootstrap-theme","-D"],"original":["--fix-bug-versions","--china","--userconfig=/Users/liuxingang/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@types/codemirror6-bootstrap-theme","-D"]}',
+    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=/Users/liuxingang/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@codemirror/legacy-modes/mode","-D"],"original":["--fix-bug-versions","--china","--userconfig=/Users/liuxingang/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@codemirror/legacy-modes/mode","-D"]}',
     npm_config_user_agent: 'npminstall/7.12.0 npm/? node/v16.20.2 darwin arm64',
     npm_config_cache: '/Users/liuxingang/.npminstall_tarball',
     NODE: '/usr/local/bin/node',

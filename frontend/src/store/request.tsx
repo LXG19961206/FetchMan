@@ -115,7 +115,6 @@ class RequestStore {
     this.updateReqInfo(reqId)
     await scriptStore.execAfterReqScript(resp, this.currentViewRequest.postTestScript)
     this.flushView(reqId)
-    
   }
 
   setUrl(url: string) {

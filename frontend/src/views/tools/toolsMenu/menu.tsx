@@ -1,17 +1,18 @@
-import { Input } from '@douyinfe/semi-ui'
 import style from './index.module.less'
-import { IconBranch } from '@douyinfe/semi-icons'
 import empty from '@/assets/empty.png'
 import { RenderIf } from '../../../components/headerless/renderIf'
 import { observer } from 'mobx-react'
 import { useToolsStore } from '@/store/tools'
 import { useMemo } from 'react'
+import tools from './tools'
 
+const toolStore = useToolsStore()
 
+tools.forEach((tool) => {
+  toolStore.resignTool(tool)
+})
 
 export const ToolMenu = observer(() => {
-
-  const toolStore = useToolsStore()
 
   const tools = useMemo(() => {
     return [...toolStore.tools]
@@ -30,6 +31,7 @@ export const ToolMenu = observer(() => {
         {
           tools.map((tool) => (
             <div
+              onClick={() => toolStore.createToolWindow(tool)}
               key={tool.id}>
               <div className={style.folder}>
                 { tool.icon }

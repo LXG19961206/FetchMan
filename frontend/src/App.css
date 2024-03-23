@@ -27,6 +27,13 @@ body, body[theme-mode=dark] .semi-always-light {
   }
 }
 
+.semi-tabs-content {
+  height: calc(100% - 50px);
+}
+.semi-tabs-pane-motion-overlay {
+  height: 100%;
+}
+
 
 
 .App-link {
