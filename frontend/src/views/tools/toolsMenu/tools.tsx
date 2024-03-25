@@ -2,6 +2,8 @@ import { IconCode, IconImage, IconTerminal, IconClock, IconKey, IconHash } from 
 import shortid from "shortid"
 import JSON2TsType from '../tools/json2ts'
 import JSON2Go from '../tools/json2go'
+import EncodeOrDecord from "../tools/encodeOrDecord"
+import Base64 from "../tools/base64"
 
 export default ([
   {
@@ -105,7 +107,7 @@ export default ([
     label: 'Decode/Encode Base64',
     id: shortid.generate(),
     icon: <IconKey></IconKey>,
-    render: () => <div>JSON To TS Type</div>,
+    render: Base64,
     allMulOpen: true
   },
   {
