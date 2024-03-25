@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import style from './index.module.less'
-import { Input, TextArea, Button, Switch } from '@douyinfe/semi-ui';
+import { Input, TextArea, Button, Switch, Notification } from '@douyinfe/semi-ui';
+import { IconCopy } from '@douyinfe/semi-icons'
 import { RenderIf } from '@/components/headerless/renderIf';
 import { compose } from 'lodash/fp'
+import { ClipboardSetText } from '~/runtime/runtime'
 
 interface EncodeDecodeHandler {
   (content: string): string
@@ -28,19 +30,26 @@ export default (props: {
   const encode = compose(setOutput, props.encodeHandler)
   const decode = compose(setOutput, props.decodeHandler || EMPTY_HANDLER)
 
+  useEffect(() => {
+    if (!output) return 
+    ClipboardSetText(output).then(res => {
+      Notification.success({ content: 'Trans success and copy result to clipboard' })
+    })
+  }, [output])
+
   return (
     <div className={style.wrapper} ref={setWrapper}>
       <div className={style.code_area}>
         <p> Content
           <RenderIf when={!!props.supportBinary}>
-              <Switch
-                checkedText="bin"
-                uncheckedText="txt"
-                className={style.at_right}
-                size='large'
-                checked={binaryMode}
-                onChange={setBinaryMode}>
-              </Switch>
+            <Switch
+              checkedText="bin"
+              uncheckedText="txt"
+              className={style.at_right}
+              size='large'
+              checked={binaryMode}
+              onChange={setBinaryMode}>
+            </Switch>
           </RenderIf>
         </p>
         <RenderIf
@@ -81,7 +90,9 @@ export default (props: {
         </div>
       </div>
       <div className={style.code_area}>
-        <p> Result </p>
+        <p> Result 
+          <IconCopy className={style.icon}></IconCopy>
+        </p>
         <TextArea
           autosize
           value={output}

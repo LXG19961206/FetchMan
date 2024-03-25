@@ -4,8 +4,8 @@ export default () => {
   return (
     <EncodeOrDecord 
       supportBinary
-      decodeHandler={btoa}
-      encodeHandler={atob}>
+      decodeHandler={atob}
+      encodeHandler={btoa}>
     </EncodeOrDecord>
   )
 }
