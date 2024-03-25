@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import style from './index.module.less'
-import { Input, TextArea, Button } from '@douyinfe/semi-ui';
+import { Input, TextArea, Button, Switch } from '@douyinfe/semi-ui';
 import { RenderIf } from '@/components/headerless/renderIf';
 import { compose } from 'lodash/fp'
 
@@ -23,6 +23,7 @@ export default (props: {
   const [iv, setIv] = useState('')
   const [output, setOutput] = useState("")
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>()
+  const [binaryMode, setBinaryMode] = useState(false)
 
   const encode = compose(setOutput, props.encodeHandler)
   const decode = compose(setOutput, props.decodeHandler || EMPTY_HANDLER)
@@ -30,13 +31,28 @@ export default (props: {
   return (
     <div className={style.wrapper} ref={setWrapper}>
       <div className={style.code_area}>
-        <p> Content </p>
-        <TextArea
-          placeholder='Enter your content to encode...'
-          value={input}
-          autosize
-          onChange={setInput}>
-        </TextArea>
+        <p> Content
+          <RenderIf when={!!props.supportBinary}>
+              <Switch
+                checkedText="bin"
+                uncheckedText="text"
+                className={style.at_right}
+                size='large'
+                checked={binaryMode}
+                onChange={setBinaryMode}>
+              </Switch>
+          </RenderIf>
+        </p>
+        <RenderIf
+          fallback={<Button> upload </Button>}
+          when={!binaryMode}>
+          <TextArea
+            placeholder='Enter your content to encode...'
+            value={input}
+            autosize
+            onChange={setInput}>
+          </TextArea>
+        </RenderIf>
         <RenderIf when={!!props.supportKey}>
           <p> Key </p>
           <Input
@@ -58,8 +74,8 @@ export default (props: {
           <Button type="primary" onClick={encode.bind(void 0, input)}> Encode </Button>
           <RenderIf when={!!props.decodeHandler}>
             <Button
-              onClick={decode.bind(void 0, input)} 
-              type='primary'> Decode 
+              onClick={decode.bind(void 0, input)}
+              type='primary'> Decode
             </Button>
           </RenderIf>
         </div>
