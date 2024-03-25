@@ -35,7 +35,7 @@ export default (props: {
           <RenderIf when={!!props.supportBinary}>
               <Switch
                 checkedText="bin"
-                uncheckedText="text"
+                uncheckedText="txt"
                 className={style.at_right}
                 size='large'
                 checked={binaryMode}
