@@ -10,6 +10,7 @@ import { FormDataItem } from '@/models/formData';
 import { NativeFileDialog, GetFilePathPlaceholder } from '~/go/app/App';
 import { RenderIf } from '@/components/headerless/renderIf';
 import InjectVarInput from '@/views/env/injectVarInput';
+import { useAutoHeight } from '@/hooks';
 
 const getPlaceholderAction = GetFilePathPlaceholder()
 
@@ -42,6 +43,8 @@ export default observer(() => {
   const [filePlaceholder, setPlaceholder] = useState("")
 
   const reqStore = useRequestStore()
+
+  const { bindWrapper, height } = useAutoHeight()
 
   useEffect(() => {
     getPlaceholderAction.then(setPlaceholder)
@@ -182,8 +185,11 @@ export default observer(() => {
 
   return (
     <Table
-      scroll={{ y: 400 }}
+      scroll={{ y: height }}
       bordered
+      ref={(el) => {
+        bindWrapper(el?.tableRef.current?.rootWrapRef.current)
+      }}
       pagination={false}
       footer={
         <div className={style.footer} onClick={addRow.bind(null)}>

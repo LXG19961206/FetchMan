@@ -12,6 +12,7 @@ import QueryString from 'qs';
 import { ContentType } from '@/dicts/contentType';
 import { SmartHeaders } from '@/dicts/headers';
 import InjectVarInput from '@/views/env/injectVarInput';
+import { useAutoHeight } from '@/hooks';
 
 
 
@@ -46,6 +47,9 @@ export default observer(() => {
   const [source, setSource] = useState<Param[]>([])
 
   const reqStore = useRequestStore()
+
+  const { bindWrapper, height } = useAutoHeight()
+
 
   useEffect(() => {
 
@@ -153,9 +157,12 @@ export default observer(() => {
 
   return (
     <Table
-      scroll={{ y: 400 }}
+      scroll={{ y: height }}
       bordered
       pagination={false}
+      ref={(el) => {
+        bindWrapper(el?.tableRef.current?.rootWrapRef.current)
+      }}
       footer={
         <div className={style.footer} onClick={addRow.bind(null)}>
           <IconPlus></IconPlus>

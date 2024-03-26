@@ -67,6 +67,13 @@ export const OptionSelector = (props: {
           width={400}
           title="variable value"
           dataIndex='value'
+          render={(_, record) => {
+            return (
+              <Tooltip content={record.value} showArrow>
+                <span> { record.value.length > 30 ? record.value.slice(0, 30) + '...' : record.value } </span>
+              </Tooltip>
+            )
+          }}
           key="value">
         </Table.Column>
         <Table.Column

@@ -7,6 +7,7 @@ import { useEnvStore } from '@/store/var';
 import { RenderIf } from '@/components/headerless/renderIf';
 import { env } from '~/go/models'
 import { wait } from '@/util/sync'
+import { useAutoHeight } from '@/hooks';
 
 
 
@@ -22,10 +23,10 @@ const columns = [
     dataIndex: 'name',
     width: 200
   },
-  {
-    title: 'defaultValue',
-    dataIndex: 'defaultValue',
-  },
+  // {
+  //   title: 'defaultValue',
+  //   dataIndex: 'defaultValue',
+  // },
   {
     title: 'currentValue',
     dataIndex: 'currentValue',
@@ -44,9 +45,10 @@ export default observer(() => {
 
   const envStore = useEnvStore()
 
+  const { height, bindWrapper } = useAutoHeight()
+
   const [filterVal, setFilter] = useState('')
 
-  const [wrapper, setWrapper] = useState<HTMLDivElement>()
 
   const save = async (item: env.Vars) => {
     if (sameNameCheck(item)) { return }
@@ -91,15 +93,15 @@ export default observer(() => {
             placeholder="enter variable name">
           </Input>
         ),
-        defaultValue: (
-          <Input
-            defaultValue={item.initialValue}
-            onInput={e => item.initialValue = (e.target as HTMLInputElement).value}
-            className={style.input}
-            placeholder="enter default value"
-            spellCheck={false}>
-          </Input>
-        ),
+        // defaultValue: (
+        //   <Input
+        //     defaultValue={item.initialValue}
+        //     onInput={e => item.initialValue = (e.target as HTMLInputElement).value}
+        //     className={style.input}
+        //     placeholder="enter default value"
+        //     spellCheck={false}>
+        //   </Input>
+        // ),
 
         currentValue: (
           <Input
@@ -131,7 +133,6 @@ export default observer(() => {
 
   return (
     <div
-      ref={el => setWrapper(el as HTMLDivElement)}
       className={style.wrapper}>
       <Input
         defaultValue={filterVal}
@@ -142,7 +143,10 @@ export default observer(() => {
         prefix={<IconSearch></IconSearch>}>
       </Input>
       <Table
-        scroll={{ y: (wrapper?.clientHeight || 400) - 240 }}
+        scroll={{ y: height }}
+        ref={(el) => {
+          bindWrapper(el?.tableRef.current?.rootWrapRef.current)
+        }}
         bordered
         pagination={false}
         size={"small"}
