@@ -6,11 +6,13 @@ import { RenderIf } from '@/components/headerless/renderIf';
 import { compose } from 'lodash/fp'
 import { ClipboardSetText } from '~/runtime/runtime'
 
+// maybe async
 interface EncodeDecodeHandler {
-  (content: string): string
+  (content: string): string | Promise<string>
 }
 
 const EMPTY_HANDLER = (val: string) => val
+
 
 export default (props: {
   encodeHandler: EncodeDecodeHandler,
@@ -27,20 +29,26 @@ export default (props: {
   const [wrapper, setWrapper] = useState<HTMLDivElement | null>()
   const [binaryMode, setBinaryMode] = useState(false)
 
-  const encode = compose(setOutput, props.encodeHandler)
-  const decode = compose(setOutput, props.decodeHandler || EMPTY_HANDLER)
+  const encode = async (content: string) => {
+    setOutput(await props.encodeHandler(content))
+  }
 
-  useEffect(() => {
-    if (!output) return 
-    ClipboardSetText(output).then(res => {
-      Notification.success({ content: 'Trans success and copy result to clipboard' })
+  const decode = async (content: string) => {
+    if (!props.decodeHandler) return ""
+    setOutput(await props.decodeHandler(content))
+  }
+
+  const copy = (content: string) => {
+    ClipboardSetText(content).then(res => {
+      Notification.success({ content: 'copy content to clipboard' })
     })
-  }, [output])
+  }
 
   return (
     <div className={style.wrapper} ref={setWrapper}>
       <div className={style.code_area}>
-        <p> Content
+        <div className={style.title}> Content
+          <IconCopy onClick={() => copy(input)} className={style.icon}></IconCopy>
           <RenderIf when={!!props.supportBinary}>
             <Switch
               checkedText="bin"
@@ -51,13 +59,16 @@ export default (props: {
               onChange={setBinaryMode}>
             </Switch>
           </RenderIf>
-        </p>
+        </div>
         <RenderIf
           fallback={<Button> upload </Button>}
           when={!binaryMode}>
           <TextArea
             placeholder='Enter your content to encode...'
             value={input}
+            spellCheck={false}
+            showClear
+            onClear={() => setInput("")}
             autosize
             onChange={setInput}>
           </TextArea>
@@ -90,9 +101,9 @@ export default (props: {
         </div>
       </div>
       <div className={style.code_area}>
-        <p> Result 
-          <IconCopy className={style.icon}></IconCopy>
-        </p>
+        <div className={style.title}> Result 
+          <IconCopy onClick={() => copy(output)} className={style.icon}></IconCopy>
+        </div>
         <TextArea
           autosize
           value={output}

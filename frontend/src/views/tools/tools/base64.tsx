@@ -4,8 +4,8 @@ export default () => {
   return (
     <EncodeOrDecord 
       supportBinary
-      decodeHandler={atob}
-      encodeHandler={btoa}>
+      decodeHandler={atob.bind(window)}
+      encodeHandler={btoa.bind(window)}>
     </EncodeOrDecord>
   )
 }
